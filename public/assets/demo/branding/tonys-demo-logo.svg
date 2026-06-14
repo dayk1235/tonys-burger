@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" fill="none">
+  <!-- Temporary Demo Logo — Tony's Burger -->
+  <defs>
+    <linearGradient id="brand-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F4B400" />
+      <stop offset="100%" stop-color="#D49400" />
+    </linearGradient>
+    <linearGradient id="brand-red" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D62323" />
+      <stop offset="100%" stop-color="#B81D1D" />
+    </linearGradient>
+  </defs>
+  <!-- Brand mark circle -->
+  <circle cx="60" cy="60" r="45" fill="url(#brand-red)" />
+  <circle cx="60" cy="60" r="38" fill="none" stroke="url(#brand-gold)" stroke-width="2.5" />
+  <text x="60" y="72" font-family="Georgia, serif" font-size="32" font-weight="bold" fill="url(#brand-gold)" text-anchor="middle">TB</text>
+  <!-- Brand text -->
+  <text x="120" y="56" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF" letter-spacing="4">TONY'S</text>
+  <text x="120" y="86" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="url(#brand-gold)" letter-spacing="6">BURGER</text>
+  <!-- DEMO watermark -->
+  <rect x="326" y="8" width="66" height="16" rx="8" fill="#F4B400" opacity="0.15" />
+  <text x="359" y="20" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#F4B400" text-anchor="middle" opacity="0.6">DEMO</text>
+</svg>

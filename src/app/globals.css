@@ -1,0 +1,298 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════
+   TONY'S BURGER — DESIGN TOKENS
+   ═══════════════════════════════════════════════════
+   This file defines the complete design token system.
+   All values are centralized here. Do not hardcode
+   colors or tokens in component files.
+   ═══════════════════════════════════════════════════ */
+
+@theme inline {
+  /* ─── Fonts ────────────────────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+  --font-heading: "Playfair Display", ui-serif, Georgia, serif;
+
+  /* ─── Brand Colors ─────────────────────────── */
+  --color-brand-primary: #8B1A1A;
+  --color-brand-primary-hover: #6E1414;
+  --color-brand-primary-light: #C0392B;
+  --color-brand-secondary: #D4862A;
+  --color-brand-secondary-hover: #B8721F;
+  --color-brand-secondary-light: #E8A04A;
+
+  /* ─── Surface Colors ───────────────────────── */
+  --color-bg: #0E0E0E;
+  --color-bg-surface: #181818;
+  --color-bg-surface-alt: #222222;
+  --color-bg-elevated: #2A2A2A;
+
+  /* ─── Text Colors ──────────────────────────── */
+  --color-text-primary: #F5F5F5;
+  --color-text-secondary: #A0A0A0;
+  --color-text-muted: #6B6B6B;
+  --color-text-inverse: #0E0E0E;
+
+  /* ─── Semantic Colors ──────────────────────── */
+  --color-success: #2E7D32;
+  --color-error: #D32F2F;
+  --color-warning: #D4862A;
+  --color-info: #1976D2;
+
+  /* ─── Border Colors ────────────────────────── */
+  --color-border: #333333;
+  --color-border-light: #444444;
+
+  /* ─── Overlay ──────────────────────────────── */
+  --color-overlay: rgba(0, 0, 0, 0.6);
+
+  /* ─── shadcn/ui Theme Overrides ────────────── */
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text-primary);
+  --color-primary: var(--color-brand-primary);
+  --color-primary-foreground: var(--color-text-primary);
+  --color-secondary: var(--color-bg-surface-alt);
+  --color-secondary-foreground: var(--color-text-primary);
+  --color-muted: var(--color-bg-surface);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent: var(--color-bg-surface-alt);
+  --color-accent-foreground: var(--color-text-primary);
+  --color-destructive: var(--color-error);
+  --color-card: var(--color-bg-surface);
+  --color-card-foreground: var(--color-text-primary);
+  --color-popover: var(--color-bg-elevated);
+  --color-popover-foreground: var(--color-text-primary);
+  --color-input: var(--color-bg-surface-alt);
+  --color-ring: var(--color-brand-primary);
+
+  /* ─── Radius Tokens ──────────────────────────── */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-4xl: 2.5rem;
+  --radius-full: 9999px;
+
+  /* ─── Shadow Tokens ──────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+  --shadow-glow-primary: 0 0 20px rgba(139, 26, 26, 0.3);
+  --shadow-glow-secondary: 0 0 20px rgba(212, 134, 42, 0.3);
+
+  /* ─── Z-Index Tokens ──────────────────────────── */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  /* ─── Animation Tokens ──────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* ─── Container Tokens ──────────────────────────── */
+  --container-max: 1280px;
+  --container-narrow: 768px;
+  --container-wide: 1440px;
+
+  /* ─── shadcn/ui sidebar theme (disabled for now) ─ */
+  --color-sidebar: var(--color-bg-surface);
+  --color-sidebar-foreground: var(--color-text-primary);
+  --color-sidebar-primary: var(--color-brand-primary);
+  --color-sidebar-primary-foreground: var(--color-text-primary);
+  --color-sidebar-accent: var(--color-bg-surface-alt);
+  --color-sidebar-accent-foreground: var(--color-text-primary);
+  --color-sidebar-border: var(--color-border);
+  --color-sidebar-ring: var(--color-brand-primary);
+}
+
+/* ─── Base Styles ──────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-primary);
+    color: var(--color-text-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* ─── Scrollbar Styles ─────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-light);
+}
+
+/* ─── Hero Atmosphere Animations ─────────────── */
+@layer utilities {
+  .hero-smoke-a {
+    animation: hero-smoke-a 18s ease-in-out infinite;
+  }
+
+  .hero-smoke-b {
+    animation: hero-smoke-b 24s ease-in-out infinite;
+  }
+
+  .hero-smoke-c {
+    animation: hero-smoke-c 20s ease-in-out infinite;
+  }
+
+  .hero-ember-a {
+    animation: hero-ember-a 7s ease-in-out infinite;
+  }
+
+  .hero-ember-b {
+    animation: hero-ember-b 9s ease-in-out infinite;
+  }
+
+  .hero-ember-c {
+    animation: hero-ember-c 11s ease-in-out infinite;
+  }
+
+  .hero-flame {
+    animation: hero-flame 5.5s ease-in-out infinite;
+  }
+}
+
+@keyframes hero-smoke-a {
+  0%, 100% {
+    opacity: 0.18;
+    transform: translate3d(0, 8px, 0) scale(1);
+  }
+  50% {
+    opacity: 0.34;
+    transform: translate3d(18px, -18px, 0) scale(1.08);
+  }
+}
+
+@keyframes hero-smoke-b {
+  0%, 100% {
+    opacity: 0.12;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.26;
+    transform: translate3d(-22px, -28px, 0) scale(1.12);
+  }
+}
+
+@keyframes hero-smoke-c {
+  0%, 100% {
+    opacity: 0.16;
+    transform: translate3d(0, 10px, 0) scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translate3d(-12px, -22px, 0) scale(1.09);
+  }
+}
+
+@keyframes hero-ember-a {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.8);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-18px, -180px, 0) scale(1.15);
+  }
+}
+
+@keyframes hero-ember-b {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0) scale(0.85);
+  }
+  18% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(14px, -210px, 0) scale(1.1);
+  }
+}
+
+@keyframes hero-ember-c {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0) scale(0.75);
+  }
+  24% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-8px, -200px, 0) scale(1.2);
+  }
+}
+
+@keyframes hero-flame {
+  0%, 100% {
+    opacity: 0.18;
+    transform: scale(1);
+    filter: blur(22px);
+  }
+  50% {
+    opacity: 0.36;
+    transform: scale(1.06);
+    filter: blur(28px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-smoke-a,
+  .hero-smoke-b,
+  .hero-smoke-c,
+  .hero-ember-a,
+  .hero-ember-b,
+  .hero-ember-c,
+  .hero-flame {
+    animation: none !important;
+  }
+}

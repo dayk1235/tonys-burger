@@ -1,0 +1,1351 @@
+[
+  {
+    "event_name": "page_view",
+    "timestamp": 1781417948593,
+    "session_id": "9359093f-3d6c-48c5-b46e-bb3bbc7b0edd",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781417948618,
+    "session_id": "9359093f-3d6c-48c5-b46e-bb3bbc7b0edd",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781418776853,
+    "session_id": "f4c3f153-4d5f-4d6e-a9b9-a17a4392be69",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781418777495,
+    "session_id": "f4c3f153-4d5f-4d6e-a9b9-a17a4392be69",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781418812951,
+    "session_id": "f4c3f153-4d5f-4d6e-a9b9-a17a4392be69",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781418813033,
+    "session_id": "f4c3f153-4d5f-4d6e-a9b9-a17a4392be69",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781418813033,
+    "session_id": "f4c3f153-4d5f-4d6e-a9b9-a17a4392be69",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781418813033,
+    "session_id": "f4c3f153-4d5f-4d6e-a9b9-a17a4392be69",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781419034564,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419034583,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419202798,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419202800,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419202800,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419202801,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419202878,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419208812,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419209744,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419210147,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Double Cheeseburger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419210148,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Classic Burger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419210148,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Spicy Chicken"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419210163,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419210247,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Mushroom Swiss"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419210247,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Veggie Deluxe"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781419210247,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Bacon Ranch"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419210581,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781419212948,
+    "session_id": "5881204e-ebd0-4496-a9dd-a1fd2a5cd0d2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "cta"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781455101040,
+    "session_id": "0ac5defb-7691-4281-a56c-d7b89aa890f5",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781455101078,
+    "session_id": "0ac5defb-7691-4281-a56c-d7b89aa890f5",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781455740843,
+    "session_id": "0ac5defb-7691-4281-a56c-d7b89aa890f5",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781455740857,
+    "session_id": "0ac5defb-7691-4281-a56c-d7b89aa890f5",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781455759400,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781455759430,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456227849,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456227854,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456227855,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456227855,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456229416,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456231216,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456245315,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456246721,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Classic Burger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456246721,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Double Cheeseburger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456246721,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Spicy Chicken"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456246950,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456247182,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Veggie Deluxe"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456247182,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Bacon Ranch"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781456247182,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Mushroom Swiss"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456248949,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781456251915,
+    "session_id": "c978f1f5-4a21-45f2-8da2-c003da54cb66",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "cta"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781464042675,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464042692,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464051766,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464051782,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464051782,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464051783,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464052681,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464054048,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464058884,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464060018,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Classic Burger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464060019,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Double Cheeseburger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464060019,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Spicy Chicken"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464060047,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464060264,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Bacon Ranch"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464060264,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Veggie Deluxe"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464060264,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Mushroom Swiss"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464061365,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464065899,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "cta"
+    }
+  },
+  {
+    "event_name": "whatsapp_click",
+    "timestamp": 1781464367272,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "source": "cta-section"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781464438092,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464438151,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464449700,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464449718,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464449718,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781464449718,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781464830826,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781464830859,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781465012939,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465012963,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465040139,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465040139,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465040139,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465040139,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465040205,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465040338,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465045339,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465045621,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Double Cheeseburger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465045621,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Spicy Chicken"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465045621,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Classic Burger"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465045821,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465084087,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Veggie Deluxe"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465084087,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Bacon Ranch"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781465084087,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Mushroom Swiss"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465085736,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465087770,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "cta"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781465933545,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781465933567,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781468609868,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468609912,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468614569,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468614605,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468614605,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468614606,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468615738,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781468810008,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468810072,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781468865372,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468865427,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468877089,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468877091,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468877091,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468877091,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468877219,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468877621,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468878524,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468879304,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Classic Burger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468879304,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Spicy Chicken"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468879304,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Double Cheeseburger"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468879569,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468879737,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Veggie Deluxe"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468879738,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Mushroom Swiss"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781468879738,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Bacon Ranch"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468880053,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781468880871,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "cta"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781469403512,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469403543,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1781469525681,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/",
+      "referrer": "http://localhost:3000/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469525697,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469530043,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Smoky BBQ"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469530127,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "The Classic"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469530796,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469530945,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "The Inferno"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469534144,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469538262,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469540979,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469542411,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Spicy Chicken"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469542411,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Classic Burger"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469542412,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Double Cheeseburger"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469542461,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469542845,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Veggie Deluxe"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469542846,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Bacon Ranch"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1781469542846,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Mushroom Swiss"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469543944,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1781469545178,
+    "session_id": "6cfa924c-d6dd-4912-a102-3e527033fccf",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "cta"
+    }
+  }
+]

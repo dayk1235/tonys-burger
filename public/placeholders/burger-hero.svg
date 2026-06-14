@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="700" viewBox="0 0 800 700">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#2A2A2A"/>
+      <stop offset="100%" stop-color="#0E0E0E"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="40%">
+      <stop offset="0%" stop-color="#C62828" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#C62828" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="patty" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4A2810"/>
+      <stop offset="70%" stop-color="#3A1F0C"/>
+      <stop offset="100%" stop-color="#2A1508"/>
+    </radialGradient>
+    <radialGradient id="bunTop" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#E8A84C"/>
+      <stop offset="100%" stop-color="#D4883C"/>
+    </radialGradient>
+    <radialGradient id="bunBottom" cx="50%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#D4883C"/>
+      <stop offset="100%" stop-color="#B8742E"/>
+    </radialGradient>
+    <radialGradient id="cheese" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F4B400"/>
+      <stop offset="100%" stop-color="#DAA000"/>
+    </radialGradient>
+    <radialGradient id="lettuce" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4CAF50"/>
+      <stop offset="100%" stop-color="#388E3C"/>
+    </radialGradient>
+    <radialGradient id="tomato" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E53935"/>
+      <stop offset="100%" stop-color="#C62828"/>
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <rect width="800" height="700" fill="url(#bg)"/>
+  <rect width="800" height="700" fill="url(#glow)"/>
+  <!-- Burger illustration -->
+  <g transform="translate(400, 350)" filter="url(#shadow)">
+    <!-- Bottom bun -->
+    <ellipse cx="0" cy="100" rx="160" ry="30" fill="url(#bunBottom)"/>
+    <!-- Patty -->
+    <ellipse cx="0" cy="60" rx="175" ry="35" fill="url(#patty)"/>
+    <!-- Cheese -->
+    <ellipse cx="0" cy="35" rx="180" ry="20" fill="url(#cheese)"/>
+    <!-- Lettuce -->
+    <ellipse cx="0" cy="15" rx="185" ry="18" fill="url(#lettuce)"/>
+    <!-- Tomato slices -->
+    <ellipse cx="-60" cy="-2" rx="45" ry="12" fill="url(#tomato)"/>
+    <ellipse cx="60" cy="-2" rx="45" ry="12" fill="url(#tomato)"/>
+    <!-- Top bun -->
+    <ellipse cx="0" cy="-20" rx="170" ry="50" fill="url(#bunTop)"/>
+    <ellipse cx="0" cy="-30" rx="155" ry="45" fill="#E8A84C" opacity="0.5"/>
+    <!-- Sesame seeds -->
+    <ellipse cx="-50" cy="-50" rx="8" ry="4" fill="#F5E6C8" transform="rotate(-15, -50, -50)"/>
+    <ellipse cx="40" cy="-55" rx="8" ry="4" fill="#F5E6C8" transform="rotate(10, 40, -55)"/>
+    <ellipse cx="-10" cy="-60" rx="7" ry="3.5" fill="#F5E6C8" transform="rotate(-5, -10, -60)"/>
+    <ellipse cx="70" cy="-45" rx="7" ry="3.5" fill="#F5E6C8" transform="rotate(20, 70, -45)"/>
+    <ellipse cx="-80" cy="-40" rx="7" ry="3.5" fill="#F5E6C8" transform="rotate(-20, -80, -40)"/>
+  </g>
+</svg>
