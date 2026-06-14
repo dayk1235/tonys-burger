@@ -51,7 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${inter.variable} ${playfairDisplay.variable} dark`}
       suppressHydrationWarning
     >

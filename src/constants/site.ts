@@ -2,15 +2,15 @@ import { BUSINESS_CONFIG } from "@/config/business";
 
 export const SITE_CONFIG = {
   name: BUSINESS_CONFIG.name,
-  locale: "en-US",
-  currency: "USD",
-  timezone: "America/New_York",
+  locale: "es-MX",
+  currency: "MXN",
+  timezone: "America/Mexico_City",
 
   navigation: [
-    { label: "Menu", href: "#menu" },
-    { label: "About", href: "#about" },
-    { label: "Gallery", href: "#gallery" },
-    { label: "Contact", href: "#contact" },
+    { label: "Inicio", href: "#" },
+    { label: "Menú", href: "#menu-preview" },
+    { label: "Galería", href: "#gallery" },
+    { label: "Contacto", href: "#contact" },
   ] as const,
 
   social: {

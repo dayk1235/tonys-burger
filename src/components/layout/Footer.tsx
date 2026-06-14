@@ -34,24 +34,28 @@ export function Footer() {
             </p>
             {/* Social Links */}
             <div className="flex gap-3">
-              <a
-                href={BUSINESS_CONFIG.social.instagram}
-                className="flex size-10 items-center justify-center rounded-xl border border-border text-text-muted transition-all duration-fast hover:border-brand-primary hover:bg-brand-primary/5 hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                aria-label="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Camera size={18} aria-hidden="true" />
-              </a>
-              <a
-                href={BUSINESS_CONFIG.social.facebook}
-                className="flex size-10 items-center justify-center rounded-xl border border-border text-text-muted transition-all duration-fast hover:border-brand-primary hover:bg-brand-primary/5 hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink size={18} aria-hidden="true" />
-              </a>
+              {BUSINESS_CONFIG.social.instagram && (
+                <a
+                  href={BUSINESS_CONFIG.social.instagram}
+                  className="flex size-10 items-center justify-center rounded-xl border border-border text-text-muted transition-all duration-fast hover:border-brand-primary hover:bg-brand-primary/5 hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Camera size={18} aria-hidden="true" />
+                </a>
+              )}
+              {BUSINESS_CONFIG.social.facebook && (
+                <a
+                  href={BUSINESS_CONFIG.social.facebook}
+                  className="flex size-10 items-center justify-center rounded-xl border border-border text-text-muted transition-all duration-fast hover:border-brand-primary hover:bg-brand-primary/5 hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={18} aria-hidden="true" />
+                </a>
+              )}
             </div>
           </div>
 

@@ -4,30 +4,30 @@ export const BUSINESS_CONFIG = {
   locationName: "Tony's Burger Centro",
 
   whatsapp: {
-    number: "+1234567890",
+    number: "",
     message: "¡Hola! Quiero pedir unas hamburguesas para llevar 🙌",
   },
 
-  phone: "(555) 123-4567",
-  email: "hello@tonys-burger.com",
+  phone: "Pendiente de confirmar",
+  email: "Correo por confirmar",
 
   address: {
-    full: "123 Burger Street, Foodville, CA 90210",
+    full: "Dirección por confirmar",
   },
 
   hours: {
-    display: "Lun-Sáb: 11AM-10PM, Dom: 12PM-9PM",
-    detailed: "Lun — Sáb: 11AM — 10PM\nDomingo: 12PM — 9PM",
+    display: "Horario por confirmar",
+    detailed: "Horario por confirmar",
   },
 
   social: {
-    instagram: "https://instagram.com/tonysburger",
-    facebook: "https://facebook.com/tonysburger",
-    tiktok: "https://tiktok.com/@tonysburger",
+    instagram: "",
+    facebook: "",
+    tiktok: "",
   },
 
   links: {
-    siteUrl: "https://tonys-burger.com",
+    siteUrl: "",
   },
 
   footer: {

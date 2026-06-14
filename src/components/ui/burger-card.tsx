@@ -100,8 +100,7 @@ export function BurgerCard({
         </p>
         <div className="mt-auto flex items-center justify-between pt-3">
           <span className="font-heading text-3xl tracking-wide text-brand-secondary">
-            {currency}
-            {price.toFixed(2)}
+            {price > 0 ? `${currency}${price.toFixed(2)}` : "Precio por confirmar"}
           </span>
         </div>
       </div>

@@ -14,9 +14,10 @@ export function CTASection() {
   const revealRef = useRef<HTMLDivElement>(null!);
   const sectionRef = useSectionView<HTMLDivElement>("cta");
   const trackClick = useClickTracking();
-  const whatsappUrl = `https://wa.me/${BUSINESS_CONFIG.whatsapp.number}?text=${encodeURIComponent(BUSINESS_CONFIG.whatsapp.message)}`;
+  const whatsappNumber = BUSINESS_CONFIG.whatsapp.number;
 
   useEffect(() => {
+    if (!whatsappNumber) return;
     const el = revealRef.current;
     if (!el) return;
 
@@ -45,7 +46,11 @@ export function CTASection() {
     return () => {
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
-  }, []);
+  }, [whatsappNumber]);
+
+  if (!whatsappNumber) return null;
+
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(BUSINESS_CONFIG.whatsapp.message)}`;
 
   return (
     <SectionContainer id="cta" background="brand" className="py-20 md:py-28">

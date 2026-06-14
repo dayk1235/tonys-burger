@@ -6,7 +6,11 @@ import { BUSINESS_CONFIG } from "@/config/business";
 
 export function FloatingCta() {
   const trackClick = useClickTracking();
-  const whatsappUrl = `https://wa.me/${BUSINESS_CONFIG.whatsapp.number}?text=${encodeURIComponent(BUSINESS_CONFIG.whatsapp.message)}`;
+  const whatsappNumber = BUSINESS_CONFIG.whatsapp.number;
+
+  if (!whatsappNumber) return null;
+
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(BUSINESS_CONFIG.whatsapp.message)}`;
 
   return (
     <a
