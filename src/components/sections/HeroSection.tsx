@@ -31,7 +31,7 @@ export function HeroSection() {
 
       {/* ─── Charcoal texture — hidden on mobile ──── */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04] max-md:hidden"
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage: "url('/assets/demo/textures/charcoal-texture.webp')",
           backgroundRepeat: "repeat",
@@ -42,14 +42,14 @@ export function HeroSection() {
 
       {/* ─── Bottom gradient fade — hidden on mobile ── */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-bg/80 to-transparent max-md:hidden"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-bg/80 to-transparent"
         aria-hidden="true"
       />
 
       {/* ─── Desktop/tablet hero image + atmosphere — hidden on mobile ── */}
       <div
         data-hero-image
-        className="pointer-events-none absolute inset-0 z-0 max-md:hidden"
+        className="pointer-events-none absolute inset-0 z-0"
         aria-hidden="true"
       >
         <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_72%_50%,rgba(244,180,0,0.2),transparent_28%),radial-gradient(circle_at_82%_72%,rgba(198,40,40,0.18),transparent_24%),linear-gradient(90deg,rgba(11,11,11,0.96)_0%,rgba(11,11,11,0.8)_28%,rgba(11,11,11,0.2)_58%,rgba(11,11,11,0.08)_100%)]" />
@@ -59,7 +59,7 @@ export function HeroSection() {
           fill
           priority
           sizes="100vw"
-          className="z-0 object-contain object-right-bottom md:object-cover md:object-[82%_center] lg:object-[76%_center] xl:object-[73%_center]"
+          className="z-0 object-cover object-[82%_center] lg:object-[76%_center] xl:object-[73%_center]"
         />
         <div
           className="hero-flame absolute inset-x-[52%] bottom-[9%] z-10 h-[26%] rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(244,180,0,0.52),rgba(198,40,40,0.18)_46%,transparent_78%)] blur-3xl md:inset-x-[58%] md:bottom-[8%] md:h-[30%]"
@@ -95,18 +95,6 @@ export function HeroSection() {
         ref={containerRef}
         className="relative mx-auto flex min-h-[calc(100svh-6rem)] max-w-container-max flex-col items-start px-4 pb-8 pt-4 md:items-center md:py-12 lg:px-8 lg:py-16"
       >
-        {/* ─── MOBILE: Burger image as primary visual ── */}
-        <div className="w-full md:hidden">
-          <Image
-            src="/assets/demo/hero/hero-burger.webp"
-            alt={PLACEHOLDER.HERO_IMAGE_ALT}
-            width={800}
-            height={1200}
-            priority
-            sizes="(max-width: 767px) 100vw, 0vw"
-            className="h-[48svh] w-full rounded-2xl object-cover shadow-2xl"
-          />
-        </div>
 
         {/* ─── Text content block ──────────────────── */}
         <div className="relative z-20 w-full max-w-xl lg:max-w-[58%]">
