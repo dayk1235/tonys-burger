@@ -23,12 +23,15 @@ export function HeroSection() {
       className="relative isolate overflow-hidden bg-bg pt-24"
       aria-label="Hero section"
     >
+      {/* ─── Background gradient (always visible) ─────── */}
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_60%_40%,rgba(212,134,42,0.12),transparent),linear-gradient(180deg,#0a0a0a_0%,#111111_60%,#090909_100%)]"
         aria-hidden="true"
       />
+
+      {/* ─── Charcoal texture — hidden on mobile ──── */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        className="pointer-events-none absolute inset-0 opacity-[0.04] max-md:hidden"
         style={{
           backgroundImage: "url('/assets/demo/textures/charcoal-texture.webp')",
           backgroundRepeat: "repeat",
@@ -36,14 +39,17 @@ export function HeroSection() {
         }}
         aria-hidden="true"
       />
+
+      {/* ─── Bottom gradient fade — hidden on mobile ── */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-bg/80 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-bg/80 to-transparent max-md:hidden"
         aria-hidden="true"
       />
 
+      {/* ─── Desktop/tablet hero image + atmosphere — hidden on mobile ── */}
       <div
         data-hero-image
-        className="pointer-events-none absolute inset-0 z-0"
+        className="pointer-events-none absolute inset-0 z-0 max-md:hidden"
         aria-hidden="true"
       >
         <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_72%_50%,rgba(244,180,0,0.2),transparent_28%),radial-gradient(circle_at_82%_72%,rgba(198,40,40,0.18),transparent_24%),linear-gradient(90deg,rgba(11,11,11,0.96)_0%,rgba(11,11,11,0.8)_28%,rgba(11,11,11,0.2)_58%,rgba(11,11,11,0.08)_100%)]" />
@@ -87,43 +93,57 @@ export function HeroSection() {
 
       <div
         ref={containerRef}
-        className="relative mx-auto flex min-h-[calc(100svh-6rem)] max-w-container-max items-center px-4 py-12 md:px-6 lg:px-8 lg:py-16"
+        className="relative mx-auto flex min-h-[calc(100svh-6rem)] max-w-container-max flex-col items-start px-4 pb-8 pt-4 md:items-center md:py-12 lg:px-8 lg:py-16"
       >
-        <div className="relative z-20 max-w-xl lg:max-w-[58%]">
+        {/* ─── MOBILE: Burger image as primary visual ── */}
+        <div className="w-full md:hidden">
+          <Image
+            src="/assets/demo/hero/hero-burger.webp"
+            alt={PLACEHOLDER.HERO_IMAGE_ALT}
+            width={800}
+            height={1200}
+            priority
+            sizes="(max-width: 767px) 100vw, 0vw"
+            className="h-[48svh] w-full rounded-2xl object-cover shadow-2xl"
+          />
+        </div>
+
+        {/* ─── Text content block ──────────────────── */}
+        <div className="relative z-20 w-full max-w-xl lg:max-w-[58%]">
           <p
             data-hero-badge
-            className="mb-4 text-xs font-semibold uppercase tracking-[0.42em] text-brand-secondary/90"
+            className="mb-3 mt-5 text-xs font-semibold uppercase tracking-[0.42em] text-brand-secondary/90 md:mb-4 md:mt-0"
           >
             Anuncio premium
           </p>
           <h1
             data-hero-headline
-            className="max-w-[11ch] whitespace-pre-line font-heading text-[clamp(3.4rem,8vw,6.9rem)] leading-[0.9] tracking-[0.005em] text-text-primary drop-shadow-[0_14px_28px_rgba(0,0,0,0.45)] md:max-w-[12ch] md:text-[clamp(4rem,7.2vw,7.3rem)] lg:max-w-[11ch] xl:text-[clamp(4.6rem,6.4vw,7.8rem)]"
+            className="max-w-[11ch] whitespace-pre-line font-heading text-[clamp(2.2rem,6.5vw,6.9rem)] leading-[0.9] tracking-[0.005em] text-text-primary drop-shadow-[0_14px_28px_rgba(0,0,0,0.45)] md:max-w-[12ch] md:text-[clamp(4rem,7.2vw,7.3rem)] lg:max-w-[11ch] xl:text-[clamp(4.6rem,6.4vw,7.8rem)]"
           >
             {PLACEHOLDER.HERO_TITLE}
           </h1>
           <p
             data-hero-subheadline
-            className="mt-5 max-w-[36ch] font-sans text-[0.98rem] font-medium leading-[1.7] text-text-secondary/95 md:mt-6 md:max-w-[40ch] md:text-[1.05rem] lg:text-[1.1rem]"
+            className="mt-3 max-w-[36ch] font-sans text-[0.88rem] leading-[1.6] text-text-secondary/95 md:mt-6 md:max-w-[40ch] md:text-[1.05rem] lg:text-[1.1rem]"
           >
             {PLACEHOLDER.HERO_SUBTITLE}
           </p>
 
           <div
             data-hero-cta
-            className="mt-9 flex flex-col items-start gap-4 sm:flex-row"
+            className="mt-5 flex flex-col items-start gap-3 sm:flex-row md:mt-9 md:gap-4"
           >
             <a
               href="#cta"
               onClick={() => trackClick({ type: "whatsapp", source: "hero" })}
-              className="inline-flex h-14 items-center justify-center rounded-xl bg-brand-secondary px-10 font-sans text-base font-semibold text-bg shadow-glow-secondary transition-all duration-normal hover:bg-brand-secondary-hover hover:shadow-lg hover:shadow-brand-secondary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-secondary active:scale-[0.98]"
+              className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-brand-secondary px-10 font-sans text-base font-semibold text-bg shadow-glow-secondary transition-all duration-normal hover:bg-brand-secondary-hover hover:shadow-lg hover:shadow-brand-secondary/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-secondary active:scale-[0.98] sm:w-auto md:h-14"
             >
               {PLACEHOLDER.HERO_CTA_PRIMARY}
             </a>
             <a
               href="#menu-preview"
               onClick={() => trackClick({ type: "menu", source: "hero" })}
-              className="inline-flex h-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 px-10 font-sans text-base font-semibold text-text-primary transition-all duration-normal hover:border-brand-secondary/40 hover:bg-brand-secondary/10 hover:text-brand-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-secondary active:scale-[0.98]"
+              className="inline-flex h-12 items-center justify-center rounded-xl px-0 text-sm font-semibold text-text-muted transition-all duration-normal hover:text-brand-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-secondary active:scale-[0.98] md:h-14 md:border md:border-white/10 md:bg-white/5 md:px-10 md:text-base md:text-text-primary md:hover:border-brand-secondary/40 md:hover:bg-brand-secondary/10 md:hover:text-brand-secondary"
             >
               {PLACEHOLDER.HERO_CTA_SECONDARY}
             </a>
@@ -131,25 +151,26 @@ export function HeroSection() {
 
           <div
             data-hero-trust
-            className="mt-12 flex flex-wrap gap-3"
+            className="mt-6 flex gap-2 overflow-x-auto flex-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mt-12 md:flex-wrap md:gap-3"
             role="list"
             aria-label="Trust indicators"
           >
             {TRUST_INDICATORS.map((indicator) => (
               <div
                 key={indicator.label}
-                className="inline-flex items-center gap-3 border border-brand-secondary/20 px-4 py-2"
+                className="inline-flex shrink-0 items-center gap-1.5 border border-brand-secondary/20 px-3 py-1.5 md:px-4 md:py-2"
                 role="listitem"
               >
                 <span
-                  className="size-2 rounded-full bg-brand-secondary shadow-[0_0_10px_rgba(212,134,42,0.55)]"
+                  className="size-1.5 rounded-full bg-brand-secondary shadow-[0_0_10px_rgba(212,134,42,0.55)] md:size-2"
                   aria-hidden="true"
                 />
-                <span className="font-sans text-sm font-medium text-text-secondary">
+                <span className="whitespace-nowrap font-sans text-xs font-medium text-text-secondary md:text-sm">
                   {indicator.label}
                 </span>
               </div>
             ))}
+            <div className="shrink-0 w-4" aria-hidden="true" />
           </div>
         </div>
       </div>
