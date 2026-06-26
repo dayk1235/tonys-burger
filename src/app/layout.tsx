@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { FloatingCta } from "@/components/ui/FloatingCta";
+import { LayoutShell } from "@/components/layout/LayoutShell";
 import { AnalyticsRootProvider, AnalyticsTracker } from "@/features/analytics";
+import { LivingBackground } from "@/features/living-background";
 import { Providers } from "@/providers";
 import { PLACEHOLDER } from "@/content/placeholders";
 import { BUSINESS_CONFIG } from "@/config/business";
@@ -52,19 +51,19 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${playfairDisplay.variable} dark`}
+      className={`${inter.variable} ${playfairDisplay.variable} dark experience-morning`}
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-bg font-sans text-text-primary antialiased">
-        <AnalyticsRootProvider>
-          <AnalyticsTracker />
-          <Providers>
-            <Navbar />
-            <FloatingCta />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </Providers>
-        </AnalyticsRootProvider>
+        <LivingBackground />
+        <div className="relative z-0">
+          <AnalyticsRootProvider>
+            <AnalyticsTracker />
+            <Providers>
+              <LayoutShell>{children}</LayoutShell>
+            </Providers>
+          </AnalyticsRootProvider>
+        </div>
       </body>
     </html>
   );

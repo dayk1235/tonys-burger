@@ -1,15 +1,18 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { LocalizationProvider } from "@/localization";
+import { ExperienceProvider } from "@/experience";
+import { LivingBackgroundProvider } from "@/features/living-background";
 
 /**
  * Providers — Application Providers Wrapper
  *
- * PLACEHOLDER: This is a scaffold for future providers.
- * Add providers here as they are implemented:
- * - ThemeProvider (dark/light mode)
- * - CartProvider (shopping cart state)
- * - ChatProvider (chatbot state)
+ * Central location for all application-level providers.
+ * Order matters — providers that depend on other providers
+ * must be nested inside their dependencies.
+ *
+ * Order: Localization → Experience → LivingBackground
  */
 
 interface ProvidersProps {
@@ -17,5 +20,13 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  return <>{children}</>;
+  return (
+    <LocalizationProvider>
+      <ExperienceProvider>
+        <LivingBackgroundProvider>
+          {children}
+        </LivingBackgroundProvider>
+      </ExperienceProvider>
+    </LocalizationProvider>
+  );
 }

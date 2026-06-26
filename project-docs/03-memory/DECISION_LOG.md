@@ -180,3 +180,53 @@ Adopt the 8-phase product vision defined in `project-docs/08-product/PRODUCT_VIS
 - Every future task must reference its product vision phase
 - Explicitly excludes POS, ERP, inventory, accounting from scope
 - Knowledge-first architecture (ADR-006) has natural home in Phases 5-6
+
+### [GOVERNANCE-002] Product Reasoning Layer
+*   **Fecha:** 2026-06-25
+*   **Responsable:** Buffy (Chief Product Architect)
+*   **Estado:** Aprobado
+
+#### A) Contexto y Motivo
+Restaurant OS has reached a new stage of maturity with a comprehensive set of vision, governance, and design documents. The agent was behaving as a code generator rather than a product-first architect. Every technical decision must first be justified as a product decision. Every product decision must first be justified as a business decision. A mandatory reasoning layer is required to enforce this discipline before every task.
+
+#### B) Decisión
+A new **Product Reasoning Layer** is introduced as a mandatory stage executed after the Boot Sequence and before implementation. The layer consists of 12 reasoning sections: Product Impact, Experience Impact, Cognitive Impact, Design Validation, Future Compatibility, Knowledge Impact, Risk Analysis, Alternatives Considered, Confidence Level, Technical Debt, Product Evolution, and Executive Summary. The agent persona is elevated to **Chief Product Architect of Restaurant OS**.
+
+Files modified:
+- `AGENTS.md` — New persona, Product Reasoning Layer, updated evaluation criteria and report format
+- `project-docs/BOOT_SEQUENCE.md` — New STEP 10, updated Declaration and checklist
+- `project-docs/02-development/TASK_WORKFLOW.md` — New FASE 1b (Product Reasoning Layer)
+- `project-docs/05-reporting/CHANGE_REPORT_TEMPLATE.md` — Product Reasoning Layer added to report template
+- `project-docs/03-memory/DECISION_LOG.md` — This entry
+- `project-docs/03-memory/PROJECT_MEMORY.md` — Amendment added
+
+#### C) Impacto
+- Agents now think as Chief Product Architects before coding
+- Every task now requires a 12-point product reasoning analysis before implementation
+- Product quality, user confidence, and business reasoning become primary evaluation criteria
+- Future reports will include the complete Product Reasoning Layer
+- No code or architecture changes — only governance improvements
+- All existing governance documents remain unchanged
+
+---
+
+### [ADR-008] Product Boundary Separation
+*   **Fecha:** 2026-06-25
+*   **Responsable:** Buffy (Chief Product Architect)
+*   **Estado:** Aprobado
+
+#### A) Contexto y Motivo
+The repository now contains two different products that serve different business goals: Restaurant Experience and Restaurant OS. Keeping them inside one undifferentiated structure makes ownership ambiguous, increases cognitive load, and creates a long-term risk of cross-product drift. The system needs an explicit top-level boundary so future work can be assigned to the correct product without guessing.
+
+#### B) Decisión
+Introduce a top-level `apps/` boundary with separate module homes for:
+- `apps/restaurant-experience/` — public website and customer-facing implementation
+- `apps/restaurant-os/` — operational platform, intelligence, and owner tools
+
+The shared layer remains centralized in existing reusable modules such as `src/design-system/`, `src/components/ui/`, `src/constants/`, `src/lib/`, and `src/localization/`. The running project keeps its current routes through `src/app/` as a compatibility layer.
+
+#### C) Impacto
+*   **Archivos:** New top-level product boundary and documentation scaffolding.
+*   **Mantenibilidad:** Clearer ownership and lower risk of duplicated logic.
+*   **Routing:** Existing URLs remain stable.
+*   **Escalabilidad:** Future verticals can be added without changing Restaurant OS behavior.

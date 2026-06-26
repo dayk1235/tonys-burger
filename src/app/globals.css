@@ -18,7 +18,7 @@
   --font-mono: ui-monospace, SFMono-Regular, monospace;
   --font-heading: "Playfair Display", ui-serif, Georgia, serif;
 
-  /* ─── Brand Colors ─────────────────────────── */
+  /* ─── Brand Colors (static — never change) ── */
   --color-brand-primary: #8B1A1A;
   --color-brand-primary-hover: #6E1414;
   --color-brand-primary-light: #C0392B;
@@ -26,27 +26,25 @@
   --color-brand-secondary-hover: #B8721F;
   --color-brand-secondary-light: #E8A04A;
 
-  /* ─── Surface Colors ───────────────────────── */
-  --color-bg: #0E0E0E;
-  --color-bg-surface: #181818;
-  --color-bg-surface-alt: #222222;
-  --color-bg-elevated: #2A2A2A;
+  /* ─── Experience Tokens (dynamic — themed) ── */
+  --color-bg: var(--exp-bg, #0E0E0E);
+  --color-bg-surface: var(--exp-bg-surface, #181818);
+  --color-bg-surface-alt: var(--exp-bg-surface-alt, #222222);
+  --color-bg-elevated: var(--exp-bg-elevated, #2A2A2A);
 
-  /* ─── Text Colors ──────────────────────────── */
-  --color-text-primary: #F5F5F5;
-  --color-text-secondary: #A0A0A0;
-  --color-text-muted: #6B6B6B;
+  --color-text-primary: var(--exp-text-primary, #F5F5F5);
+  --color-text-secondary: var(--exp-text-secondary, #A0A0A0);
+  --color-text-muted: var(--exp-text-muted, #6B6B6B);
   --color-text-inverse: #0E0E0E;
 
-  /* ─── Semantic Colors ──────────────────────── */
+  --color-border: var(--exp-border, #333333);
+  --color-border-light: var(--exp-border-light, #444444);
+
+  /* ─── Semantic Colors (static) ─────────────── */
   --color-success: #2E7D32;
   --color-error: #D32F2F;
   --color-warning: #D4862A;
   --color-info: #1976D2;
-
-  /* ─── Border Colors ────────────────────────── */
-  --color-border: #333333;
-  --color-border-light: #444444;
 
   /* ─── Overlay ──────────────────────────────── */
   --color-overlay: rgba(0, 0, 0, 0.6);
@@ -70,7 +68,15 @@
   --color-input: var(--color-bg-surface-alt);
   --color-ring: var(--color-brand-primary);
 
-  /* ─── Radius Tokens ──────────────────────────── */
+  /* ─── Shadow Tokens (dynamic — themed) ────── */
+  --shadow-sm: var(--exp-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.3));
+  --shadow-md: var(--exp-shadow-md, 0 4px 6px rgba(0, 0, 0, 0.4));
+  --shadow-lg: var(--exp-shadow-lg, 0 10px 15px rgba(0, 0, 0, 0.5));
+  --shadow-xl: var(--exp-shadow-xl, 0 20px 25px rgba(0, 0, 0, 0.6));
+  --shadow-glow-primary: var(--exp-shadow-glow-primary, 0 0 20px rgba(139, 26, 26, 0.3));
+  --shadow-glow-secondary: var(--exp-shadow-glow-secondary, 0 0 20px rgba(212, 134, 42, 0.3));
+
+  /* ─── Static Token Groups ──────────────────── */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -80,22 +86,12 @@
   --radius-4xl: 2.5rem;
   --radius-full: 9999px;
 
-  /* ─── Shadow Tokens ──────────────────────────── */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
-  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
-  --shadow-glow-primary: 0 0 20px rgba(139, 26, 26, 0.3);
-  --shadow-glow-secondary: 0 0 20px rgba(212, 134, 42, 0.3);
-
-  /* ─── Z-Index Tokens ──────────────────────────── */
   --z-dropdown: 100;
   --z-sticky: 200;
   --z-overlay: 300;
   --z-modal: 400;
   --z-toast: 500;
 
-  /* ─── Animation Tokens ──────────────────────────── */
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-slow: 500ms;
@@ -104,12 +100,11 @@
   --easing-out: cubic-bezier(0, 0, 0.2, 1);
   --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  /* ─── Container Tokens ──────────────────────────── */
   --container-max: 1280px;
   --container-narrow: 768px;
   --container-wide: 1440px;
 
-  /* ─── shadcn/ui sidebar theme (disabled for now) ─ */
+  /* ─── shadcn/ui sidebar theme ──────────────── */
   --color-sidebar: var(--color-bg-surface);
   --color-sidebar-foreground: var(--color-text-primary);
   --color-sidebar-primary: var(--color-brand-primary);
@@ -118,6 +113,56 @@
   --color-sidebar-accent-foreground: var(--color-text-primary);
   --color-sidebar-border: var(--color-border);
   --color-sidebar-ring: var(--color-brand-primary);
+}
+
+/* ═══════════════════════════════════════════════════
+   EXPERIENCE SYSTEM — CSS Custom Properties
+   ═══════════════════════════════════════════════════
+   :root contains the default (Morning) values.
+   The ExperienceProvider overrides these at runtime
+   via inline styles on <html>.
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* Morning (default) — Fresh, bright, calm */
+  --exp-bg: #0E0E0E;
+  --exp-bg-surface: #181818;
+  --exp-bg-surface-alt: #222222;
+  --exp-bg-elevated: #2A2A2A;
+  --exp-text-primary: #F5F5F5;
+  --exp-text-secondary: #A0A0A0;
+  --exp-text-muted: #6B6B6B;
+  --exp-border: #333333;
+  --exp-border-light: #444444;
+  --exp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --exp-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --exp-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --exp-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+  --exp-shadow-glow-primary: 0 0 20px rgba(139, 26, 26, 0.3);
+  --exp-shadow-glow-secondary: 0 0 20px rgba(212, 134, 42, 0.3);
+
+  /* Smooth theme transitions */
+  transition: background-color var(--duration-normal) var(--easing-default),
+              color var(--duration-normal) var(--easing-default);
+}
+
+/* Focus — Elegant, professional, minimal (applied by JS, kept as fallback) */
+:root.experience-focus {
+  --exp-bg: #080808;
+  --exp-bg-surface: #101010;
+  --exp-bg-surface-alt: #181818;
+  --exp-bg-elevated: #1E1E1E;
+  --exp-text-primary: #E8E8E8;
+  --exp-text-secondary: #888888;
+  --exp-text-muted: #555555;
+  --exp-border: #222222;
+  --exp-border-light: #2A2A2A;
+  --exp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --exp-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --exp-shadow-lq: 0 10px 15px rgba(0, 0, 0, 0.6);
+  --exp-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7);
+  --exp-shadow-glow-primary: none;
+  --exp-shadow-glow-secondary: none;
 }
 
 /* ─── Base Styles ──────────────────────────────── */

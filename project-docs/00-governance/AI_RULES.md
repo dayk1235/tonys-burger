@@ -8,6 +8,14 @@ Este documento define el marco operativo, los límites de seguridad y las restri
 
 Estas leyes de gobernanza global regulan de forma permanente el comportamiento de los agentes:
 
+### LAW_043 — ALWAYS GREEN REPOSITORY
+El main branch debe compilar siempre exitosamente.
+- TypeScript debe pasar (`npx tsc --noEmit` — cero errores).
+- Build debe pasar (`npm run build` — cero errores).
+- Lint debe pasar, salvo deuda legacy documentada explícitamente.
+- Ninguna feature puede integrarse si deja el repositorio en estado quebrado.
+- Si una tarea introduce fallos de compilación, se considera incompleta.
+
 ### LAW_001 - DOCUMENTATION FIRST
 Ningún agente puede modificar código sin haber leído:
 - VISION

@@ -1347,5 +1347,936 @@
     "metadata": {
       "section": "cta"
     }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782347299788,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347299845,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347302533,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Hamburguesa 1"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347302700,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "Hamburguesa Especial"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347303664,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347304149,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "Hamburguesa 2"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347306484,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347306616,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347308032,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347308483,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Hamburguesa 3"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347308484,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Hamburguesa 1"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347308484,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Hamburguesa 2"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347308615,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347308717,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Hamburguesa 4"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347308717,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Combo Familiar"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782347308717,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Hamburguesa 5"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782347309067,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782348678611,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782348678652,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782352395384,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352395397,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352398560,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Hamburguesa 1"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352398595,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "Hamburguesa Especial"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352399059,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "Hamburguesa 2"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352399060,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352399262,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352399561,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "burger-assembly"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352404981,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "about"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352405111,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_3",
+      "burger_name": "Hamburguesa 3"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352405111,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_2",
+      "burger_name": "Hamburguesa 2"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352405111,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_1",
+      "burger_name": "Hamburguesa 1"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352405143,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "menu-preview"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352405277,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_4",
+      "burger_name": "Hamburguesa 4"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352405277,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_6",
+      "burger_name": "Combo Familiar"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782352405278,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "menu_5",
+      "burger_name": "Hamburguesa 5"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782352405298,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "gallery"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782353878476,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782353878511,
+    "session_id": "0fee473b-f3fb-46a4-b0e9-9afb64ded2ad",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782355763474,
+    "session_id": "aa111787-3863-44b9-8e2d-7eee3b614175",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782355763503,
+    "session_id": "aa111787-3863-44b9-8e2d-7eee3b614175",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782355785360,
+    "session_id": "aa111787-3863-44b9-8e2d-7eee3b614175",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782356134156,
+    "session_id": "aa111787-3863-44b9-8e2d-7eee3b614175",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782356188207,
+    "session_id": "aa111787-3863-44b9-8e2d-7eee3b614175",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard",
+      "referrer": "http://localhost:3000/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782356230618,
+    "session_id": "aa111787-3863-44b9-8e2d-7eee3b614175",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard",
+      "referrer": "http://localhost:3000/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782371818473,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782371818503,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782371826316,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782371870725,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782371899214,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782371905492,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782371978804,
+    "session_id": "b4f582af-1d64-46da-8910-72f726d1cc07",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782379543072,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782379543124,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782379548153,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782379558694,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782379558730,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782379561053,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Hamburguesa 1"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782379561086,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "Hamburguesa Especial"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782379561152,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782379561169,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "Hamburguesa 2"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782379564102,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "testimonials"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782379577463,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782379636845,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782379872699,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782380136340,
+    "session_id": "88000341-ef43-4103-a41f-5e54272946b2",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo",
+      "referrer": "http://localhost:3000/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425194343,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782425194419,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425200305,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425233425,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782425236518,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425245471,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425381346,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard/experiments/boost-afternoon"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425389103,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard/experiments"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782425393237,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782427247168,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard/insights/boost-afternoon",
+      "referrer": "http://localhost:3000/dashboard/insights/boost-afternoon"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434174730,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard/insights/boost-afternoon",
+      "referrer": "http://localhost:3000/dashboard/insights/boost-afternoon"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434185930,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434330532,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard/insights/boost-afternoon"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434335105,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard/insights/boost-afternoon"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434545334,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434565190,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434583471,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782434583555,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782434587083,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_2",
+      "burger_name": "Hamburguesa 1"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782434587117,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_1",
+      "burger_name": "Hamburguesa Especial"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782434587200,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "featured-burgers"
+    }
+  },
+  {
+    "event_name": "burger_view",
+    "timestamp": 1782434587201,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "burger_id": "featured_3",
+      "burger_name": "Hamburguesa 2"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434593388,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/login"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434601638,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782434689137,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782439912057,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782439912104,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782439917712,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashborad"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782439926259,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782440099512,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard",
+      "referrer": "http://localhost:3000/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782440172475,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard",
+      "referrer": "http://localhost:3000/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782440217800,
+    "session_id": "b3e198b4-f9cf-4420-8c09-19dfe5397a11",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782485225812,
+    "session_id": "4097670c-7a3e-4d72-a0eb-2d4d92c96f72",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/"
+    }
+  },
+  {
+    "event_name": "section_view",
+    "timestamp": 1782485225862,
+    "session_id": "4097670c-7a3e-4d72-a0eb-2d4d92c96f72",
+    "device_type": "desktop",
+    "metadata": {
+      "section": "hero"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782485232486,
+    "session_id": "4097670c-7a3e-4d72-a0eb-2d4d92c96f72",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
   }
 ]

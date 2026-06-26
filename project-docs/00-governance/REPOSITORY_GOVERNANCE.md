@@ -182,6 +182,24 @@ Todos los documentos de gobernanza deben ser descubribles a través de:
 
 Ningún documento puede existir fuera de la estructura documentada.
 
+### LAW_043 — ALWAYS GREEN REPOSITORY
+
+The main branch must always compile successfully.
+
+TypeScript must pass (`npx tsc --noEmit` — zero errors).
+
+Build must pass (`npm run build` — zero errors).
+
+Lint should pass unless explicitly documented as legacy debt.
+
+No feature may be merged if it leaves the repository in a broken state.
+
+If a task introduces build failures, that task is considered incomplete.
+
+**Scope:** This law applies to all branches that target `main`. CI/CD pipelines must enforce this law at the gate level.
+
+**Exceptions:** Legacy debt may be documented in a `TODO.md` or `LEGACY_DEBT.md` file at the project root, explicitly describing the nature, scope, and remediation plan for each lint violation. No exception exists for TypeScript or build errors.
+
 ---
 
 ## 4. Protocolo de Limpieza del Repositorio (LAW_020)

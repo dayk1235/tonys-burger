@@ -1,0 +1,140 @@
+import { RuntimeConfiguration } from "./RuntimeConfiguration";
+import { RuntimeClock } from "./RuntimeClock";
+import { RuntimeLifecycle } from "./RuntimeLifecycle";
+import { EventBus } from "./EventBus";
+import { ContextBusImpl } from "./ContextBus";
+import { WorkingMemory } from "./WorkingMemory";
+import { EngineRegistry } from "./EngineRegistry";
+import { EngineLoader } from "./EngineLoader";
+import { RuntimeRegistryImpl } from "./RuntimeRegistry";
+import { AuditPipelineImpl } from "./AuditPipeline";
+import { RecoveryPipelineImpl } from "./RecoveryPipeline";
+import { RuntimeSchedulerImpl } from "./RuntimeScheduler";
+import { RuntimeMetrics } from "./RuntimeMetrics";
+import { RuntimeHealth } from "./RuntimeHealth";
+import { RuntimeState } from "./RuntimeTypes";
+import { CognitiveEngine } from "../engines/observation/ObservationContracts";
+import { EngineManifestDefinition } from "./EngineManifest";
+
+export class Runtime {
+  readonly config: RuntimeConfiguration;
+  readonly clock: RuntimeClock;
+  readonly lifecycle: RuntimeLifecycle;
+  readonly eventBus: EventBus;
+  readonly contextBus: ContextBusImpl;
+  readonly workingMemory: WorkingMemory;
+  readonly engineRegistry: EngineRegistry;
+  readonly engineLoader: EngineLoader;
+  readonly runtimeRegistry: RuntimeRegistryImpl;
+  readonly auditPipeline: AuditPipelineImpl;
+  readonly recoveryPipeline: RecoveryPipelineImpl;
+  readonly scheduler: RuntimeSchedulerImpl;
+  readonly metrics: RuntimeMetrics;
+  readonly health: RuntimeHealth;
+
+  constructor(configOverrides?: Partial<RuntimeConfiguration["getAll"]>) {
+    this.config = new RuntimeConfiguration(configOverrides);
+    this.clock = new RuntimeClock();
+    this.lifecycle = new RuntimeLifecycle();
+    this.eventBus = new EventBus(this.clock, this.config.get("eventHistoryLimit"));
+    this.contextBus = new ContextBusImpl();
+    this.workingMemory = new WorkingMemory(
+      this.config.get("maxWorkingMemoryItems"),
+      this.config.get("workingMemoryTTLMs")
+    );
+    this.engineRegistry = new EngineRegistry();
+    this.engineLoader = new EngineLoader(this.engineRegistry);
+    this.runtimeRegistry = new RuntimeRegistryImpl(this.engineRegistry);
+    this.auditPipeline = new AuditPipelineImpl(this.clock, this.config.get("auditRetentionMs"));
+    this.recoveryPipeline = new RecoveryPipelineImpl(this.clock);
+    this.scheduler = new RuntimeSchedulerImpl(this.clock);
+    this.metrics = new RuntimeMetrics(this.clock);
+    this.health = new RuntimeHealth(this.clock);
+  }
+
+  async boot(): Promise<void> {
+    this.requireState("BOOTING");
+    this.lifecycle.transition("INITIALIZING");
+
+    this.requireState("INITIALIZING");
+    this.lifecycle.transition("DISCOVERING");
+
+    this.requireState("DISCOVERING");
+    this.lifecycle.transition("RESOLVING");
+
+    this.requireState("RESOLVING");
+    this.lifecycle.transition("READY");
+  }
+
+  async start(): Promise<void> {
+    if (this.lifecycle.isBooting()) {
+      await this.boot();
+    }
+
+    this.requireState("READY");
+
+    await this.scheduler.start();
+    this.metrics.incrementPublished();
+    this.lifecycle.transition("OPERATING");
+
+    await this.eventBus.emit("runtime:started", {
+      state: this.lifecycle.current,
+      engines: this.engineRegistry.count(),
+    });
+  }
+
+  async shutdown(): Promise<void> {
+    this.requireOperating();
+
+    await this.scheduler.stop();
+    this.lifecycle.transition("SHUTTING_DOWN");
+
+    await this.eventBus.emit("runtime:shutting-down", {
+      finalState: this.lifecycle.current,
+    });
+
+    this.lifecycle.transition("HALTED");
+  }
+
+  getState(): RuntimeState {
+    return this.lifecycle.current;
+  }
+
+  snapshot(): ReturnType<RuntimeMetrics["snapshot"]> {
+    return this.metrics.snapshot(
+      this.lifecycle.current,
+      this.engineRegistry,
+      this.eventBus,
+      this.auditPipeline,
+      this.recoveryPipeline
+    );
+  }
+
+  async healthCheck(): Promise<ReturnType<RuntimeHealth["check"]>> {
+    return this.health.check(this.engineRegistry, this.auditPipeline, this.recoveryPipeline);
+  }
+
+  registerEngine(
+    name: string,
+    instance: CognitiveEngine,
+    manifestDef: EngineManifestDefinition
+  ): Promise<void> {
+    return this.engineLoader.loadFromInstance(name, instance, manifestDef);
+  }
+
+  private requireState(expected: RuntimeState): void {
+    if (this.lifecycle.current !== expected) {
+      throw new Error(
+        `Runtime must be in "${expected}" state, currently "${this.lifecycle.current}"`
+      );
+    }
+  }
+
+  private requireOperating(): void {
+    if (!this.lifecycle.isOperating() && !this.lifecycle.isDegraded()) {
+      throw new Error(
+        `Runtime must be operating or degraded, currently "${this.lifecycle.current}"`
+      );
+    }
+  }
+}

@@ -252,11 +252,37 @@ Para que una fase nueva pueda comenzar, deben cumplirse:
 
 ---
 
-## 10. REFERENCIAS
+## 10. PRODUCT SEASONS
+
+Restaurant OS evolves through defined Product Seasons. These seasons represent the platform's philosophical and strategic progression, layered on top of the development phases defined above.
+
+| Season | Status | Purpose |
+| :--- | :--- | :--- |
+| **Foundation** | ✅ COMPLETED (2026-06-25) | Create permanent philosophical foundation. Constitution, Principles, Design Language, Visual System, Material System, Motion System, Experience Hierarchy, Knowledge Graph, Design System. |
+| **Research** | 🔵 ACTIVE | Validate foundation against real restaurant operations. Owner discovery sessions. Data collection. Gap analysis. |
+| **Craftsmanship** | ⚪ Future | Polish every pixel, transition, and interaction. Accessibility audit. Performance optimization. Animation refinement. |
+| **Product** | ⚪ Future | Transform philosophy into features. Build the real product. Deliver value to restaurant owners. |
+| **Expansion** | ⚪ Future | Expand to new surfaces (mobile, watch, KDS). New domains (multi-location, catering). |
+| **Scale** | ⚪ Future | Scale to serve thousands of restaurants. Multi-tenancy. SaaS infrastructure. Enterprise features. |
+
+### Season Transition Rules
+
+1. A season cannot begin until the previous season's exit criteria are met.
+2. Season transitions are documented in PROJECT_MEMORY.md.
+3. The founder approves all season transitions.
+4. Work from a future season is not permitted during an active season.
+5. A season may be extended if exit criteria are not met, but may not be shortened.
+
+For full details on each season, see `../00-governance/FOUNDATION_FREEZE_POLICY.md`.
+
+---
+
+## 11. REFERENCIAS
 
 | Documento | Propósito |
 | :--- | :--- |
 | `./PHASE_DEFINITIONS.md` | Definición detallada de cada fase |
 | `./DELIVERY_STRATEGY.md` | Estrategia de entrega y ejecución |
 | `../00-governance/REPOSITORY_GOVERNANCE.md` | Leyes de gobernanza aplicables |
+| `../00-governance/FOUNDATION_FREEZE_POLICY.md` | Foundation v1.0 LOCKED, seasons, amendment process |
 | `../02-development/TASK_WORKFLOW.md` | Flujo de trabajo de tareas |

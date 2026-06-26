@@ -4,6 +4,47 @@ Este documento define la estructura de directorios, convenciones de nomenclatura
 
 ---
 
+## 0. Product Boundary Layer
+
+El repositorio reconoce dos productos distintos:
+
+- **Restaurant Experience** - la capa pública y de marketing.
+- **Restaurant OS** - la capa operativa, analítica y de decisión.
+
+La separación existe para evitar que ambos productos evolucionen como si compartieran el mismo objetivo. El boundary es lógico y físico: cada producto tendrá su propio espacio en `apps/`, mientras que las rutas actuales permanecen estables mediante una capa de compatibilidad en `src/app/`.
+
+### Relationship Diagram
+
+```mermaid
+flowchart TD
+    RE[Restaurant Experience<br/>Presentation Layer]
+    OS[Restaurant OS<br/>Operational Layer]
+    BI[Business Intelligence<br/>Decision Engine]
+    SH[Shared Layer<br/>Design System, UI Primitives, Utilities, Localization]
+    APP[src/app<br/>Route Compatibility Layer]
+
+    RE --> OS
+    OS --> BI
+    RE --> SH
+    OS --> SH
+    RE -.-> APP
+    OS -.-> APP
+```
+
+### Boundary Responsibilities
+
+| Boundary | Responsible For | Explicitly Not Responsible For |
+| :--- | :--- | :--- |
+| `apps/restaurant-experience/` | Landing pages, branding, public menu, reservations, gallery, contact, marketing pages, ordering experience, customer-facing interactions | Dashboard, owner tools, decision engine, analytics, insights |
+| `apps/restaurant-os/` | Dashboard, owner experience, decision engine, knowledge graph, widgets, watch, admin, shared platform services | Marketing pages, public menu, branding, customer-facing flows |
+| Shared layer | Design system, motion, materials, typography, primitives, localization, utilities | Product-specific copy, product-specific business logic |
+
+### Compatibility Rule
+
+The running project keeps its current URLs intact. `src/app/` remains the compatibility layer while route ownership is documented separately from route delivery.
+
+---
+
 ## 1. Tech Stack Oficial
 
 | Capa | Tecnología | Versión |
@@ -25,21 +66,37 @@ El proyecto sigue una arquitectura modular dentro de Next.js App Router.
 
 ```text
 / (Raíz del proyecto)
+├── apps/                      # Product boundaries (restaurant-os, restaurant-experience)
 ├── project-docs/              # Documentación de gobernanza y arquitectura
 ├── public/                    # Recursos estáticos (imágenes, fuentes, PDFs)
 │   ├── fonts/                 # Fuentes self-hosted (futuro)
 │   └── images/                # Imágenes del sitio (futuro)
 ├── src/                       # Código fuente
-│   ├── app/                   # Next.js App Router
+│   ├── design-system/         # Shared design system and reusable primitives
+│   ├── app/                   # Next.js App Router (compatibility layer)
 │   │   ├── globals.css        # Tokens de diseño y estilos globales
 │   │   ├── layout.tsx         # Root layout (fonts, navbar, footer, providers)
 │   │   └── page.tsx           # Home page shell
+│   ├── experience/            # Experience System (appearance/themes)
+│   │   ├── types/             # Experience mode types
+│   │   ├── themes/            # Theme definitions (Morning, Focus)
+│   │   ├── storage/           # localStorage persistence
+│   │   ├── utils/             # Time-based auto detection
+│   │   ├── hooks/             # useExperience hook
+│   │   ├── provider/          # ExperienceProvider (SSR-safe context)
+│   │   ├── components/        # ExperienceSelector for Topbar
+│   │   └── index.ts           # Barrel export
 │   ├── components/
 │   │   ├── ui/                # shadcn/ui + componentes atómicos (sin lógica de negocio)
 │   │   ├── layout/            # Componentes de layout (Navbar, Footer)
 │   │   ├── sections/          # Componentes de sección de página (Hero, Menu, Gallery)
 │   │   └── features/          # Componentes de feature por dominio
 │   │       └── chatbot/       # Preparación de chatbot (implementación futura)
+│   ├── features/              # Feature modules (dominios completos)
+│   │   ├── analytics/         # Sistema de analytics (eventos, tracking, provider)
+│   │   ├── insights/          # Generación de insights desde datos de analytics
+│   │   ├── reports/           # Generación y formateo de reportes de negocio
+│   │   └── dashboard/         # Plataforma de Business Intelligence (fase preparatoria)
 │   ├── animations/            # Arquitectura de animaciones GSAP
 │   │   ├── hero/              # Animaciones de hero section (futuro)
 │   │   ├── scroll/            # Scroll-triggered animations (futuro)
@@ -50,6 +107,7 @@ El proyecto sigue una arquitectura modular dentro de Next.js App Router.
 │   │   └── index.ts           # Barrel export
 │   ├── content/               # Sistema de contenido con placeholders
 │   │   └── placeholders.ts    # Constantes PLACEHOLDER_ para todo el contenido
+│   ├── localization/          # Shared localization and translation system
 │   ├── config/                # Configuración centralizada del negocio
 │   │   ├── business.ts        # BUSINESS_CONFIG — fuente única de datos del negocio
 │   │   └── index.ts           # Barrel export
@@ -96,8 +154,13 @@ El proyecto sigue una arquitectura modular dentro de Next.js App Router.
 
 ```mermaid
 graph TD
+    subgraph Product_Boundaries [Product Boundaries]
+        Experience[Restaurant Experience]
+        Platform[Restaurant OS]
+    end
+
     subgraph App_Router [Next.js App Router]
-        Page[page.tsx - Home Page] --> Section[components/sections/HeroSection]
+        Page[page.tsx - Compatibility Routes] --> Section[components/sections/HeroSection]
         Layout[layout.tsx - Root Layout] --> Nav[components/layout/Navbar]
         Layout --> Footer[components/layout/Footer]
     end
@@ -126,16 +189,22 @@ graph TD
     subgraph Providers [State Layer]
         Providers[providers/index.tsx - Provider Wrapper] --> Layout
     end
+
+    Experience --> App_Router
+    Platform --> App_Router
+    Design_System --> Experience
+    Design_System --> Platform
 ```
 
 ### Reglas de Flujo de Datos:
-1. **Design Tokens:** Definidos en `globals.css` (CSS) y `constants/tokens.ts` (TypeScript). Ambas fuentes deben mantenerse sincronizadas.
-2. **Business Config:** Toda la información operativa del negocio (nombre, teléfono, email, dirección, horario, redes sociales, WhatsApp) vive en `config/business.ts` como `BUSINESS_CONFIG`. Es la fuente única de verdad.
-3. **Placeholder Content:** El contenido de marketing y copy (`PLACEHOLDER`) en `content/placeholders.ts` es independiente de `BUSINESS_CONFIG`. Contiene textos de secciones, descripciones de productos y elementos de UI copy.
-4. **UI Components:** Sin lógica de negocio. Son puramente presentacionales.
-5. **Layout Shell:** Navbar y Footer son componentes de layout que envuelven todas las páginas.
-6. **Animations:** La arquitectura de GSAP está preparada pero no implementada. El hook `useGsapAnimation` proporciona los métodos reutilizables.
-7. **Providers:** El wrapper de providers está listo para aceptar ThemeProvider, CartProvider, etc. cuando se implementen.
+1. **Boundary ownership:** Restaurant Experience y Restaurant OS are separate product modules. Shared code is the only layer both can consume.
+2. **Design Tokens:** Definidos en `globals.css` (CSS) y `constants/tokens.ts` (TypeScript). Ambas fuentes deben mantenerse sincronizadas.
+3. **Business Config:** Toda la información operativa del negocio (nombre, teléfono, email, dirección, horario, redes sociales, WhatsApp) vive en `config/business.ts` como `BUSINESS_CONFIG`. Es la fuente única de verdad.
+4. **Placeholder Content:** El contenido de marketing y copy (`PLACEHOLDER`) en `content/placeholders.ts` es independiente de `BUSINESS_CONFIG`. Contiene textos de secciones, descripciones de productos y elementos de UI copy.
+5. **UI Components:** Sin lógica de negocio. Son puramente presentacionales.
+6. **Layout Shell:** Navbar y Footer son componentes de layout que envuelven las páginas públicas.
+7. **Animations:** La arquitectura de GSAP está preparada pero no implementada. El hook `useGsapAnimation` proporciona los métodos reutilizables.
+8. **Providers:** El wrapper de providers está listo para aceptar ThemeProvider, CartProvider, etc. cuando se implementen.
 
 ---
 

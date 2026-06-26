@@ -12,6 +12,13 @@ La propiedad de un archivo no implica acceso exclusivo. Implica **responsabilida
 
 ## 2. Categorías de Dominio y Propietarios
 
+### DOMINIO 0 — Boundary Modules
+**Ruta raíz:** `apps/restaurant-os/`, `apps/restaurant-experience/`
+**Responsabilidad:** Declarar la frontera física entre los dos productos del repositorio. Contiene documentación de módulo, contratos de responsabilidad y preparación para futuras implementaciones.
+**Propietario Lógico:** Arquitecto Principal / Chief Product Architect
+**Archivos típicos:** `README.md`, `future/README.md`, `templates/tonys-burger/README.md`
+**Impacto de un cambio:** Alto — define el perímetro de los productos y el contexto de futuras migraciones.
+
 ### DOMINIO 1 — UI (Interfaz de Usuario)
 **Ruta raíz:** `src/components/ui/`
 **Responsabilidad:** Componentes atómicos sin estado de negocio (botones, inputs, badges, modals, cards). No contienen lógica, llamadas a servicios ni accesos a contextos globales.
@@ -31,19 +38,20 @@ La propiedad de un archivo no implica acceso exclusivo. Implica **responsabilida
 ---
 
 ### DOMINIO 3 — Enrutamiento (Routing)
-**Ruta raíz:** `src/App.tsx`, `src/pages/`
+**Ruta raíz:** `src/app/`
 **Responsabilidad:** Definición de rutas de navegación y composición de páginas. Conecta el sistema de rutas con los componentes de feature.
 **Propietario Lógico:** Agente de Arquitectura / Arquitecto Principal
-**Archivos típicos:** `App.tsx`, `HomePage.tsx`, `MenuPage.tsx`, `BookingPage.tsx`, `AdminPage.tsx`
+**Archivos típicos:** `layout.tsx`, `page.tsx`, `dashboard/page.tsx`, `demo/page.tsx`, `api/**/route.ts`
 **Impacto de un cambio:** Alto — un error puede dejar rutas inaccesibles o romper la navegación global.
+**Nota:** `src/app/` actúa como capa de compatibilidad para preservar URLs mientras la separación de productos se documenta en `apps/`.
 
 ---
 
 ### DOMINIO 4 — Utilidades y Servicios (Utilities)
-**Ruta raíz:** `src/utils/`, `src/services/`, `src/hooks/`
+**Ruta raíz:** `src/utils/`, `src/services/`, `src/hooks/`, `src/lib/`, `src/constants/`, `src/localization/`, `src/design-system/`
 **Responsabilidad:** Lógica de negocio encapsulada, helpers de cálculo, persistencia en `localStorage` y custom hooks reutilizables. Sin dependencias de UI.
 **Propietario Lógico:** Agente de Backend-for-Frontend / Ingeniero de Servicios
-**Archivos típicos:** `formatCurrency.ts`, `localStorageService.ts`, `useCart.ts`, `useMenu.ts`, `calculateTax.ts`
+**Archivos típicos:** `formatCurrency.ts`, `localStorageService.ts`, `useCart.ts`, `useMenu.ts`, `calculateTax.ts`, `tokens.ts`, `business.ts`, `dictionaries/en.ts`
 **Impacto de un cambio:** Medio-Alto — una utilidad compartida puede afectar a múltiples features.
 
 ---
@@ -83,10 +91,11 @@ La propiedad de un archivo no implica acceso exclusivo. Implica **responsabilida
 
 | Dominio | Ruta(s) | Propietario Lógico | Nivel de Riesgo | Requiere ADR |
 | :--- | :--- | :--- | :--- | :--- |
+| Boundary Modules | `apps/restaurant-os/`, `apps/restaurant-experience/` | Arquitecto Principal | Alto | Sí |
 | UI | `src/components/ui/` | Agente de UI | Bajo | No |
 | Features | `src/components/features/` | Agente de Feature | Medio | Solo si nueva feature |
-| Routing | `src/App.tsx`, `src/pages/` | Arquitecto Principal | Alto | Sí |
-| Utilities | `src/utils/`, `src/services/`, `src/hooks/` | Ing. de Servicios | Medio-Alto | Solo si nueva abstracción |
+| Routing | `src/app/` | Arquitecto Principal | Alto | Sí |
+| Utilities | `src/utils/`, `src/services/`, `src/hooks/`, `src/lib/`, `src/constants/`, `src/localization/`, `src/design-system/` | Ing. de Servicios | Medio-Alto | Solo si nueva abstracción |
 | Configuration | `/`, `src/index.css` | Agente de Infra | Crítico | **Siempre** |
 | Documentation | `project-docs/*.md` | Agente de Gobernanza | Medio | No (solo reporte) |
 | Governance | `AGENTS.md`, reglas | Supervisor Humano | Crítico | **Siempre** |

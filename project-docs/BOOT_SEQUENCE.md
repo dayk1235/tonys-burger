@@ -2,6 +2,8 @@
 
 Este documento es la fuente única de verdad para el procedimiento de arranque que todo agente debe ejecutar antes de modificar cualquier archivo en el repositorio **Tony Burgers**.
 
+**IMPORTANT:** The canonical execution protocol (14-step workflow, all laws, Product Reasoning Layer, report format) is defined in `project-docs/11-protocol/EXECUTION_PROTOCOL.md`. This document covers only the boot sequence itself.
+
 **Ley Aplicable:** LAW_001 — DOCUMENTATION FIRST
 
 ---
@@ -48,6 +50,22 @@ Ejecutar en orden. No saltar ningún paso.
 
 ---
 
+### STEP 10 — Product Reasoning Layer
+**Ejecutar:** El agente debe producir el análisis completo del PRODUCT REASONING LAYER.
+**Definición:** `project-docs/11-protocol/EXECUTION_PROTOCOL.md` (Part IV — 12 sections)
+**Propósito:** Antes de cualquier acción, el agente debe razonar como Chief Product Architect — evaluando impacto de producto, experiencia, cognición, diseño, compatibilidad futura, conocimiento, riesgo, alternativas, confianza, deuda técnica y evolución del producto.
+
+**Documentos de referencia obligatorios para este paso:**
+- `project-docs/00-vision/THE_CONSTITUTION_OF_RESTAURANT_OS.md`
+- `project-docs/00-vision/PRODUCT_PRINCIPLES.md`
+- `project-docs/00-vision/RESTAURANT_OS_DESIGN_LANGUAGE.md`
+- `project-docs/00-vision/RESTAURANT_OS_VISUAL_SYSTEM.md`
+- `project-docs/00-vision/AMBIENT_MOTION_SYSTEM.md`
+- `project-docs/00-vision/RESTAURANT_OS_MATERIAL_SYSTEM.md`
+- `project-docs/00-vision/RESTAURANT_OS_COGNITIVE_BEHAVIORAL_SYSTEM.md`
+
+---
+
 ## Declaración Obligatoria (LAW_024)
 
 Antes de comenzar la implementación, el agente debe emitir la siguiente declaración:
@@ -65,6 +83,7 @@ Documents Read:
 ✓ MEMORY: PROJECT_MEMORY
 ✓ ACTIVE WORK: PHASE_DEFINITIONS
 ✓ ACTIVE WORK: SCOPE_BOUNDARIES
+✓ STEP 10: PRODUCT REASONING LAYER
 
 Relevant Constraints:
 - [Detallar restricciones y reglas críticas que impacten la tarea]
@@ -96,6 +115,7 @@ Affected Deliverables:
 Antes de dar por concluida la secuencia de arranque, validar que:
 
 - [ ] He leído VISION, ARCHITECTURE, ROADMAP, AI_RULES, REPOSITORY_GOVERNANCE, FOLDER_LAWS, PROJECT_MEMORY, PHASE_DEFINITIONS y SCOPE_BOUNDARIES.
+- [ ] He producido el Product Reasoning Layer (12 secciones).
 - [ ] He emitido la declaración formal (LAW_024).
 - [ ] He declarado la fase activa (LAW_029).
 - [ ] Conozco las restricciones operativas y las dependencias del proyecto.
