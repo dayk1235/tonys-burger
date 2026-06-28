@@ -115,6 +115,8 @@ export class AttentionFactory {
     const scoringFactors = defaultScoringFactors();
     scoringFactors.baseScore = input.urgency * 0.25 + input.importance * 0.25 + input.businessValue * 0.2 + input.humanValue * 0.15 + input.risk * 0.1 + input.opportunity * 0.05;
 
+    const attrs: Record<string, unknown> = {};
+    if (input.businessId) attrs.businessId = input.businessId;
     const metadata: AttentionMetadata = {
       totalAllocations: 0,
       totalFocusDuration: 0,
@@ -123,7 +125,7 @@ export class AttentionFactory {
       starveBoostCount: 0,
       decayCycles: 0,
       tags: [],
-      attributes: {},
+      attributes: attrs,
     };
 
     return {

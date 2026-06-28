@@ -166,14 +166,10 @@ export class AttentionPipeline {
     this.queue.enqueue(queued);
 
     await this.emitEvent(ATTENTION_EVENTS.OPERATION_PRIORITIZED, {
-      attentionId: queued.id,
-      name: queued.identity.name,
-      category: queued.identity.category,
-      stage: "QUEUED",
-      priority: queued.priority,
-      allocation: queued.allocation,
+      attention: { ...queued },
       operation: "PRIORITIZE",
       timestamp: new Date().toISOString(),
+      version: queued.versions.length,
     });
 
     if (this.auditPipeline) {
@@ -493,15 +489,12 @@ export class AttentionPipeline {
   private async emitLifecycleEvent(attention: Attention): Promise<void> {
     const eventName = getAttentionLifecycleEventName(attention.stage);
     if (!eventName) return;
+    const operation = attention.stage === "ARCHIVED" ? "ARCHIVE" : "RELEASE";
     await this.emitEvent(eventName, {
-      attentionId: attention.id,
-      name: attention.identity.name,
-      category: attention.identity.category,
-      stage: attention.stage,
-      priority: attention.priority,
-      allocation: attention.allocation,
-      operation: attention.stage === "ARCHIVED" ? "ARCHIVE" : "RELEASE" as string,
+      attention: { ...attention },
+      operation,
       timestamp: new Date().toISOString(),
+      version: attention.versions.length,
     });
   }
 }

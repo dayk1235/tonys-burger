@@ -32,6 +32,7 @@ project-docs/
 ├── 22-cognitive-engine-contract/  # Contrato constitucional entre motores cognitivos (1 documento)
 ├── 22-cognitive-atlas/            # Capa maestra de navegación (1 documento)
 ├── 23-runtime-architecture/       # Arquitectura de ejecución del Runtime (1 documento)
+├── 24-decision-constitution/      # Constitución de la Decisión (1 documento)
 ├── backlog/              # Futuras oportunidades (LAW 27)
 ├── technical-debt/       # Registro de deuda técnica (LAW 29)
 ├── BOOT_SEQUENCE.md      # Secuencia de arranque obligatoria para agentes
@@ -68,6 +69,7 @@ project-docs/
 | `22-cognitive-engine-contract/` | Contrato constitucional entre motores cognitivos — 28 partes, 55 principios constitucionales, 380 invariantes (25 categorías), 40 relaciones, 18 políticas, 15 dimensiones de calidad, 29 modos de fallo, 15 mecanismos de recuperación, 18 contratos de motor (Observation a Human Experience), 11 ejemplos de negocio, tubería cognitiva canónica con 8 ramas, reglas de comunicación permitida y prohibida, filosofía de evolución, degradación elegante, verificación de consistencia | COGNITIVE_ENGINE_CONTRACT |
 | `22-cognitive-atlas/` | Capa maestra de navegación — 30 partes + 1 apéndice, 4,000+ líneas. Mapa global, gráficos de dependencia, atlas de eventos de negocio (15 tipos), atlas de experiencia humana (12 roles), navegación semántica (10 dimensiones), 48 entradas de concepto, 28 entradas de problema, 7 matrices de navegación, 9 escenarios operativos, 25 leyes del atlas, verificación de consistencia contra 22 documentos fuente. Tecnológicamente agnóstico. | COGNITIVE_ATLAS |
 | `23-runtime-architecture/` | Arquitectura de ejecución del Runtime — 34 partes + apéndice. Puente entre la arquitectura constitucional y la implementación. Define cómo los 18 motores cognitivos viven, se comunican, fallan, se recuperan y evolucionan dentro del Runtime. Tecnológicamente agnóstico. Sin framework, lenguaje o implementación. | RUNTIME_ARCHITECTURE |
+| `24-decision-constitution/` | Constitución de la Decisión — 15 partes + 6 apéndices. Filosofía, 55 principios, 340 invariantes, ciclo de vida de 15 etapas, 15 dimensiones de evaluación, DecisionEnvelope, teoría de reversibilidad, marco de impacto humano, modelo ético, 30 modos de fallo, modelo de recuperación, 7 contratos de relación, 20 ejemplos de negocio. Tecnológicamente agnóstico. | DECISION_CONSTITUTION |
 | `backlog/` | Oportunidades futuras descubiertas durante implementación (LAW 27) | — |
 | `technical-debt/` | Registro de deuda técnica y shortcuts (LAW 29) | — |
 

@@ -439,6 +439,244 @@ When a shortcut is taken, register it in `project-docs/technical-debt/`. Each en
 **LAW 30 — Executive Completion Report**
 Every completed task must end with the LAW 30 format (Part VII).
 
+**LAW 56 — VALIDATION TASK SPECIFICATION**
+Every Validation Task shall follow a standardized specification containing all required sections: Validation Task ID, Title, Dead End, Context, Objective, Scope (STRICT), Out of Scope, Architectural Constraints, Applicable Laws, Implementation Notes, Success Criteria, Verification Steps, Deliverables, and Stop Condition. Every Validation Task output shall finish with a Pipeline Status Report using the Pipeline Status Canonical Template (LAW 60). A task without a complete specification is invalid and must not be executed.
+
+**LAW 57 — VERTICAL INTEGRATION**
+Validation Season progresses only through vertical integration. Business value is created by connecting existing capabilities, not by creating new isolated capabilities. Every Validation Task removes exactly one Dead End and connects exactly one additional layer. Validation always progresses from the user toward cognition. Horizontal expansion is forbidden while a vertical Dead End exists. Canonical order: Customer → Landing → API → Runtime → Observation → Event Bus → Pattern → Memory → Knowledge → Attention → Reasoning → Decision → Dashboard.
+
+**LAW 58 — SPECIFICATION ONCE**
+The process specification exists only once. Validation Tasks instantiate the specification; they never duplicate it. Validation philosophy lives in one place. The Validation Task Specification is the canonical template. Validation Tasks only fill the template. Repetition of process documentation is forbidden unless the specification changes.
+
+**LAW 60 — PIPELINE STATUS REPORT**
+Every completed Validation Task shall report the current operational state of the Cognitive Pipeline using the Pipeline Status Report format. Validation Season is measured by the number of connected operational layers, not by completed code. The Pipeline Status Report is the canonical progress indicator.
+
+A layer may only be marked as ✅ Connected when a functional connection has been verified through running code. The mere existence of an Engine, Runtime, or module is NOT sufficient. If an Engine exists but does not yet receive real data from the Pipeline, it must remain as ⬜ Not activated or 🟨 Alive but not connected as appropriate.
+
+The report shall reflect the real implementation state after the completed task. It shall never speculate about future work. It shall never mark a layer as connected unless the connection has been verified.
+
+Every Pipeline Status Report shall follow the Pipeline Status Canonical Template:
+
+```
+PIPELINE STATUS
+
+Customer                  {state}
+Landing                   {state}
+Orders API                {state}
+Runtime                   {state}
+Observation               {state}
+Event Bus                 {state}
+Pattern                   {state}
+Memory                    {state}
+Knowledge                 {state}
+Attention                 {state}
+Reasoning                 {state}
+Decision                  {state}
+Dashboard                 {state}
+
+Pipeline Completion
+Connected: {X} / 13
+Alive: {X} / 13
+Pending: {X} / 13
+
+Validation Sprint Progress
+VS0-001 {status}
+VS0-002 {status}
+VS0-003 {status}
+VS0-004 {status}
+VS0-005 {status}
+VS0-006 {status}
+VS0-007 {status}
+VS0-008 {status}
+VS0-009 {status}
+VS0-010 {status}
+VS0-011 {status}
+VS0-012 {status}
+```
+
+State values: ✅ Connected, 🟨 Alive but not connected, ⬜ Not activated.
+Sprint status values: ✅ Completed, 🔄 In progress, ⬜ Not started.
+
+**LAW 61 — CONTROLLED VALIDATION EVIDENCE**
+Starting from CV-005, every Controlled Validation scenario MUST include the following block:
+
+```
+EXPECTED PIPELINE BEHAVIOR
+
+Observation
+- Expected result
+
+Pattern
+- Expected result
+
+Memory
+- Expected result
+
+Dashboard
+- Expected result
+
+Expected Result
+- Expected system behavior
+```
+
+This block is the canonical evidence declaration for the scenario. It documents what each cognitive layer should produce when the scenario is executed. It does not modify code, Runtime, Engines, Dashboard, Endpoints, or existing fixtures.
+
+**LAW 62 — VALIDATION SPRINT METHODOLOGY**
+Toda implementación de Restaurant OS deberá seguir obligatoriamente el siguiente ciclo:
+
+```
+Planning
+    ↓
+Validation Sprint Task
+    ↓
+Controlled Validation
+    ↓
+Audit
+    ↓
+Closing Report
+    ↓
+Siguiente Validation Task
+```
+
+Queda prohibido:
+
+- Saltar etapas
+- Acumular múltiples Dead Ends en una misma Validation Task
+- Introducir funcionalidades fuera del alcance definido
+- Considerar terminada una Validation Task sin evidencia verificable
+
+Toda Validation Task deberá producir:
+
+- Evidencia funcional
+- Controlled Validation
+- Audit
+- Closing Report
+
+La evidencia siempre tendrá prioridad sobre las afirmaciones.
+
+La especificación completa de la metodología se encuentra en:
+`project-docs/11-protocol/VALIDATION_SPRINT_METHODOLOGY.md`
+
+**LAW 63 — ENGINE IMPLEMENTATION STANDARD**
+Todo nuevo Engine Cognitivo deberá implementarse siguiendo el estándar oficial documentado en:
+
+`project-docs/11-protocol/ENGINE_IMPLEMENTATION_STANDARD.md`
+
+Queda prohibido:
+
+- Inventar estructuras diferentes al estándar
+- Omitir archivos obligatorios (Types, Contracts, Errors, Validator, Pipeline, Engine, index)
+- Integrar un Engine sin Validation Sprint
+- Integrar un Engine sin Smoke Test
+- Integrar un Engine sin Audit
+- Integrar un Engine sin Closing Report
+
+La consistencia arquitectónica tendrá prioridad sobre preferencias individuales.
+
+**LAW 64 — DESIGN BEFORE IMPLEMENTATION**
+
+Todo contrato arquitectónico considerado Core Architecture deberá aprobar obligatoriamente el siguiente ciclo antes de cualquier implementación:
+
+```
+Design
+    ↓
+Specification
+    ↓
+Architecture Design Review (ADR)
+    ↓
+Approval
+    ↓
+Freeze
+    ↓
+Implementation
+    ↓
+Validation
+    ↓
+Audit
+    ↓
+Certification
+```
+
+Ninguna implementación podrá comenzar mientras el contrato correspondiente no haya sido aprobado mediante ADR y posteriormente congelado oficialmente.
+
+Queda prohibido:
+
+- Implementar contratos sin Specification
+- Implementar contratos sin ADR
+- Modificar contratos congelados durante una implementación
+- Romper compatibilidad del contrato congelado
+
+Una vez congelado un contrato:
+
+- Cambios compatibles → nueva versión MINOR
+- Cambios incompatibles → nueva versión MAJOR
+
+Todos los Adapters, Engines y componentes deberán consumir exclusivamente contratos oficialmente congelados.
+
+Esta ley aplica a:
+
+- Canonical Events
+- Runtime Contracts
+- Engine Contracts
+- Adapter Contracts
+- API Contracts
+- Shared Models
+
+El incumplimiento invalida automáticamente cualquier Validation Sprint relacionado.
+
+**LAW 65 — SPRINT COMPLETION RULE**
+
+Todo Intelligence Sprint deberá completarse como una unidad cerrada de ingeniería.
+
+Queda estrictamente prohibido iniciar un nuevo Intelligence Sprint mientras el Sprint anterior no haya sido finalizado oficialmente.
+
+El ciclo obligatorio será:
+
+```
+Planning
+    ↓
+Specification
+    ↓
+Architecture Review (cuando aplique)
+    ↓
+Freeze (cuando aplique)
+    ↓
+Implementation
+    ↓
+Controlled Validation
+    ↓
+Audit
+    ↓
+Closing Report
+    ↓
+Next Sprint
+```
+
+Un Sprint únicamente podrá considerarse COMPLETED cuando existan todos los siguientes elementos:
+
+- Sprint Plan
+- Implementación terminada
+- Typecheck exitoso
+- Tests exitosos
+- Code Review aprobado
+- Controlled Validation aprobada
+- Audit aprobado
+- Closing Report generado
+- Sin regresiones abiertas
+- Sin Dead Ends pendientes
+
+A partir del Closing Report el Sprint queda oficialmente congelado.
+
+Ningún cambio funcional deberá agregarse posteriormente.
+
+Toda nueva funcionalidad deberá comenzar en un Sprint nuevo.
+
+**LAW 066 — SINGLE DEAD END RESOLUTION**
+
+Cada Validation Sprint solo puede resolver un Dead End.
+
+Si durante la ejecución se detectan problemas adicionales, oportunidades de mejora o refactors posibles, estos deberán registrarse como riesgos o futuros Dead Ends, pero nunca resolverse dentro del Sprint actual. La finalización de un Sprint implica detener la ejecución inmediatamente después de cumplir el objetivo definido.
+
 ---
 
 ## PART VI — COMMUNICATION STYLE

@@ -1,0 +1,75 @@
+{
+  "scenario": "case-004-duplicate-order",
+  "description": "Duplicate order — same payload sent twice within 1 second, sharing the same requestId to prepare for future idempotency validation. Current endpoint will accept both (no dedup yet).",
+  "requestId": "dup-req-20260627-001",
+  "attempts": [
+    {
+      "attempt": 1,
+      "timestamp": "2026-06-27T14:00:00.000Z",
+      "payload": {
+        "items": [
+          {
+            "id": "smash-double",
+            "quantity": 2
+          },
+          {
+            "id": "truffle-fries",
+            "quantity": 1
+          },
+          {
+            "id": "milkshake-chocolate",
+            "quantity": 2
+          }
+        ],
+        "customer": {
+          "name": "Ricardo Nava",
+          "phone": "+52 55 2468 1357"
+        }
+      }
+    },
+    {
+      "attempt": 2,
+      "timestamp": "2026-06-27T14:00:01.000Z",
+      "payload": {
+        "items": [
+          {
+            "id": "smash-double",
+            "quantity": 2
+          },
+          {
+            "id": "truffle-fries",
+            "quantity": 1
+          },
+          {
+            "id": "milkshake-chocolate",
+            "quantity": 2
+          }
+        ],
+        "customer": {
+          "name": "Ricardo Nava",
+          "phone": "+52 55 2468 1357"
+        }
+      }
+    }
+  ],
+  "post_api_orders_payload": {
+    "items": [
+      {
+        "id": "smash-double",
+        "quantity": 2
+      },
+      {
+        "id": "truffle-fries",
+        "quantity": 1
+      },
+      {
+        "id": "milkshake-chocolate",
+        "quantity": 2
+      }
+    ],
+    "customer": {
+      "name": "Ricardo Nava",
+      "phone": "+52 55 2468 1357"
+    }
+  }
+}

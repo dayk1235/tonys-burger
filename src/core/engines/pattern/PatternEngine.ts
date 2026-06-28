@@ -10,12 +10,13 @@ import {
   PATTERN_ENGINE_NAME,
   PATTERN_ENGINE_CLASSIFICATION,
   PATTERN_ENGINE_CONTRACT_VERSION,
-  PatternEventPayload,
   ObservationRef,
   Pattern,
 } from "./PatternTypes";
 
 import { PatternPipeline } from "./PatternPipeline";
+import { PatternEventNames } from "./PatternEvents";
+import { ObservationEventNames } from "../observation/ObservationEvents";
 import { DEFAULT_PATTERN_DEFINITIONS } from "./PatternDefinitions";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
@@ -116,11 +117,35 @@ export class PatternEngine implements CognitiveEngine {
   private subscribeToObservations(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("observation.lifecycle.historical_committed", async (payload) => {
+    this.eventBus.subscribe(ObservationEventNames.HISTORICAL_COMMITTED, async (payload) => {
       try {
-        const obsPayload = payload as Record<string, unknown>;
-        const data = obsPayload.data as Record<string, unknown> | undefined;
-        if (!data) return;
+        const p = payload as Record<string, unknown>;
+        const observation = (p.entity ?? p.observation) as Record<string, unknown> | undefined;
+        let data: Record<string, unknown>;
+
+        if (observation) {
+          data = {
+            id: observation.id,
+            category: observation.category,
+            timestamp: observation.timestamp,
+            businessId: observation.businessId,
+            source: observation.source,
+            payload: observation.payload,
+            stage: observation.stage,
+          };
+        } else {
+          const flatData = p.data as Record<string, unknown> | undefined;
+          if (!flatData) return;
+          data = {
+            id: p.observationId,
+            category: flatData.category,
+            timestamp: flatData.timestamp,
+            source: { id: flatData.sourceId },
+            payload: flatData.payload,
+            stage: p.stage,
+          };
+        }
+
         const ref = this.toObservationRef(data);
         await this.pipeline.processObservation(ref);
       } catch {
@@ -130,14 +155,15 @@ export class PatternEngine implements CognitiveEngine {
   }
 
   private toObservationRef(input: Record<string, unknown>): ObservationRef {
+    const source = (input.source as Record<string, unknown>) || {};
     const payload = (input.payload as Record<string, unknown>) || {};
     return {
       id: (input.id as string) || `obs_${Date.now()}`,
       category: (input.category as string) || "OPERATIONAL",
       timestamp: (input.timestamp as string) || new Date().toISOString(),
       businessId: (input.businessId as string) || "default",
-      sourceType: ((input.source as Record<string, unknown>)?.type as string) || "SYSTEM_LOG",
-      trustScore: ((input.source as Record<string, unknown>)?.trustScore as number) || 0.5,
+      sourceType: (source.type as string) || "SYSTEM_LOG",
+      trustScore: (source.trustScore as number) || 0.5,
       payload,
       stage: (input.stage as string) || "HISTORICAL",
     };

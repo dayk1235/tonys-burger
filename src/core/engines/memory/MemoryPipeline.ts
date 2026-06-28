@@ -354,7 +354,7 @@ export class MemoryPipeline {
 
   private async emitEvent(
     eventName: string,
-    payload: import("./MemoryTypes").MemoryEventPayload
+    payload: Record<string, unknown>
   ): Promise<void> {
     if (!this.eventBus) return;
     try {
@@ -368,16 +368,28 @@ export class MemoryPipeline {
     const eventName = getMemoryLifecycleEventName(memory.stage);
     if (!eventName) return;
 
+    const operation = this.getMemoryOperation(memory.stage);
     await this.emitEvent(eventName, {
-      memoryId: memory.id,
-      name: memory.identity.name,
-      category: memory.identity.category,
-      stage: memory.stage,
-      strength: memory.strength,
-      confidence: memory.confidence,
-      recallScore: memory.recallScore,
-      operation: memory.stage === "ARCHIVED" ? "ARCHIVE" : "CONSOLIDATE",
+      memory: { ...memory },
+      businessId: (memory.metadata.attributes?.businessId as string) || "",
+      operation,
       timestamp: new Date().toISOString(),
+      version: memory.versions.length,
     });
+  }
+
+  private getMemoryOperation(stage: MemoryStage): string {
+    const map: Record<string, string> = {
+      WORKING: "CREATE",
+      CANDIDATE: "PROMOTE",
+      SHORT_TERM: "ESTABLISH",
+      STABILIZING: "STABILIZE",
+      CONSOLIDATED: "CONSOLIDATE",
+      LONG_TERM: "PROMOTE_LONG_TERM",
+      SEMANTIC: "SEMANTIC",
+      HISTORICAL: "ARCHIVE",
+      ARCHIVED: "ARCHIVE",
+    };
+    return map[stage] || "UPDATE";
   }
 }

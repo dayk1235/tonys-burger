@@ -4,7 +4,7 @@ export const BUSINESS_CONFIG = {
   locationName: "Tony's Burger Centro",
 
   whatsapp: {
-    number: "",
+    number: "5215584507458",
     message: "¡Hola! Quiero pedir unas hamburguesas para llevar 🙌",
   },
 

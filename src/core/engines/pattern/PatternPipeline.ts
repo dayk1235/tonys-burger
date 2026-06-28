@@ -21,7 +21,7 @@ import { PatternSequence } from "./PatternSequence";
 import { PatternRelationships } from "./PatternRelationships";
 import { PatternRegistry } from "./PatternRegistry";
 import { PatternMetrics } from "./PatternMetrics";
-import { PatternEventNames, createPatternEvent } from "./PatternEvents";
+import { PatternEventNames } from "./PatternEvents";
 import { InsufficientEvidenceError } from "./PatternErrors";
 
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
@@ -130,11 +130,8 @@ export class PatternPipeline {
     this.metrics.recordDetection(def.category);
     this.metrics.recordConfidence(confidenceScore);
 
-    await this.emitEvent(PatternEventNames.POTENTIAL_DETECTED, pattern.id, pattern.stage, {});
-    await this.emitEvent(PatternEventNames.EMERGING_CONFIRMED, stage2.id, stage2.stage, {
-      confidence: confidenceScore,
-      strength: stage2.strength,
-    });
+    await this.emitEvent(PatternEventNames.POTENTIAL_DETECTED, pattern);
+    await this.emitEvent(PatternEventNames.EMERGING_CONFIRMED, stage2);
 
     return stage2;
   }
@@ -168,10 +165,7 @@ export class PatternPipeline {
 
     await this.registry.storePattern(updated);
     this.metrics.recordConfidence(updated.confidence);
-    await this.emitEvent(PatternEventNames.PATTERN_UPDATED, updated.id, updated.stage, {
-      newEvidenceCount: newEvidence.length,
-      totalEvidenceCount: updated.evidence.length,
-    });
+    await this.emitEvent(PatternEventNames.PATTERN_UPDATED, updated);
 
     return updated;
   }
@@ -199,7 +193,7 @@ export class PatternPipeline {
       await this.registry.storePattern(staged);
       this.metrics.recordCorrelationFound();
       this.metrics.recordDetection("CORRELATION");
-      await this.emitEvent(PatternEventNames.CORRELATION_FOUND, staged.id, staged.stage, result.metadata);
+      await this.emitEvent(PatternEventNames.CORRELATION_FOUND, staged);
     }
   }
 
@@ -231,7 +225,7 @@ export class PatternPipeline {
       await this.registry.storePattern(staged);
       this.metrics.recordTrendDetected();
       this.metrics.recordDetection(direction === "POSITIVE" ? "POSITIVE_TREND" : "NEGATIVE_TREND");
-      await this.emitEvent(PatternEventNames.TREND_DETECTED, staged.id, staged.stage, result.metadata);
+      await this.emitEvent(PatternEventNames.TREND_DETECTED, staged);
     }
   }
 
@@ -261,7 +255,7 @@ export class PatternPipeline {
       await this.registry.storePattern(staged);
       this.metrics.recordAnomalyDetected();
       this.metrics.recordDetection("ANOMALY");
-      await this.emitEvent(PatternEventNames.ANOMALY_DETECTED, staged.id, staged.stage, result.metadata);
+      await this.emitEvent(PatternEventNames.ANOMALY_DETECTED, staged);
     }
   }
 
@@ -291,7 +285,7 @@ export class PatternPipeline {
       await this.registry.storePattern(staged);
       this.metrics.recordSequenceDiscovered();
       this.metrics.recordDetection("SEQUENCE");
-      await this.emitEvent(PatternEventNames.SEQUENCE_DISCOVERED, staged.id, staged.stage, result.metadata);
+      await this.emitEvent(PatternEventNames.SEQUENCE_DISCOVERED, staged);
     }
   }
 
@@ -309,9 +303,7 @@ export class PatternPipeline {
     this.metrics.recordStageTransition(existing.stage, targetStage);
 
     const eventName = this.getEventNameForStage(targetStage);
-    await this.emitEvent(eventName, updated.id, targetStage, {
-      previousStage: existing.stage,
-    });
+    await this.emitEvent(eventName, updated);
 
     return updated;
   }
@@ -328,10 +320,7 @@ export class PatternPipeline {
 
     await this.registry.storePattern(deprecated);
     this.metrics.recordStageTransition(existing.stage, "DEPRECATED");
-    await this.emitEvent(PatternEventNames.DEPRECATED, deprecated.id, "DEPRECATED", {
-      reason,
-      previousStage: existing.stage,
-    });
+    await this.emitEvent(PatternEventNames.DEPRECATED, deprecated);
 
     return deprecated;
   }
@@ -348,6 +337,10 @@ export class PatternPipeline {
     this.registry.registerDefinition(def);
   }
 
+  getRecentObservations(): readonly ObservationRef[] {
+    return this.recentObservations;
+  }
+
   private addObservation(observation: ObservationRef): void {
     this.recentObservations.push(observation);
     if (this.recentObservations.length > this.maxRecentObservations) {
@@ -355,13 +348,37 @@ export class PatternPipeline {
     }
   }
 
-  private async emitEvent(eventName: string, patternId: string, stage: PatternStage, data: Record<string, unknown>): Promise<void> {
+  private async emitEvent(eventName: string, pattern: Pattern): Promise<void> {
     if (!this.eventBus) return;
-    const event = createPatternEvent(eventName, "PatternEngine", patternId, stage, data);
+    const operation = this.getPatternOperation(eventName);
     await this.eventBus.emit(eventName, {
-      ...event,
-      payload: { patternId, stage, data },
+      pattern: { ...pattern },
+      operation,
+      timestamp: new Date().toISOString(),
+      version: pattern.versions.length,
     });
+  }
+
+  private getPatternOperation(eventName: string): string {
+    const map: Record<string, string> = {
+      [PatternEventNames.POTENTIAL_DETECTED]: "DETECT",
+      [PatternEventNames.CANDIDATE_EVALUATED]: "EVALUATE",
+      [PatternEventNames.EMERGING_CONFIRMED]: "CONFIRM",
+      [PatternEventNames.SUPPORTED_ESTABLISHED]: "ESTABLISH",
+      [PatternEventNames.VALIDATED_CONFIRMED]: "VALIDATE",
+      [PatternEventNames.STRENGTHENING_OBSERVED]: "STRENGTHEN",
+      [PatternEventNames.WEAKENING_OBSERVED]: "WEAKEN",
+      [PatternEventNames.DEPRECATED]: "DEPRECATE",
+      [PatternEventNames.HISTORICAL_ARCHIVED]: "ARCHIVE",
+      [PatternEventNames.CORRELATION_FOUND]: "CORRELATE",
+      [PatternEventNames.TREND_DETECTED]: "TREND",
+      [PatternEventNames.ANOMALY_DETECTED]: "ANOMALY",
+      [PatternEventNames.SEQUENCE_DISCOVERED]: "SEQUENCE",
+      [PatternEventNames.PATTERN_UPDATED]: "UPDATE",
+      [PatternEventNames.PATTERN_CONFLICT]: "CONFLICT",
+      [PatternEventNames.PATTERN_MERGED]: "MERGE",
+    };
+    return map[eventName] || "UNKNOWN";
   }
 
   private getEventNameForStage(stage: PatternStage): string {

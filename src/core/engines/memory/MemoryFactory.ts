@@ -76,7 +76,7 @@ export class MemoryFactory {
       lastStrengthenedAt: now,
       decayRate: 0.1,
       tags: [],
-      attributes: {},
+      attributes: { businessId: input.businessId },
     };
 
     return {

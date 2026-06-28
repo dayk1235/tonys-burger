@@ -320,17 +320,30 @@ export class ObservationPipeline {
   }
 
   private async emitEvent(eventName: string, obs: Observation): Promise<void> {
-    if (this.eventBus) {
-      await this.eventBus.emit(eventName, {
-        observationId: obs.id,
-        stage: obs.stage,
-        data: {
-          category: obs.category,
-          timestamp: obs.timestamp,
-          sourceId: obs.source.id,
-          payload: obs.payload
-        }
-      });
-    }
+    if (!this.eventBus) return;
+    const operation = this.getObservationOperation(eventName);
+    const entity = { ...obs };
+    await this.eventBus.emit(eventName, {
+      entity,
+      observation: entity,
+      operation,
+      timestamp: new Date().toISOString(),
+      version: 1,
+    });
+  }
+
+  private getObservationOperation(eventName: string): string {
+    const map: Record<string, string> = {
+      [ObservationEventNames.POTENTIAL_DETECTED]: "DETECT",
+      [ObservationEventNames.CANDIDATE_VERIFIED]: "VERIFY",
+      [ObservationEventNames.CONTEXT_ASSIGNED]: "CONTEXTUALIZE",
+      [ObservationEventNames.HISTORICAL_COMMITTED]: "COMMIT",
+      [ObservationEventNames.DEPRECATED]: "DEPRECATE",
+      [ObservationEventNames.CORRECTED]: "CORRECT",
+      [ObservationEventNames.PATTERN_EVIDENCE_LINKED]: "LINK_PATTERN",
+      [ObservationEventNames.KNOWLEDGE_EVIDENCE_LINKED]: "LINK_KNOWLEDGE",
+      [ObservationEventNames.ARCHIVED]: "ARCHIVE",
+    };
+    return map[eventName] || "UNKNOWN";
   }
 }

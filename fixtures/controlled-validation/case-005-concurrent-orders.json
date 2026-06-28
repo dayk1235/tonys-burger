@@ -1,0 +1,140 @@
+{
+  "scenario": "case-005-concurrent-orders",
+  "description": "Concurrent orders — 8 valid orders arriving within ~200ms, each with unique requestId and different customers. Simulates lunch rush concurrency at Tony's Burger.",
+  "base_timestamp": "2026-06-27T13:45:00.000Z",
+  "orders": [
+    {
+      "requestId": "cnc-20260627-001",
+      "ts_offset_ms": 0,
+      "payload": {
+        "items": [
+          { "id": "smash-double", "quantity": 1 },
+          { "id": "truffle-fries", "quantity": 1 }
+        ],
+        "customer": { "name": "Lucía Herrera", "phone": "+52 55 1111 0001" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-002",
+      "ts_offset_ms": 50,
+      "payload": {
+        "items": [
+          { "id": "classic-melt", "quantity": 2 },
+          { "id": "soda-cola", "quantity": 2 }
+        ],
+        "customer": { "name": "Pedro Sánchez", "phone": "+52 55 1111 0002" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-003",
+      "ts_offset_ms": 80,
+      "payload": {
+        "items": [
+          { "id": "spicy-chicken", "quantity": 1 },
+          { "id": "onion-rings", "quantity": 1 },
+          { "id": "milkshake-vainilla", "quantity": 1 }
+        ],
+        "customer": { "name": "Ana Torres", "phone": "+52 55 1111 0003" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-004",
+      "ts_offset_ms": 120,
+      "payload": {
+        "items": [
+          { "id": "smoked-brisket", "quantity": 1 },
+          { "id": "truffle-fries", "quantity": 2 }
+        ],
+        "customer": { "name": "Jorge Ruiz", "phone": "+52 55 1111 0004" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-005",
+      "ts_offset_ms": 140,
+      "payload": {
+        "items": [
+          { "id": "smash-double", "quantity": 3 },
+          { "id": "soda-orange", "quantity": 3 }
+        ],
+        "customer": { "name": "Carmela Díaz", "phone": "+52 55 1111 0005" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-006",
+      "ts_offset_ms": 160,
+      "payload": {
+        "items": [
+          { "id": "classic-melt", "quantity": 1 },
+          { "id": "spicy-chicken", "quantity": 1 },
+          { "id": "milkshake-chocolate", "quantity": 2 }
+        ],
+        "customer": { "name": "Diego Rivas", "phone": "+52 55 1111 0006" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-007",
+      "ts_offset_ms": 190,
+      "payload": {
+        "items": [
+          { "id": "smoked-brisket", "quantity": 2 },
+          { "id": "truffle-fries", "quantity": 1 },
+          { "id": "soda-cola", "quantity": 2 }
+        ],
+        "customer": { "name": "Fernanda Luna", "phone": "+52 55 1111 0007" }
+      }
+    },
+    {
+      "requestId": "cnc-20260627-008",
+      "ts_offset_ms": 200,
+      "payload": {
+        "items": [
+          { "id": "smash-double", "quantity": 1 },
+          { "id": "onion-rings", "quantity": 2 },
+          { "id": "milkshake-vainilla", "quantity": 1 }
+        ],
+        "customer": { "name": "Hugo Campos", "phone": "+52 55 1111 0008" }
+      }
+    }
+  ],
+  "post_api_orders_payloads": [
+    {
+      "items": [{ "id": "smash-double", "quantity": 1 }, { "id": "truffle-fries", "quantity": 1 }],
+      "customer": { "name": "Lucía Herrera", "phone": "+52 55 1111 0001" }
+    },
+    {
+      "items": [{ "id": "classic-melt", "quantity": 2 }, { "id": "soda-cola", "quantity": 2 }],
+      "customer": { "name": "Pedro Sánchez", "phone": "+52 55 1111 0002" }
+    },
+    {
+      "items": [{ "id": "spicy-chicken", "quantity": 1 }, { "id": "onion-rings", "quantity": 1 }, { "id": "milkshake-vainilla", "quantity": 1 }],
+      "customer": { "name": "Ana Torres", "phone": "+52 55 1111 0003" }
+    },
+    {
+      "items": [{ "id": "smoked-brisket", "quantity": 1 }, { "id": "truffle-fries", "quantity": 2 }],
+      "customer": { "name": "Jorge Ruiz", "phone": "+52 55 1111 0004" }
+    },
+    {
+      "items": [{ "id": "smash-double", "quantity": 3 }, { "id": "soda-orange", "quantity": 3 }],
+      "customer": { "name": "Carmela Díaz", "phone": "+52 55 1111 0005" }
+    },
+    {
+      "items": [{ "id": "classic-melt", "quantity": 1 }, { "id": "spicy-chicken", "quantity": 1 }, { "id": "milkshake-chocolate", "quantity": 2 }],
+      "customer": { "name": "Diego Rivas", "phone": "+52 55 1111 0006" }
+    },
+    {
+      "items": [{ "id": "smoked-brisket", "quantity": 2 }, { "id": "truffle-fries", "quantity": 1 }, { "id": "soda-cola", "quantity": 2 }],
+      "customer": { "name": "Fernanda Luna", "phone": "+52 55 1111 0007" }
+    },
+    {
+      "items": [{ "id": "smash-double", "quantity": 1 }, { "id": "onion-rings", "quantity": 2 }, { "id": "milkshake-vainilla", "quantity": 1 }],
+      "customer": { "name": "Hugo Campos", "phone": "+52 55 1111 0008" }
+    }
+  ],
+  "expected_pipeline_behavior": {
+    "observation": "Must accept all 8 orders without losing events. Must generate one observation per received order (8 total).",
+    "pattern": "Must process each observation independently. Must not mix order items between customers.",
+    "memory": "Must create an independent memory entry per persisted observation (8 total).",
+    "dashboard": "Orders counter must reflect total processed orders (8). Activity Feed must show multiple events in chronological order.",
+    "expected_result": "Pipeline processes all concurrent orders correctly without data loss, duplication, or state corruption."
+  }
+}

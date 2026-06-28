@@ -4,6 +4,7 @@ import { type ReactNode } from "react";
 import { LocalizationProvider } from "@/localization";
 import { ExperienceProvider } from "@/experience";
 import { LivingBackgroundProvider } from "@/features/living-background";
+import { RuntimeProvider } from "./RuntimeProvider";
 
 /**
  * Providers — Application Providers Wrapper
@@ -12,7 +13,7 @@ import { LivingBackgroundProvider } from "@/features/living-background";
  * Order matters — providers that depend on other providers
  * must be nested inside their dependencies.
  *
- * Order: Localization → Experience → LivingBackground
+ * Order: Runtime → Localization → Experience → LivingBackground
  */
 
 interface ProvidersProps {
@@ -21,12 +22,14 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <LocalizationProvider>
-      <ExperienceProvider>
-        <LivingBackgroundProvider>
-          {children}
-        </LivingBackgroundProvider>
-      </ExperienceProvider>
-    </LocalizationProvider>
+    <RuntimeProvider>
+      <LocalizationProvider>
+        <ExperienceProvider>
+          <LivingBackgroundProvider>
+            {children}
+          </LivingBackgroundProvider>
+        </ExperienceProvider>
+      </LocalizationProvider>
+    </RuntimeProvider>
   );
 }

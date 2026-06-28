@@ -40,7 +40,8 @@ function stateToKey(state: string): string {
 /* ─── Props ──────────────────────────────────── */
 
 interface HealthHeroProps {
-  health: HealthData;
+  /** Health data to display. When undefined and not loading/empty, shows empty state */
+  health?: HealthData;
   /** When true, shows a loading skeleton instead of health data */
   loading?: boolean;
   /** When true, shows an empty state instead of health data */

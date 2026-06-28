@@ -1,6 +1,13 @@
 export { Runtime } from "./Runtime";
 export { bootstrapRuntime } from "./RuntimeBootstrap";
 
+export type {
+  CanonicalOrderEvent,
+  CanonicalOrderItem,
+  CanonicalCustomer,
+  RuntimeReceiveResult,
+} from "./CanonicalOrderEvent";
+
 export { RuntimeConfiguration } from "./RuntimeConfiguration";
 export { RuntimeClock } from "./RuntimeClock";
 export { RuntimeLifecycle } from "./RuntimeLifecycle";
@@ -8,6 +15,8 @@ export { RuntimeMetrics } from "./RuntimeMetrics";
 export { RuntimeHealth } from "./RuntimeHealth";
 
 export { EventBus } from "./EventBus";
+export type { CanonicalEvent } from "./CanonicalEvent";
+export { createCanonicalEvent } from "./CanonicalEvent";
 export { ContextBusImpl } from "./ContextBus";
 export type { ContextQueryResult } from "./ContextBus";
 export { WorkingMemory } from "./WorkingMemory";

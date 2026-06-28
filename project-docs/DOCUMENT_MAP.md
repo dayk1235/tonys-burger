@@ -273,6 +273,26 @@ Este documento es el índice maestro de todos los documentos de gobernanza del p
 
 ---
 
+## 24-decision-constitution — Decision Constitution
+
+| Document | Purpose | Dependencies |
+| :--- | :--- | :--- |
+| DECISION_CONSTITUTION.md | Canonical Decision Constitution — 15 parts + 6 appendices: Philosophy of Decision (11 sections), Principles (55 — DCP-001 to DCP-055), Invariants (340 — INV-DEC-001 to INV-DEC-340 across 14 categories), Lifecycle (15 stages with transition rules and failure modes), Dimensions (15 evaluation dimensions), DecisionEnvelope (22 required sections), Reversibility theory (3-tier classification), Human Impact framework (10 sub-dimensions), Ethical Decision Model (6 frameworks), Failure Modes (30 — FM-001 to FM-030 with detection/prevention/recovery), Recovery Model (9 strategies), Relationships (7 engine contracts), Quality Framework (10 dimensions), Business Examples (20 scenarios), Decision Vocabulary (22 terms). Appendices: State Machine, Envelope Schema, Audit Checklist (40 checks), Constitution Audit, Quality Checklist, Relationship Matrix (9×10 inter-engine communication). The constitutional specification of Decision as the consummation of cognition in Restaurant OS. | Constitution, Product Principles, Cognitive Architecture, Reasoning Engine, Cognitive Engine Contract, Business Ontology, Domain Model, Blueprint 001 |
+
+---
+
+## intelligence — Intelligence Phase (V2) Data Contracts
+
+| Document | Purpose | Dependencies |
+| :--- | :--- | :--- |
+| RESTAURANT_OS_INTELLIGENCE_ROADMAP.md | V2 Intelligence Roadmap — philosophy, objectives, 5 Intelligence Sprints (IS1–IS5), scope, non-objectives, baseline commitment | V1 Architecture (AUD-MASTER-001), V2_BASELINE |
+| DATA_SOURCES.md | 10 data sources classified (Orders, Inventory, Kitchen, Delivery, Customers, Sales, Weather, Suppliers, Promotions, Reviews) with origin, frequency, format, engine consumer | RESTAURANT_OS_INTELLIGENCE_ROADMAP |
+| ENGINE_DATA_MATRIX.md | 10×13 matrix mapping data sources to all 13 cognitive engines with consumption indicators | DATA_SOURCES, Cognitive Engine Contract |
+| V2_BASELINE.md | Official V1 baseline freeze declaration — V1 frozen as certified baseline, no architectural regression permitted | AUD-MASTER-001 |
+| **CANONICAL_ORDER_EVENT_SPEC.md** | **🏆 CANONICAL — Official Canonical Order Event contract v1.0.0. Single canonical format for all orders entering Restaurant OS. 16 sections, 31 validation rules, 6 source conversions, 3 examples. All external sources must convert to this format before entering the Cognitive Pipeline.** | Observation System, Cognitive Engine Contract, Orders API |
+
+---
+
 ## backlog — Future Opportunities
 
 | Documento | Propósito |

@@ -1,0 +1,53 @@
+{
+  "scenario": "case-002-large-order",
+  "description": "Large group order — catering-style with 10 items across multiple menu categories for an office lunch",
+  "timestamp": "2026-06-27T12:30:00.000Z",
+  "payload": {
+    "items": [
+      {
+        "id": "smash-double",
+        "quantity": 4
+      },
+      {
+        "id": "classic-melt",
+        "quantity": 3
+      },
+      {
+        "id": "smoked-brisket",
+        "quantity": 2
+      },
+      {
+        "id": "spicy-chicken",
+        "quantity": 1
+      },
+      {
+        "id": "truffle-fries",
+        "quantity": 4
+      },
+      {
+        "id": "onion-rings",
+        "quantity": 3
+      },
+      {
+        "id": "milkshake-vainilla",
+        "quantity": 3
+      },
+      {
+        "id": "milkshake-chocolate",
+        "quantity": 2
+      },
+      {
+        "id": "soda-cola",
+        "quantity": 5
+      },
+      {
+        "id": "soda-orange",
+        "quantity": 3
+      }
+    ],
+    "customer": {
+      "name": "María García — Oficina 4B",
+      "phone": "+52 55 9876 5432"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "scenario": "case-001-happy-path",
+  "description": "Happy path order — customer orders two Smash Double burgers and one Truffle Fries for pickup",
+  "timestamp": "2026-06-26T19:24:00.000Z",
+  "payload": {
+    "items": [
+      {
+        "id": "smash-double",
+        "quantity": 2
+      },
+      {
+        "id": "truffle-fries",
+        "quantity": 1
+      }
+    ],
+    "customer": {
+      "name": "Carlos Mendoza",
+      "phone": "+52 55 1234 5678"
+    }
+  }
+}

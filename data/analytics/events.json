@@ -2278,5 +2278,70 @@
     "metadata": {
       "url": "/demo"
     }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782525631202,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782525639409,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782525765811,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782525775602,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782525886676,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/demo"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782526135078,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard",
+      "referrer": "http://localhost:3000/dashboard"
+    }
+  },
+  {
+    "event_name": "page_view",
+    "timestamp": 1782526841148,
+    "session_id": "b5129592-7fbb-44bc-a86f-cf81fad6ad15",
+    "device_type": "desktop",
+    "metadata": {
+      "url": "/dashboard",
+      "referrer": "http://localhost:3000/dashboard"
+    }
   }
 ]

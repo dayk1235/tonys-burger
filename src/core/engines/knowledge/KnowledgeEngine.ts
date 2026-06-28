@@ -16,6 +16,7 @@ import {
 
 import { KnowledgePipeline } from "./KnowledgePipeline";
 import { KnowledgeValidator } from "./KnowledgeValidator";
+import { MEMORY_EVENTS } from "../memory/MemoryEvents";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -108,7 +109,7 @@ export class KnowledgeEngine implements CognitiveEngine {
   private subscribeToMemoryEvents(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("memory.lifecycle.consolidated", async (payload) => {
+    this.eventBus.subscribe(MEMORY_EVENTS.LIFECYCLE_CONSOLIDATED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
       } catch {
@@ -116,7 +117,7 @@ export class KnowledgeEngine implements CognitiveEngine {
       }
     });
 
-    this.eventBus.subscribe("memory.lifecycle.long_term_promoted", async (payload) => {
+    this.eventBus.subscribe(MEMORY_EVENTS.LIFECYCLE_LONG_TERM_PROMOTED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
       } catch {
@@ -124,7 +125,7 @@ export class KnowledgeEngine implements CognitiveEngine {
       }
     });
 
-    this.eventBus.subscribe("memory.lifecycle.semantic_established", async (payload) => {
+    this.eventBus.subscribe(MEMORY_EVENTS.LIFECYCLE_SEMANTIC_ESTABLISHED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
       } catch {

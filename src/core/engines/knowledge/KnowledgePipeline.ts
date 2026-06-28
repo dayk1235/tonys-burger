@@ -374,7 +374,7 @@ export class KnowledgePipeline {
 
   private async emitEvent(
     eventName: string,
-    payload: import("./KnowledgeTypes").KnowledgeEventPayload
+    payload: Record<string, unknown>
   ): Promise<void> {
     if (!this.eventBus) return;
     try {
@@ -388,15 +388,28 @@ export class KnowledgePipeline {
     const eventName = getKnowledgeLifecycleEventName(knowledge.stage);
     if (!eventName) return;
 
+    const operation = this.getKnowledgeOperation(knowledge.stage);
     await this.emitEvent(eventName, {
-      knowledgeId: knowledge.id,
-      name: knowledge.identity.name,
-      category: knowledge.identity.category,
-      stage: knowledge.stage,
-      confidence: knowledge.confidence,
-      integrity: knowledge.integrity,
-      operation: knowledge.stage === "ARCHIVED" ? "ARCHIVE" : "VALIDATE",
+      knowledge: { ...knowledge },
+      operation,
       timestamp: new Date().toISOString(),
+      version: knowledge.versions.length,
     });
+  }
+
+  private getKnowledgeOperation(stage: KnowledgeStage): string {
+    const map: Record<string, string> = {
+      CANDIDATE: "CREATE",
+      EXTRACTED: "EXTRACT",
+      STRUCTURED: "STRUCTURE",
+      VALIDATED: "VALIDATE",
+      GENERALIZED: "GENERALIZE",
+      SPECIALIZED: "SPECIALIZE",
+      SEMANTIC: "SEMANTIC",
+      CANONICAL: "CANONICAL",
+      HISTORICAL: "ARCHIVE",
+      ARCHIVED: "ARCHIVE",
+    };
+    return map[stage] || "UPDATE";
   }
 }

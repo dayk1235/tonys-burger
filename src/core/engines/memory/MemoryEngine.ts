@@ -16,6 +16,10 @@ import {
 
 import { MemoryPipeline } from "./MemoryPipeline";
 import { MemoryValidator } from "./MemoryValidator";
+import { MEMORY_EVENTS } from "./MemoryEvents";
+import { ObservationEventNames } from "../observation/ObservationEvents";
+import { PatternEventNames } from "../pattern/PatternEvents";
+import { EVIDENCE_EVENTS } from "../evidence/EvidenceEvents";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -42,6 +46,8 @@ export class MemoryEngine implements CognitiveEngine {
     if (this.state === "RUNNING") return;
 
     this.subscribeToEvidenceEvents();
+    this.subscribeToObservationEvents();
+    this.subscribeToPatternEvents();
 
     this.cycleInterval = setInterval(async () => {
       try {
@@ -144,7 +150,7 @@ export class MemoryEngine implements CognitiveEngine {
   private subscribeToEvidenceEvents(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("evidence.lifecycle.validated_confirmed", async (payload) => {
+    this.eventBus.subscribe(EVIDENCE_EVENTS.LIFECYCLE_VALIDATED_CONFIRMED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
       } catch {
@@ -152,12 +158,132 @@ export class MemoryEngine implements CognitiveEngine {
       }
     });
 
-    this.eventBus.subscribe("evidence.evaluation.completed", async (payload) => {
+    this.eventBus.subscribe(EVIDENCE_EVENTS.EVALUATION_COMPLETED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
       } catch {
         // silently handle
       }
     });
+  }
+
+  /**
+   * Subscribes to Observation lifecycle events (historically committed).
+   * Each confirmed observation creates a memory entry.
+   */
+  private subscribeToObservationEvents(): void {
+    if (!this.eventBus) return;
+
+    this.eventBus.subscribe(ObservationEventNames.HISTORICAL_COMMITTED, async (payload) => {
+      try {
+        const p = payload as Record<string, unknown>;
+        const observation = (p.entity ?? p.observation) as Record<string, unknown> | undefined;
+
+        if (observation) {
+          const identity = (observation.identity as Record<string, unknown>) || {};
+          await this.receiveInput({
+            evidence: {
+              id: observation.id,
+              identity: {
+                patternId: identity.id || "observation-auto",
+                patternName: identity.name || String(observation.category || "Unknown"),
+              },
+              provenance: {
+                sourceObservations: [observation.id],
+              },
+              description: `Observation: ${identity.name || observation.category} (${observation.id})`,
+              score: (observation.importance as number) || 0.5,
+              confidence: ((observation.confidence as Record<string, unknown>)?.score as number) || 0.5,
+            },
+            businessId: observation.businessId,
+          } as unknown as Record<string, unknown>);
+        } else {
+          const data = (p.data as Record<string, unknown>) || {};
+          const eventPayload = (data.payload as Record<string, unknown>) || {};
+          const observationId = p.observationId as string;
+          await this.receiveInput({
+            evidence: {
+              id: observationId,
+              identity: {
+                patternId: "observation-auto",
+                patternName: String(eventPayload.type || "Unknown"),
+              },
+              provenance: {
+                sourceObservations: [observationId],
+              },
+              description: `Observation: ${eventPayload.type} (${observationId})`,
+              score: 0.5,
+              confidence: 0.5,
+            },
+            businessId: "default",
+          } as unknown as Record<string, unknown>);
+        }
+      } catch {
+        // silently handle
+      }
+    });
+  }
+
+  private subscribeToPatternEvents(): void {
+    if (!this.eventBus) return;
+
+    const events = [
+      PatternEventNames.EMERGING_CONFIRMED,
+      PatternEventNames.SUPPORTED_ESTABLISHED,
+      PatternEventNames.VALIDATED_CONFIRMED,
+      PatternEventNames.STRENGTHENING_OBSERVED,
+      PatternEventNames.TREND_DETECTED,
+      PatternEventNames.CORRELATION_FOUND,
+      PatternEventNames.ANOMALY_DETECTED,
+      PatternEventNames.SEQUENCE_DISCOVERED,
+    ];
+
+    for (const eventName of events) {
+      this.eventBus.subscribe(eventName, async (payload) => {
+        try {
+          const p = payload as Record<string, unknown>;
+          const pattern = p.pattern as Record<string, unknown> | undefined;
+
+          if (pattern) {
+            const identity = (pattern.identity as Record<string, unknown>) || {};
+            await this.receiveInput({
+              evidence: {
+                id: pattern.id as string,
+                identity: {
+                  patternId: pattern.id as string,
+                  patternName: identity.name as string || eventName,
+                },
+                provenance: { sourceObservations: [...((pattern.originObservations as string[]) || [])] },
+                description: `Pattern: ${identity.name || pattern.id} at stage ${pattern.stage}`,
+                score: (pattern.strength as number) || 0.5,
+                confidence: (pattern.confidence as number) || 0.5,
+              },
+              businessId: ((identity as Record<string, unknown>).businessId as string) || "default",
+              description: `Memory from pattern ${pattern.id}`,
+            } as unknown as Record<string, unknown>);
+          } else {
+            const eventPayload = (p.payload as Record<string, unknown>) || {};
+            const patternId = (eventPayload.patternId as string) || "";
+            const stage = (eventPayload.stage as string) || "";
+            if (!patternId) return;
+            const data = (eventPayload.data as Record<string, unknown>) || {};
+            await this.receiveInput({
+              evidence: {
+                id: patternId,
+                identity: { patternId, patternName: eventName },
+                provenance: { sourceObservations: [patternId] },
+                description: `Pattern: ${eventName} at stage ${stage}`,
+                score: (data.strength as number) || 0.5,
+                confidence: (data.confidence as number) || 0.5,
+              },
+              businessId: "default",
+              description: `Memory from pattern ${patternId}`,
+            } as unknown as Record<string, unknown>);
+          }
+        } catch {
+          // silently handle
+        }
+      });
+    }
   }
 }

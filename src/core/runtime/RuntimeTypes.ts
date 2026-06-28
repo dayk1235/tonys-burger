@@ -2,7 +2,7 @@ export type RuntimeState = "BOOTING" | "INITIALIZING" | "DISCOVERING" | "RESOLVI
 
 export type EngineLifecycleState = "INITIALIZED" | "REGISTERED" | "CONFIGURED" | "ACTIVATED" | "RUNNING" | "IDLE" | "SUSPENDED" | "DEGRADED" | "FAILING" | "RECOVERING" | "SHUTDOWN";
 
-export type EngineClassification = "Perception" | "Understanding" | "Storage" | "Allocation" | "Processing" | "Expression" | "Action" | "Meta" | "Constitutional";
+export type EngineClassification = "Perception" | "Understanding" | "Storage" | "Knowledge" | "Attention" | "Allocation" | "Processing" | "Expression" | "Decision" | "Validation" | "Learning" | "Prediction" | "Recommendation" | "Planning" | "Execution" | "Action" | "Meta" | "Constitutional";
 
 export type PipelineStage = "OBSERVATION" | "PATTERN" | "EVIDENCE" | "MEMORY" | "KNOWLEDGE" | "ATTENTION" | "REASONING" | "DECISION" | "PLANNING" | "EXECUTION" | "LEARNING" | "PREDICTION" | "RECOMMENDATION" | "CONVERSATION" | "REFLECTION" | "COORDINATION" | "BUSINESS_PULSE" | "HUMAN_EXPERIENCE";
 

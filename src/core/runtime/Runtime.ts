@@ -15,6 +15,9 @@ import { RuntimeHealth } from "./RuntimeHealth";
 import { RuntimeState } from "./RuntimeTypes";
 import { CognitiveEngine } from "../engines/observation/ObservationContracts";
 import { EngineManifestDefinition } from "./EngineManifest";
+import type { CanonicalOrderEvent, RuntimeReceiveResult } from "./CanonicalOrderEvent";
+import { ObservationCategory, type Observation } from "../engines/observation/ObservationTypes";
+import { EngineNotFoundError, EngineNotRunningError } from "./RuntimeErrors";
 
 export class Runtime {
   readonly config: RuntimeConfiguration;
@@ -120,6 +123,84 @@ export class Runtime {
     manifestDef: EngineManifestDefinition
   ): Promise<void> {
     return this.engineLoader.loadFromInstance(name, instance, manifestDef);
+  }
+
+  /**
+   * Public ingress for Canonical Order Events.
+   * Routes a validated canonical event to ObservationEngine exactly once per call.
+   */
+  async receive(event: CanonicalOrderEvent): Promise<RuntimeReceiveResult> {
+    this.requireOperating();
+
+    const observationEngine = this.runtimeRegistry.getEngine("ObservationEngine");
+    if (!observationEngine) {
+      throw new EngineNotFoundError("ObservationEngine");
+    }
+
+    const engineEntry = this.engineRegistry.get("ObservationEngine");
+    const engineState = engineEntry.instance.getState();
+    if (engineState !== "RUNNING") {
+      throw new EngineNotRunningError("ObservationEngine", engineState);
+    }
+
+    await this.auditPipeline.recordLog("Runtime", "canonical_order_received", {
+      orderId: event.orderId,
+      requestId: event.requestId,
+      channel: event.channel.type,
+      source: event.source.provider,
+    });
+
+    const observation = (await observationEngine.receiveInput(
+      this.toObservationInput(event)
+    )) as Observation;
+
+    this.metrics.incrementPublished();
+
+    await this.eventBus.emit("runtime:order-received", {
+      orderId: event.orderId,
+      requestId: event.requestId,
+      observationId: observation.id,
+      channel: event.channel.type,
+    });
+
+    return {
+      orderId: event.orderId,
+      observationId: observation.id,
+      requestId: event.requestId,
+    };
+  }
+
+  private toObservationInput(event: CanonicalOrderEvent): Record<string, unknown> {
+    return {
+      source: {
+        id: event.source.provider,
+        name: event.channel.name,
+        type: "SYSTEM_LOG",
+        trustScore: 0.9,
+      },
+      category: ObservationCategory.CUSTOMER,
+      businessId: event.restaurant.id,
+      restaurantId: event.restaurant.id,
+      timestamp: event.timestamps.orderedAt,
+      payload: {
+        orderId: event.orderId,
+        requestId: event.requestId,
+        version: event.version,
+        status: event.status,
+        type: event.type,
+        items: event.items,
+        customer: event.customer,
+        pricing: event.pricing,
+        payment: event.payment,
+        delivery: event.delivery,
+        restaurant: event.restaurant,
+        channel: event.channel,
+        source: event.source,
+        timestamps: event.timestamps,
+        analytics: event.analytics,
+        metadata: event.metadata,
+      },
+    };
   }
 
   private requireState(expected: RuntimeState): void {

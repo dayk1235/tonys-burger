@@ -57,7 +57,7 @@ export class MemoryValidator {
       category: "SALES_PATTERN",
       strength: (evidence.score as number) || 0,
       confidence: (evidence.confidence as number) || 0,
-      businessId: "",
+      businessId: (input.businessId as string) || "",
     };
   }
 }

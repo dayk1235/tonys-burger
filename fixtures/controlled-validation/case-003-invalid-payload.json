@@ -1,0 +1,31 @@
+{
+  "scenario": "case-003-invalid-payload",
+  "description": "Invalid payload with multiple validation errors: empty items array, item without id, quantity = 0, empty customer name, empty customer phone — POST /api/orders should reject with 400",
+  "timestamp": "2026-06-27T13:00:00.000Z",
+  "payload": {
+    "items": [
+      {
+        "id": "smash-double",
+        "quantity": 0
+      },
+      {
+        "quantity": 2
+      },
+      {
+        "id": "",
+        "quantity": 1
+      }
+    ],
+    "customer": {
+      "name": "",
+      "phone": ""
+    }
+  },
+  "rejection_reasons": [
+    "item 1: quantity = 0 (must be ≥ 1)",
+    "item 2: missing 'id' field",
+    "item 3: id is empty string",
+    "customer.name is empty",
+    "customer.phone is empty"
+  ]
+}
