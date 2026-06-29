@@ -1,6 +1,7 @@
 import { Memory, MemoryStage, MemoryInput, MemoryOperation, MemoryOperationResult, MemoryCategory } from "./MemoryTypes";
 import { MEMORY_EVENTS, getMemoryLifecycleEventName, getMemoryOperationEventName } from "./MemoryEvents";
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 import { MemoryFactory } from "./MemoryFactory";
 import { MemoryValidator } from "./MemoryValidator";
@@ -42,6 +43,7 @@ export class MemoryPipeline {
   readonly compression: MemoryCompression;
   readonly metrics: MemoryMetrics;
   readonly policyEngine: MemoryPolicyEngine;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -61,6 +63,7 @@ export class MemoryPipeline {
     this.search = new MemorySearch(this.index);
     this.metrics = new MemoryMetrics();
     this.policyEngine = new MemoryPolicyEngine();
+    this.errorReporter = new RuntimeErrorReporter("MemoryPipeline", this.auditPipeline, this.recoveryPipeline);
 
     this.consolidation = new MemoryConsolidation(this.factory, this.lifecycle);
     this.retention = new MemoryRetention();
@@ -84,6 +87,7 @@ export class MemoryPipeline {
     this.metrics.recordConfidence(memory.confidence);
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_CREATED, {
+      entity: { memory: { ...memory } },
       memoryId: memory.id,
       name: memory.identity.name,
       category: memory.identity.category,
@@ -151,6 +155,7 @@ export class MemoryPipeline {
     this.metrics.recordStrength(retentionApplied.strength);
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_STRENGTHENED, {
+      entity: { memory: { ...retentionApplied } },
       memoryId: memory.id,
       name: memory.identity.name,
       category: memory.identity.category,
@@ -172,6 +177,7 @@ export class MemoryPipeline {
     this.metrics.recordStrength(retentionApplied.strength);
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_WEAKENED, {
+      entity: { memory: { ...retentionApplied } },
       memoryId: memory.id,
       name: memory.identity.name,
       category: memory.identity.category,
@@ -192,6 +198,7 @@ export class MemoryPipeline {
     this.metrics.recordForgotten();
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_FORGOTTEN, {
+      entity: { memory: { ...forgotten } },
       memoryId: memory.id,
       name: memory.identity.name,
       category: memory.identity.category,
@@ -222,6 +229,7 @@ export class MemoryPipeline {
     this.metrics.recordReactivation();
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_REACTIVATED, {
+      entity: { memory: { ...reactivated } },
       memoryId: memory.id,
       name: memory.identity.name,
       category: memory.identity.category,
@@ -242,6 +250,7 @@ export class MemoryPipeline {
     this.metrics.recordCompression();
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_COMPRESSED, {
+      entity: { memory: { ...result.memory } },
       memoryId: memory.id,
       name: memory.identity.name,
       category: memory.identity.category,
@@ -268,6 +277,7 @@ export class MemoryPipeline {
     }
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_MERGED, {
+      entity: { memory: { ...merged } },
       memoryId: merged.id,
       name: merged.identity.name,
       category: merged.identity.category,
@@ -288,6 +298,7 @@ export class MemoryPipeline {
     this.metrics.recordAssociations(updated.associations.length);
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_ASSOCIATED, {
+      entity: { memory: { ...updated } },
       memoryId: source.id,
       name: source.identity.name,
       category: source.identity.category,
@@ -307,6 +318,7 @@ export class MemoryPipeline {
     this.index.index(updated);
 
     await this.emitEvent(MEMORY_EVENTS.OPERATION_DETACHED, {
+      entity: { memory: { ...updated } },
       memoryId: source.id,
       name: source.identity.name,
       category: source.identity.category,
@@ -359,8 +371,14 @@ export class MemoryPipeline {
     if (!this.eventBus) return;
     try {
       await this.eventBus.emit(eventName, payload as unknown as Record<string, unknown>);
-    } catch {
-      // swallow emit errors
+    } catch (error) {
+      const ent = payload.entity as Record<string, unknown> | undefined;
+      const mem = ent?.memory as Record<string, unknown> | undefined;
+      await this.errorReporter.reportWithDetails("emit_event", error, {
+        event: eventName,
+        entityId: (mem?.id as string) || (payload.memoryId as string) || undefined,
+        businessId: ((mem?.metadata as Record<string, unknown> | undefined)?.attributes as Record<string, unknown> | undefined)?.businessId as string | undefined,
+      });
     }
   }
 
@@ -370,8 +388,8 @@ export class MemoryPipeline {
 
     const operation = this.getMemoryOperation(memory.stage);
     await this.emitEvent(eventName, {
+      entity: { memory: { ...memory } },
       memory: { ...memory },
-      businessId: (memory.metadata.attributes?.businessId as string) || "",
       operation,
       timestamp: new Date().toISOString(),
       version: memory.versions.length,

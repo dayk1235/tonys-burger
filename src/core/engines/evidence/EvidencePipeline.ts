@@ -1,6 +1,7 @@
 import { Evidence, EvidenceStage, EvidenceEvaluationRequest, EvidenceEvaluationResult, ObservationDetail, PatternDetail, EvidenceEventPayload } from "./EvidenceTypes";
 import { EVIDENCE_EVENTS, getLifecycleEventName } from "./EvidenceEvents";
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 import { EvidenceFactory } from "./EvidenceFactory";
 import { EvidenceValidator } from "./EvidenceValidator";
@@ -32,6 +33,7 @@ export class EvidencePipeline {
   readonly metrics: EvidenceMetrics;
   readonly policyEngine: EvidencePolicyEngine;
   readonly memory: EvidenceMemory;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -52,6 +54,7 @@ export class EvidencePipeline {
     this.policyEngine = new EvidencePolicyEngine();
     this.metrics = new EvidenceMetrics();
     this.registry = new EvidenceRegistry(this.memory, this.factory, this.validator);
+    this.errorReporter = new RuntimeErrorReporter("EvidencePipeline", this.auditPipeline, this.recoveryPipeline);
   }
 
   async evaluate(
@@ -66,6 +69,8 @@ export class EvidencePipeline {
     this.metrics.recordCategory(request.patternCategory);
 
     await this.emitEvent(EVIDENCE_EVENTS.EVALUATION_STARTED, {
+      entity: {},
+      operation: "EVALUATE",
       evidenceId: "",
       patternId: request.patternId,
       patternName: request.patternName,
@@ -75,6 +80,7 @@ export class EvidencePipeline {
       supportingCount: request.supportingObservationIds.length,
       contradictingCount: request.contradictingObservationIds.length,
       timestamp: new Date().toISOString(),
+      version: 1,
     });
 
     try {
@@ -162,6 +168,8 @@ export class EvidencePipeline {
       await this.emitLifecycleEvent(withRelationships);
 
       await this.emitEvent(EVIDENCE_EVENTS.EVALUATION_COMPLETED, {
+        entity: { evidence: { ...withRelationships } },
+        operation: "EVALUATE",
         evidenceId: withRelationships.id,
         patternId: request.patternId,
         patternName: request.patternName,
@@ -171,6 +179,7 @@ export class EvidencePipeline {
         supportingCount: withRelationships.supportingRefs.length,
         contradictingCount: withRelationships.contradictingRefs.length,
         timestamp: new Date().toISOString(),
+        version: withRelationships.versions.length,
       });
 
       if (this.auditPipeline) {
@@ -189,6 +198,8 @@ export class EvidencePipeline {
       this.metrics.recordRejected();
 
       await this.emitEvent(EVIDENCE_EVENTS.EVALUATION_FAILED, {
+        entity: {},
+        operation: "EVALUATE",
         evidenceId: "",
         patternId: request.patternId,
         patternName: request.patternName,
@@ -198,6 +209,7 @@ export class EvidencePipeline {
         supportingCount: request.supportingObservationIds.length,
         contradictingCount: request.contradictingObservationIds.length,
         timestamp: new Date().toISOString(),
+        version: 1,
       });
 
       if (this.recoveryPipeline && error instanceof Error) {
@@ -284,8 +296,8 @@ export class EvidencePipeline {
     if (!this.eventBus) return;
     try {
       await this.eventBus.emit(eventName, payload as unknown as Record<string, unknown>);
-    } catch {
-      // swallow emit errors
+    } catch (err) {
+      await this.errorReporter.reportPipelineError("emitEvent", err);
     }
   }
 
@@ -293,7 +305,10 @@ export class EvidencePipeline {
     const eventName = getLifecycleEventName(evidence.stage);
     if (!eventName) return;
 
+    const operation = this.getEvidenceOperation(evidence.stage);
     await this.emitEvent(eventName, {
+      entity: { evidence: { ...evidence } },
+      operation,
       evidenceId: evidence.id,
       patternId: evidence.identity.patternId,
       patternName: evidence.identity.patternName,
@@ -303,6 +318,22 @@ export class EvidencePipeline {
       supportingCount: evidence.supportingRefs.length,
       contradictingCount: evidence.contradictingRefs.length,
       timestamp: new Date().toISOString(),
+      version: evidence.versions.length,
     });
+  }
+
+  private getEvidenceOperation(stage: EvidenceStage): string {
+    const map: Record<string, string> = {
+      CANDIDATE: "CREATE",
+      COLLECTING: "COLLECT",
+      SUPPORTING: "SUPPORT",
+      CONFLICTING: "CONFLICT",
+      WEIGHTED: "WEIGHT",
+      VALIDATED: "VALIDATE",
+      REJECTED: "REJECT",
+      HISTORICAL: "ARCHIVE",
+      ARCHIVED: "ARCHIVE",
+    };
+    return map[stage] || "TRANSITION";
   }
 }

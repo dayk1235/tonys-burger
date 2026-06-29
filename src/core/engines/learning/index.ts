@@ -1,6 +1,10 @@
 export { LearningEngine } from "./LearningEngine";
 export { LearningPipeline } from "./LearningPipeline";
 export { LearningValidator } from "./LearningValidator";
+export { LearningMemory } from "./LearningMemory";
+export { LearningLifecycle } from "./LearningLifecycle";
+export { LearningEntityBuilder } from "./LearningEntityBuilder";
+export { LearningMetrics } from "./LearningMetrics";
 
 export {
   LEARNING_ENGINE_NAME,
@@ -12,7 +16,9 @@ export type {
   LearningStage,
   LearningOperation,
   LearningInput,
+  LearningEntity,
   LearningOperationResult,
+  ResultStatus,
 } from "./LearningTypes";
 
 export type {

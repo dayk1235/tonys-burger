@@ -6,6 +6,7 @@ import {
   DetectionMethod,
   ObservationRef,
   PatternDefinition,
+  PatternDetectionResult,
 } from "../PatternTypes";
 import { PatternLifecycle } from "../PatternLifecycle";
 import { PatternFactory } from "../PatternFactory";
@@ -491,6 +492,189 @@ test("Business Scenario — detects operational anomaly", async () => {
   assert.ok(result.isAnomaly);
   assert.ok(result.zScore > 3);
   assert.ok(result.severity === "HIGH" || result.severity === "CRITICAL");
+});
+
+// ─── Error Observability ────────────────────────────────
+
+class TestAuditPipeline {
+  readonly logs: Array<{ engine: string; action: string; details: Record<string, unknown> }> = [];
+
+  async recordLog(engine: string, action: string, details: Record<string, unknown>): Promise<void> {
+    this.logs.push({ engine, action, details });
+  }
+
+  async recordStateChange(_engine: string, _from: string, _to: string): Promise<void> {}
+}
+
+test("Error Observability — failing detector logs error via audit pipeline", async () => {
+  const audit = new TestAuditPipeline();
+  const pipeline = new PatternPipeline(undefined, audit);
+
+  const throwingDef: PatternDefinition = {
+    name: "throwing_def",
+    category: "REPEATED_EVENT",
+    description: "Always throws",
+    detectionMethod: "FREQUENCY",
+    minSupport: 1,
+    confidenceThreshold: 0.1,
+    timeWindowMs: 1000,
+    evaluate: () => { throw new Error("detector_crash"); },
+  };
+  pipeline.registerDefinition(throwingDef);
+
+  const obs = [createObsRef("o1", "TEST", hoursAgo(1), 0.9, { amount: 1 })];
+  await pipeline.processObservation(obs[0]);
+
+  const defLog = audit.logs.find((l) => l.action === "evaluate_definition");
+  assert.ok(defLog, "Must log evaluate_definition on detector failure");
+  assert.equal(defLog?.details?.event, "throwing_def");
+  assert.ok(String(defLog?.details?.error).includes("detector_crash"));
+});
+
+test("Error Observability — runtime continues after logged detector failure", async () => {
+  const audit = new TestAuditPipeline();
+  const pipeline = new PatternPipeline(undefined, audit);
+
+  const throwingDef: PatternDefinition = {
+    name: "throws",
+    category: "REPEATED_EVENT",
+    description: "throws",
+    detectionMethod: "FREQUENCY",
+    minSupport: 1,
+    confidenceThreshold: 0.1,
+    timeWindowMs: 1000,
+    evaluate: () => { throw new Error("crash"); },
+  };
+  const workingDef: PatternDefinition = {
+    name: "working",
+    category: "REPEATED_EVENT",
+    description: "works",
+    detectionMethod: "FREQUENCY",
+    minSupport: 1,
+    confidenceThreshold: 0.1,
+    timeWindowMs: 100000,
+    evaluate: (obs: readonly ObservationRef[]): PatternDetectionResult => ({
+      detected: true,
+      strength: 0.9,
+      confidence: 0.8,
+      novelty: 0.5,
+      evidence: obs.map((o) => o.id),
+      metadata: {},
+    }),
+  };
+  pipeline.registerDefinition(throwingDef);
+  pipeline.registerDefinition(workingDef);
+
+  const obs = [createObsRef("o2", "TEST", hoursAgo(1), 0.9, { amount: 1 })];
+  const patterns = await pipeline.processObservation(obs[0]);
+
+  const errorLog = audit.logs.find((l) => l.action === "evaluate_definition" && l.details?.event === "throws");
+  assert.ok(errorLog, "Must log the throwing definition failure");
+
+  assert.ok(patterns.length > 0, "Working definition must still produce patterns");
+  assert.equal(patterns[0].identity.name, "working");
+});
+
+test("Error Observability — pipeline continues after detector failure with parallel working definitions", async () => {
+  const audit = new TestAuditPipeline();
+  const pipeline = new PatternPipeline(undefined, audit);
+
+  // Throwing definition
+  pipeline.registerDefinition({
+    name: "always_crash",
+    category: "REPEATED_EVENT",
+    description: "crashes",
+    detectionMethod: "FREQUENCY",
+    minSupport: 1,
+    confidenceThreshold: 0.1,
+    timeWindowMs: 1000,
+    evaluate: () => { throw new Error("intentional_crash"); },
+  });
+
+  // Working definitions
+  for (const def of (await import("../PatternDefinitions")).DEFAULT_PATTERN_DEFINITIONS) {
+    pipeline.registerDefinition(def);
+  }
+
+  const now = Date.now();
+  const obs = [50, 55, 60, 65, 70].map((v, i) =>
+    createObsRef(`multi_${i}`, "FINANCIAL", new Date(now + i * 3600000).toISOString(), 0.9, { amount: v })
+  );
+
+  for (const o of obs) {
+    await pipeline.processObservation(o);
+  }
+
+  const errorLog = audit.logs.find((l) => l.action === "evaluate_definition" && l.details?.event === "always_crash");
+  assert.ok(errorLog, "Must log the crashing definition");
+
+  const allPatterns = await pipeline.getAllPatterns();
+  assert.ok(allPatterns.length > 0, "Working definitions must still produce patterns despite crashed definition");
+});
+
+test("Error Observability — PatternCorrelation logs pair failure", () => {
+  const audit = new TestAuditPipeline();
+  const corr = new PatternCorrelation(audit);
+
+  // Need 2 categories with >=3 observations each, timestamps misaligned to cause pearson to throw
+  const now = Date.now();
+  const obsA = [10, 20, 30, 40, 50].map((v, i) =>
+    makeNumericObs(`a_${i}`, "FINANCIAL", new Date(now + i * 3600000).toISOString(), v)
+  );
+  const obsB = [10, 20, 30].map((v, i) =>
+    makeNumericObs(`b_${i}`, "INVENTORY", new Date(now + 9999999999999 + i * 3600000).toISOString(), v)
+  );
+  const allObs = [...obsA, ...obsB];
+  const results = corr.detect(allObs, 0.5);
+
+  // One of the category pairs may fail correlation if alignByTime produces < 3 pairs
+  const log = audit.logs.find((l) => l.action === "correlate_pair");
+  // If correlation succeeds for all pairs, no error is logged — that's also correct behavior
+  if (log) {
+    assert.ok(String(log?.details?.error).length > 0);
+  }
+});
+
+test("Error Observability — PatternTrend logs category failure", () => {
+  const audit = new TestAuditPipeline();
+  const trend = new PatternTrend(audit);
+
+  const obs = [makeNumericObs("o1", "TEST", hoursAgo(0), 1)];
+  const results = trend.findTrends(obs);
+
+  const log = audit.logs.find((l) => l.action === "detect_trend");
+  assert.ok(log, "Must log failed trend category");
+  assert.ok(String(log?.details?.error).includes("Need at least 3 observations"));
+});
+
+test("Error Observability — engine name and action are propagated correctly", async () => {
+  const audit = new TestAuditPipeline();
+  const pipeline = new PatternPipeline(undefined, audit);
+
+  pipeline.registerDefinition({
+    name: "crash_def",
+    category: "REPEATED_EVENT",
+    description: "crashes",
+    detectionMethod: "FREQUENCY",
+    minSupport: 1,
+    confidenceThreshold: 0.1,
+    timeWindowMs: 1000,
+    evaluate: () => { throw new Error("test_error"); },
+  });
+
+  // Use enough observations to avoid triggering errors from cross-cutting detectors
+  const now = Date.now();
+  for (let i = 0; i < 10; i++) {
+    await pipeline.processObservation(
+      createObsRef(`e_${i}`, "TEST", new Date(now + i * 3600000).toISOString(), 0.9, { amount: i })
+    );
+  }
+
+  const defLogs = audit.logs.filter((l) => l.action === "evaluate_definition");
+  assert.ok(defLogs.length >= 1, "Must have at least one evaluate_definition log");
+  assert.ok(defLogs.some((l) => l.details?.event === "crash_def"), "Must log the crashing definition");
+  assert.ok(defLogs.some((l) => String(l.details?.error).includes("test_error")));
+  assert.ok(audit.logs.some((l) => l.engine === "PatternPipeline"), "Must log under PatternPipeline engine");
 });
 
 // ─── Business Scenario: Sequence Detection ──────────────

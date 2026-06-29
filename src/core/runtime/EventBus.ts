@@ -22,19 +22,23 @@ export class EventBus {
   private eventIdCounter = 0;
   private historyLimit: number;
   private readonly clock: RuntimeClock;
+  private onDelivered?: () => void;
 
-  constructor(clock: RuntimeClock, historyLimit = 1000) {
+  constructor(clock: RuntimeClock, historyLimit = 1000, onDelivered?: () => void) {
     this.clock = clock;
     this.historyLimit = historyLimit;
+    this.onDelivered = onDelivered;
   }
 
-  async emit(eventName: string, payload: Record<string, unknown>, source = "runtime"): Promise<void> {
+  async emit(eventName: string, payload: Record<string, unknown>, source = "runtime", businessId?: string, correlationId?: string): Promise<void> {
     const event: CognitiveEvent = {
       id: `evt_${++this.eventIdCounter}`,
       type: eventName,
       source,
       timestamp: this.clock.now(),
       payload,
+      businessId: businessId || (payload.businessId as string | undefined),
+      correlationId: correlationId || (payload.correlationId as string | undefined),
     };
 
     this.addToHistory(event);
@@ -50,6 +54,7 @@ export class EventBus {
     for (const sub of sorted) {
       try {
         await sub.handler(payload);
+        this.onDelivered?.();
       } catch (err) {
         this.deadLetters.push({
           event,

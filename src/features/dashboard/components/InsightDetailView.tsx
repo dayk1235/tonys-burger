@@ -10,7 +10,7 @@ import { PossibleCauseList } from "./PossibleCauseList";
 import { InsightRecommendation } from "./InsightRecommendation";
 import { ImpactCard } from "./ImpactCard";
 import { DashboardContainer } from "./DashboardContainer";
-import { DecisionEngine } from "@/features/engines/decision/engine";
+import { DecisionDashboard } from "@/features/engines/decision/engine";
 import { DASHBOARD_ROUTES } from "@/features/dashboard/config/routes";
 import { ExplainableDecision } from "./ExplainableDecision";
 import { BusinessMemory } from "./BusinessMemory";
@@ -23,7 +23,7 @@ interface InsightDetailViewProps {
 
 export function InsightDetailView({ id }: InsightDetailViewProps) {
   const { t, locale } = useTranslation();
-  const data = DecisionEngine.getInsight(id, locale);
+  const data = DecisionDashboard.getInsight(id, locale);
 
   if (!data) {
     notFound();

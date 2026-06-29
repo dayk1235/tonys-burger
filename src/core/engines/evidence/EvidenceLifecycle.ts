@@ -2,7 +2,7 @@ import { EvidenceStage } from "./EvidenceTypes";
 import { InvalidLifecycleTransitionError } from "./EvidenceErrors";
 
 const ALLOWED_TRANSITIONS: Record<EvidenceStage, readonly EvidenceStage[]> = {
-  CANDIDATE: ["COLLECTING", "REJECTED"],
+  CANDIDATE: ["COLLECTING", "SUPPORTING", "CONFLICTING", "REJECTED"],
   COLLECTING: ["SUPPORTING", "CONFLICTING", "REJECTED"],
   SUPPORTING: ["CONFLICTING", "WEIGHTED", "REJECTED"],
   CONFLICTING: ["SUPPORTING", "WEIGHTED", "REJECTED"],

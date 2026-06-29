@@ -1,4 +1,6 @@
 import { ContextBusError } from "./RuntimeErrors";
+import { AuditPipeline } from "../engines/observation/ObservationContracts";
+import { RuntimeErrorReporter } from "./RuntimeErrorReporter";
 
 interface ContextValue {
   value: unknown;
@@ -27,6 +29,11 @@ export interface ContextQueryResult {
 export class ContextBusImpl {
   private store: Map<string, ContextValue> = new Map();
   private subscriptions: ContextSubscription[] = [];
+  private readonly errorReporter: RuntimeErrorReporter;
+
+  constructor(auditPipeline?: AuditPipeline) {
+    this.errorReporter = new RuntimeErrorReporter("ContextBus", auditPipeline);
+  }
 
   async set(key: string, value: unknown, source = "runtime", ttl = 0): Promise<void> {
     if (!key || key.trim().length === 0) {
@@ -131,8 +138,8 @@ export class ContextBusImpl {
       if (sub.key === changedKey || sub.key === "*") {
         try {
           await sub.handler(changedKey, value);
-        } catch {
-          // subscriber errors are swallowed to avoid cascading failures
+        } catch (err) {
+          await this.errorReporter.reportRuntimeError("subscriber_notification", err);
         }
       }
     }

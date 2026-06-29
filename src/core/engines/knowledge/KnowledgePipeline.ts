@@ -1,6 +1,7 @@
 import { Knowledge, KnowledgeStage, KnowledgeInput, KnowledgeOperationResult, KnowledgeCategory, GraphEdgeType } from "./KnowledgeTypes";
 import { KNOWLEDGE_EVENTS, getKnowledgeLifecycleEventName } from "./KnowledgeEvents";
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 import { KnowledgeFactory } from "./KnowledgeFactory";
 import { KnowledgeValidator } from "./KnowledgeValidator";
@@ -44,6 +45,7 @@ export class KnowledgePipeline {
   readonly search: KnowledgeSearch;
   readonly metrics: KnowledgeMetrics;
   readonly policyEngine: KnowledgePolicyEngine;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -65,6 +67,7 @@ export class KnowledgePipeline {
     this.index = new KnowledgeIndex();
     this.search = new KnowledgeSearch(this.index);
     this.metrics = new KnowledgeMetrics();
+    this.errorReporter = new RuntimeErrorReporter("KnowledgePipeline", this.auditPipeline, this.recoveryPipeline);
     this.policyEngine = new KnowledgePolicyEngine();
 
     this.extraction = new KnowledgeExtraction(this.factory, this.validator);
@@ -112,6 +115,7 @@ export class KnowledgePipeline {
     this.metrics.recordGraphEdges(updated.graphEdges.length);
 
     await this.emitEvent(KNOWLEDGE_EVENTS.OPERATION_EXTRACTED, {
+      entity: { knowledge: { ...updated } },
       knowledgeId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -199,6 +203,7 @@ export class KnowledgePipeline {
       this.index.index(updated);
 
       await this.emitEvent(KNOWLEDGE_EVENTS.OPERATION_GENERALIZED, {
+        entity: { knowledge: { ...updated } },
         knowledgeId: updated.id,
         name: updated.identity.name,
         category: updated.identity.category,
@@ -234,6 +239,7 @@ export class KnowledgePipeline {
     this.index.index(updated);
 
     await this.emitEvent(KNOWLEDGE_EVENTS.OPERATION_SPECIALIZED, {
+      entity: { knowledge: { ...updated } },
       knowledgeId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -306,6 +312,7 @@ export class KnowledgePipeline {
     this.index.index(updated);
 
     await this.emitEvent(KNOWLEDGE_EVENTS.OPERATION_DEPRECATED, {
+      entity: { knowledge: { ...updated } },
       knowledgeId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -379,8 +386,8 @@ export class KnowledgePipeline {
     if (!this.eventBus) return;
     try {
       await this.eventBus.emit(eventName, payload as unknown as Record<string, unknown>);
-    } catch {
-      // swallow emit errors
+    } catch (err) {
+      await this.errorReporter.reportPipelineError("emitEvent", err);
     }
   }
 
@@ -390,6 +397,7 @@ export class KnowledgePipeline {
 
     const operation = this.getKnowledgeOperation(knowledge.stage);
     await this.emitEvent(eventName, {
+      entity: { knowledge: { ...knowledge } },
       knowledge: { ...knowledge },
       operation,
       timestamp: new Date().toISOString(),

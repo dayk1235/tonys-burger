@@ -4,6 +4,7 @@ import { Runtime } from "../Runtime";
 import { ObservationEngine } from "../../engines/observation/ObservationEngine";
 import { ObservationCategory } from "../../engines/observation/ObservationTypes";
 import { EngineManifestDefinition } from "../EngineManifest";
+import { RUNTIME_EVENTS } from "../RuntimeEvents";
 
 const OBSERVATION_MANIFEST: EngineManifestDefinition = {
   name: "observation_engine",
@@ -95,7 +96,7 @@ test("Runtime — ObservationEngine emits lifecycle events", async () => {
   const runtime = new Runtime();
   const events: string[] = [];
 
-  await runtime.eventBus.subscribe("engine:state-change", async (payload) => {
+  await runtime.eventBus.subscribe(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, async (payload) => {
     events.push(`${payload.engine}:${payload.to}`);
   });
 

@@ -46,6 +46,26 @@ export class EvidenceMemory implements EvidenceQuery {
     return this.findByStage("VALIDATED");
   }
 
+  async findByBusinessId(businessId: string): Promise<Evidence[]> {
+    const results: Evidence[] = [];
+    for (const item of this.items.values()) {
+      if (item.identity.businessId === businessId) {
+        results.push(item);
+      }
+    }
+    return results;
+  }
+
+  async findByReasoningId(reasoningId: string): Promise<Evidence[]> {
+    const results: Evidence[] = [];
+    for (const item of this.items.values()) {
+      if (item.identity.reasoningId === reasoningId) {
+        results.push(item);
+      }
+    }
+    return results;
+  }
+
   async search(query: string): Promise<Evidence[]> {
     const lower = query.toLowerCase();
     const results: Evidence[] = [];

@@ -1,6 +1,10 @@
 export { PredictionEngine } from "./PredictionEngine";
 export { PredictionPipeline } from "./PredictionPipeline";
 export { PredictionValidator } from "./PredictionValidator";
+export { PredictionMemory } from "./PredictionMemory";
+export { PredictionLifecycle } from "./PredictionLifecycle";
+export { PredictionForecaster } from "./PredictionForecaster";
+export { PredictionMetrics } from "./PredictionMetrics";
 
 export {
   PREDICTION_ENGINE_NAME,
@@ -12,6 +16,9 @@ export type {
   PredictionStage,
   PredictionOperation,
   PredictionInput,
+  PredictionEntity,
+  PredictionForecast,
+  SupportingEvidence,
   PredictionOperationResult,
 } from "./PredictionTypes";
 

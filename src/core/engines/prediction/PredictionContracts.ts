@@ -1,4 +1,4 @@
-import type { PredictionStage } from "./PredictionTypes";
+import type { PredictionStage, PredictionEntity } from "./PredictionTypes";
 
 export interface PredictionSubscriber {
   onPredictionInitiated(predictionId: string): Promise<void>;
@@ -8,9 +8,11 @@ export interface PredictionSubscriber {
 }
 
 export interface PredictionQuery {
-  findById(id: string): Promise<unknown>;
-  findActive(): Promise<unknown[]>;
-  findByLearningId(learningId: string): Promise<unknown[]>;
+  findById(id: string): Promise<PredictionEntity | undefined>;
+  findActive(): Promise<PredictionEntity[]>;
+  findByLearningId(learningId: string): Promise<PredictionEntity[]>;
+  findByStage(stage: PredictionStage): Promise<PredictionEntity[]>;
+  findAll(): Promise<PredictionEntity[]>;
 }
 
 export interface PredictionEngineMetrics {
@@ -19,4 +21,6 @@ export interface PredictionEngineMetrics {
   readonly failedPredictions: number;
   readonly activePredictions: number;
   readonly averageConfidence: number;
+  readonly averageProbability: number;
+  readonly predictionsByStage: Record<string, number>;
 }

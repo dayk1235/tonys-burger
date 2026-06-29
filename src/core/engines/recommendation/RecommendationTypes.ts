@@ -1,32 +1,83 @@
 export const RECOMMENDATION_ENGINE_NAME = "RecommendationEngine";
 export const RECOMMENDATION_ENGINE_CLASSIFICATION = "Recommendation";
-export const RECOMMENDATION_ENGINE_CONTRACT_VERSION = "1.0.0";
+export const RECOMMENDATION_ENGINE_CONTRACT_VERSION = "1.1.0";
 
 export type RecommendationStage =
   | "INITIATED"
-  | "CONTEXT_ANALYZED"
-  | "OPTIONS_EVALUATED"
+  | "ANALYZED"
   | "PRIORITIZED"
-  | "RECOMMENDATION_READY"
+  | "OPTIMIZED"
+  | "READY"
   | "COMPLETED"
-  | "FAILED";
+  | "FAILED"
+  | "ARCHIVED";
 
 export type RecommendationOperation =
   | "INITIATE"
-  | "ANALYZE_CONTEXT"
-  | "EVALUATE_OPTIONS"
+  | "ANALYZE"
   | "PRIORITIZE"
-  | "BUILD_RECOMMENDATION"
+  | "OPTIMIZE"
+  | "BUILD"
   | "COMPLETE"
-  | "FAIL";
+  | "FAIL"
+  | "ARCHIVE";
+
+export type PriorityLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export interface RecommendationInput {
   readonly predictionId: string;
   readonly predictionForecast: string;
+  readonly forecastOutcome: string;
+  readonly forecastProbability: number;
+  readonly forecastFactors: readonly string[];
+  readonly supportingEvidence: {
+    readonly learningId: string;
+    readonly learnedPattern: string;
+    readonly rationale: string;
+    readonly expectedResult: string;
+    readonly confidence: number;
+  };
   readonly confidence: number;
   readonly businessId: string;
-  readonly priority: string;
+  readonly context: string;
+  readonly expectedResult: string;
   readonly timestamp: string;
+}
+
+export interface RecommendationEvaluation {
+  readonly priority: PriorityLevel;
+  readonly recommendedAction: string;
+  readonly expectedBenefit: string;
+  readonly estimatedRisk: string;
+  readonly explanation: string;
+  readonly overallConfidence: number;
+}
+
+export interface RecommendationEntity {
+  readonly id: string;
+  readonly predictionId: string;
+  readonly stage: RecommendationStage;
+  readonly recommendedAction: string;
+  readonly priority: PriorityLevel;
+  readonly expectedBenefit: string;
+  readonly expectedRisk: string;
+  readonly confidence: number;
+  readonly explanation: string;
+  readonly supportingEvidence: {
+    readonly learningId: string;
+    readonly learnedPattern: string;
+    readonly rationale: string;
+    readonly expectedResult: string;
+    readonly confidence: number;
+  };
+  readonly forecast: {
+    readonly outcome: string;
+    readonly probability: number;
+    readonly factors: readonly string[];
+  };
+  readonly businessId: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export interface RecommendationOperationResult {

@@ -1,0 +1,67 @@
+# GraphSync — tony-burgers
+version: 1
+
+project: tony-burgers
+
+watch:
+  paths:
+    - project-docs/**
+    - src/**
+    - "*.md"
+  ignore:
+    - node_modules/**
+    - dist/**
+    - build/**
+    - coverage/**
+    - .next/**
+    - .git/**
+    - "*.lock"
+    - graphsync/**
+
+knowledge_sources:
+  - id: restaurant-school
+    label: "Restaurant Knowledge School"
+    paths:
+      - project-docs/20-restaurant-knowledge-school/**
+      - project-docs/21-human-experience-constitution/**
+  - id: foundations
+    label: "Architecture & Foundations"
+    paths:
+      - project-docs/00-vision/**
+      - project-docs/01-foundation/**
+      - project-docs/11-protocol/**
+  - id: governance
+    label: "Governance & Schools"
+    paths:
+      - project-docs/00-governance/**
+      - project-docs/00-knowledge-framework/**
+      - project-docs/22-cognitive-atlas/**
+      - project-docs/23-runtime-architecture/**
+  - id: source-code
+    label: "Source Code"
+    paths:
+      - src/**
+  - id: graphsync
+    label: "GraphSync"
+    paths:
+      - graphsync/**
+
+indexing:
+  default_mode: fast
+  mode_by_source:
+    restaurant-school: fast
+    foundations: fast
+    governance: fast
+    source-code: moderate
+    graphsync: fast
+  debounce_ms: 2000
+  cooldown_seconds: 60
+
+provider:
+  type: mcp
+  binary: ~/.local/bin/codebase-memory-mcp
+  repo_path: ..
+  timeout_ms: 300000
+
+state:
+  dir: ~/.graphsync

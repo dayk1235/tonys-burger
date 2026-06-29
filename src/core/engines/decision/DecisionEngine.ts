@@ -18,6 +18,8 @@ import {
 import { DecisionPipeline } from "./DecisionPipeline";
 import { DecisionValidator } from "./DecisionValidator";
 import { REASONING_EVENTS } from "../reasoning/ReasoningEvents";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -29,6 +31,7 @@ export class DecisionEngine implements CognitiveEngine {
   private state: InternalEngineState = "INITIALIZED";
   private pipeline: DecisionPipeline;
   private validator: DecisionValidator;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -37,6 +40,7 @@ export class DecisionEngine implements CognitiveEngine {
   ) {
     this.pipeline = new DecisionPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new DecisionValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -50,7 +54,7 @@ export class DecisionEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -87,7 +91,7 @@ export class DecisionEngine implements CognitiveEngine {
   }
 
   getMetrics() {
-    return {};
+    return this.pipeline.metrics.getSnapshot();
   }
 
   private subscribeToRuntimeEvents(): void {
@@ -95,7 +99,8 @@ export class DecisionEngine implements CognitiveEngine {
 
     this.eventBus.subscribe(REASONING_EVENTS.LIFECYCLE_COMPLETED, async (payload: Record<string, unknown>) => {
       try {
-        const reasoningPayload = payload.reasoning as Record<string, unknown> | undefined;
+        const reasoningPayload = ((payload.entity as Record<string, unknown> | undefined)?.reasoning as Record<string, unknown> | undefined) ??
+          (payload.reasoning as Record<string, unknown> | undefined);
         const reasoningAvailable = reasoningPayload && typeof reasoningPayload === "object";
 
         const reasoningId = reasoningAvailable
@@ -139,8 +144,8 @@ export class DecisionEngine implements CognitiveEngine {
         };
 
         await this.receiveInput(decisionInput as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(REASONING_EVENTS.LIFECYCLE_COMPLETED, err);
       }
     });
   }

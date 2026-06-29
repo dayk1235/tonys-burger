@@ -18,6 +18,8 @@ import { PatternPipeline } from "./PatternPipeline";
 import { PatternEventNames } from "./PatternEvents";
 import { ObservationEventNames } from "../observation/ObservationEvents";
 import { DEFAULT_PATTERN_DEFINITIONS } from "./PatternDefinitions";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -29,6 +31,7 @@ export class PatternEngine implements CognitiveEngine {
   private state: InternalEngineState = "INITIALIZED";
   private pipeline: PatternPipeline;
   private processingInterval: ReturnType<typeof setInterval> | null = null;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -36,6 +39,7 @@ export class PatternEngine implements CognitiveEngine {
     private readonly recoveryPipeline?: RecoveryPipeline
   ) {
     this.pipeline = new PatternPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -50,7 +54,7 @@ export class PatternEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -148,8 +152,13 @@ export class PatternEngine implements CognitiveEngine {
 
         const ref = this.toObservationRef(data);
         await this.pipeline.processObservation(ref);
-      } catch {
-        // silently handle subscription errors
+      } catch (error) {
+        const p = payload as Record<string, unknown> | undefined;
+        await this.errorReporter.reportWithDetails("process_observation_event", error, {
+          event: "HISTORICAL_COMMITTED",
+          entityId: (p?.observationId as string) || (p?.id as string) || undefined,
+          businessId: (p?.businessId as string) || undefined,
+        });
       }
     });
   }
@@ -161,7 +170,7 @@ export class PatternEngine implements CognitiveEngine {
       id: (input.id as string) || `obs_${Date.now()}`,
       category: (input.category as string) || "OPERATIONAL",
       timestamp: (input.timestamp as string) || new Date().toISOString(),
-      businessId: (input.businessId as string) || "default",
+      businessId: (input.businessId as string) || "",
       sourceType: (source.type as string) || "SYSTEM_LOG",
       trustScore: (source.trustScore as number) || 0.5,
       payload,

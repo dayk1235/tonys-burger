@@ -10,6 +10,7 @@ import {
 } from "./ReasoningTypes";
 import { REASONING_EVENTS, getReasoningLifecycleEventName } from "./ReasoningEvents";
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 import { ReasoningFactory } from "./ReasoningFactory";
 import { ReasoningValidator } from "./ReasoningValidator";
@@ -51,6 +52,7 @@ export class ReasoningPipeline {
   readonly metrics: ReasoningMetrics;
   readonly informationGap: ReasoningInformationGap;
   readonly confidenceExplanation: ReasoningConfidenceExplanation;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -76,6 +78,7 @@ export class ReasoningPipeline {
     this.metrics = new ReasoningMetrics();
     this.informationGap = new ReasoningInformationGap();
     this.confidenceExplanation = new ReasoningConfidenceExplanation();
+    this.errorReporter = new RuntimeErrorReporter("ReasoningPipeline", this.auditPipeline, this.recoveryPipeline);
   }
 
   async createCase(input: ReasoningInput): Promise<Reasoning> {
@@ -358,48 +361,54 @@ export class ReasoningPipeline {
     const eventName = getReasoningLifecycleEventName(reasoning.stage);
     if (!eventName || !this.eventBus) return;
     try {
+      let payload: Record<string, unknown>;
       if (reasoning.stage === "COMPLETED") {
-        await this.eventBus.emit(eventName, {
-          reasoning: {
-            id: reasoning.id,
-            identity: reasoning.identity,
-            confidence: reasoning.confidence,
-            integrity: reasoning.coherenceScore,
-            alternatives: reasoning.alternatives,
-            conclusion: reasoning.conclusion,
-            question: reasoning.question,
-            businessId: reasoning.identity.businessId,
-            provenance: reasoning.provenance,
-            metadata: reasoning.metadata,
-          },
+        const reasoningData = {
+          id: reasoning.id,
+          identity: reasoning.identity,
+          confidence: reasoning.confidence,
+          integrity: reasoning.coherenceScore,
+          alternatives: reasoning.alternatives,
+          conclusion: reasoning.conclusion,
+          question: reasoning.question,
+          businessId: reasoning.identity.businessId,
+          provenance: reasoning.provenance,
+          metadata: reasoning.metadata,
+        };
+        payload = {
+          entity: { reasoning: reasoningData },
+          reasoning: reasoningData,
           operation: "COMPLETE",
           timestamp: new Date().toISOString(),
           version: reasoning.versions.length,
-        });
+        };
       } else {
-        await this.eventBus.emit(eventName, {
-          reasoning: {
-            id: reasoning.id,
-            identity: reasoning.identity,
-            confidence: reasoning.confidence,
-            coherenceScore: reasoning.coherenceScore,
-            qualityProfile: reasoning.qualityProfile,
-            provenance: reasoning.provenance,
-            context: reasoning.context,
-            hypotheses: reasoning.hypotheses,
-            alternatives: reasoning.alternatives,
-            constraints: reasoning.constraints,
-            tradeoffs: reasoning.tradeoffs,
-            relationships: reasoning.relationships,
-            metadata: reasoning.metadata,
-          },
+        const reasoningData = {
+          id: reasoning.id,
+          identity: reasoning.identity,
+          confidence: reasoning.confidence,
+          coherenceScore: reasoning.coherenceScore,
+          qualityProfile: reasoning.qualityProfile,
+          provenance: reasoning.provenance,
+          context: reasoning.context,
+          hypotheses: reasoning.hypotheses,
+          alternatives: reasoning.alternatives,
+          constraints: reasoning.constraints,
+          tradeoffs: reasoning.tradeoffs,
+          relationships: reasoning.relationships,
+          metadata: reasoning.metadata,
+        };
+        payload = {
+          entity: { reasoning: reasoningData },
+          reasoning: reasoningData,
           operation: reasoning.stage as ReasoningOperation,
           timestamp: new Date().toISOString(),
           version: reasoning.versions.length,
-        });
+        };
       }
-    } catch {
-      // swallow
+      await this.eventBus.emit(eventName, payload);
+    } catch (err) {
+      await this.errorReporter.reportPipelineError("emitLifecycleEvent", err);
     }
   }
 }

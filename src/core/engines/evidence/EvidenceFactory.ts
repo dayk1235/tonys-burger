@@ -13,10 +13,9 @@ import {
   EvidenceEvaluationRequest,
 } from "./EvidenceTypes";
 
-let idCounter = 0;
-
-function generateId(): string {
-  return `evd_${Date.now()}_${++idCounter}_${Math.random().toString(36).slice(2, 8)}`;
+function generateId(request: EvidenceEvaluationRequest): string {
+  const id = request.reasoningId || request.patternId || "unknown";
+  return `evidence-${id}`;
 }
 
 function defaultQualityProfile(): EvidenceQualityProfile {
@@ -40,7 +39,7 @@ export class EvidenceFactory {
     request: EvidenceEvaluationRequest,
     description: string
   ): Evidence {
-    const id = generateId();
+    const id = generateId(request);
     const now = new Date().toISOString();
 
     const identity: EvidenceIdentity = {
@@ -51,6 +50,8 @@ export class EvidenceFactory {
       category: request.patternCategory,
       classification: "STRENGTH",
       evaluatedAt: now,
+      reasoningId: request.reasoningId,
+      businessId: request.businessId,
     };
 
     const version: EvidenceVersion = {

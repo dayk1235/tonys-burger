@@ -1,5 +1,7 @@
 import { ObservationRef, PatternDetectionResult } from "./PatternTypes";
 import { TrendDetectionError } from "./PatternErrors";
+import { AuditPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 export type TrendDirection = "POSITIVE" | "NEGATIVE" | "STABLE" | "EMERGING";
 
@@ -15,6 +17,12 @@ export interface TrendResult {
 }
 
 export class PatternTrend {
+  private readonly errorReporter: RuntimeErrorReporter;
+
+  constructor(private readonly auditPipeline?: AuditPipeline) {
+    this.errorReporter = new RuntimeErrorReporter("PatternTrend", this.auditPipeline);
+  }
+
   detect(
     observations: readonly ObservationRef[],
     category?: string
@@ -91,8 +99,10 @@ export class PatternTrend {
             },
           });
         }
-      } catch {
-        // skip categories that fail trend detection
+      } catch (error) {
+        void this.errorReporter.reportWithDetails("detect_trend", error, {
+          event: category,
+        });
       }
     }
 

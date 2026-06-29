@@ -1,5 +1,7 @@
 import { WorkingMemoryEntry } from "./RuntimeTypes";
 import { WorkingMemoryError } from "./RuntimeErrors";
+import { AuditPipeline } from "../engines/observation/ObservationContracts";
+import { RuntimeErrorReporter } from "./RuntimeErrorReporter";
 
 interface WorkingMemorySubscription {
   filter?: string;
@@ -12,10 +14,12 @@ export class WorkingMemory {
   private entryIdCounter = 0;
   private maxItems: number;
   private defaultTTL: number;
+  private readonly errorReporter: RuntimeErrorReporter;
 
-  constructor(maxItems = 10000, defaultTTLMs = 300_000) {
+  constructor(maxItems = 10000, defaultTTLMs = 300_000, auditPipeline?: AuditPipeline) {
     this.maxItems = maxItems;
     this.defaultTTL = defaultTTLMs;
+    this.errorReporter = new RuntimeErrorReporter("WorkingMemory", auditPipeline);
   }
 
   async store(
@@ -100,8 +104,8 @@ export class WorkingMemory {
       if (!sub.filter || sub.filter === entry.type) {
         try {
           await sub.handler(entry);
-        } catch {
-          // subscriber errors are swallowed
+        } catch (err) {
+          await this.errorReporter.reportRuntimeError("subscriber_notification", err);
         }
       }
     }

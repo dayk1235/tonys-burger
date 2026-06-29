@@ -13,6 +13,8 @@ export interface EvidenceQuery {
   findByStage(stage: string): Promise<Evidence[]>;
   findValidated(): Promise<Evidence[]>;
   search(query: string): Promise<Evidence[]>;
+  findByBusinessId(businessId: string): Promise<Evidence[]>;
+  findByReasoningId(reasoningId: string): Promise<Evidence[]>;
 }
 
 export interface EvidenceEngineMetrics {

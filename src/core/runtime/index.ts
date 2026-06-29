@@ -1,6 +1,9 @@
 export { Runtime } from "./Runtime";
 export { bootstrapRuntime } from "./RuntimeBootstrap";
 
+export { RUNTIME_EVENTS } from "./RuntimeEvents";
+export type { RuntimeEventName } from "./RuntimeEvents";
+
 export type {
   CanonicalOrderEvent,
   CanonicalOrderItem,
@@ -32,6 +35,8 @@ export { RuntimeRegistryImpl } from "./RuntimeRegistry";
 export { AuditPipelineImpl } from "./AuditPipeline";
 export { RecoveryPipelineImpl } from "./RecoveryPipeline";
 export { RuntimeSchedulerImpl } from "./RuntimeScheduler";
+export { RuntimeErrorReporter } from "./RuntimeErrorReporter";
+export type { ErrorSeverity } from "./RuntimeErrorReporter";
 
 export type {
   RuntimeState,

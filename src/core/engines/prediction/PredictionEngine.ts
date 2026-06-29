@@ -16,6 +16,9 @@ import {
 
 import { PredictionPipeline } from "./PredictionPipeline";
 import { PredictionValidator } from "./PredictionValidator";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { LEARNING_EVENTS } from "../learning/LearningEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -27,6 +30,7 @@ export class PredictionEngine implements CognitiveEngine {
   private state: InternalEngineState = "INITIALIZED";
   private pipeline: PredictionPipeline;
   private validator: PredictionValidator;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -35,6 +39,7 @@ export class PredictionEngine implements CognitiveEngine {
   ) {
     this.pipeline = new PredictionPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new PredictionValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -48,7 +53,7 @@ export class PredictionEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -85,17 +90,18 @@ export class PredictionEngine implements CognitiveEngine {
   }
 
   getMetrics() {
-    return {};
+    return this.pipeline.metrics.getSnapshot();
   }
 
   private subscribeToRuntimeEvents(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("learning.lifecycle.completed", async (payload) => {
+    this.eventBus.subscribe(LEARNING_EVENTS.LIFECYCLE_COMPLETED, async (payload) => {
       try {
-        await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+        const extracted = this.validator.extractFromLearningEvent(payload as Record<string, unknown>);
+        await this.receiveInput(extracted);
+      } catch (err) {
+        await this.errorReporter.reportEngineError(LEARNING_EVENTS.LIFECYCLE_COMPLETED, err);
       }
     });
   }

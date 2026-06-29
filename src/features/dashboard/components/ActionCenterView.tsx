@@ -11,7 +11,7 @@ import { SuccessCriteria } from "./SuccessCriteria";
 import { PredictionCard } from "./PredictionCard";
 import { ActionFooter } from "./ActionFooter";
 import { DASHBOARD_ROUTES } from "@/features/dashboard/config/routes";
-import { DecisionEngine } from "@/features/engines/decision/engine";
+import { DecisionDashboard } from "@/features/engines/decision/engine";
 import { useTranslation } from "@/localization";
 
 interface ActionCenterViewProps {
@@ -20,7 +20,7 @@ interface ActionCenterViewProps {
 
 export function ActionCenterView({ insightId }: ActionCenterViewProps) {
   const { t, locale } = useTranslation();
-  const data = insightId ? DecisionEngine.getExperiment(insightId, locale) : null;
+  const data = insightId ? DecisionDashboard.getExperiment(insightId, locale) : null;
 
   if (!data) {
     notFound();

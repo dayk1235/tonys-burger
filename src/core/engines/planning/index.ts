@@ -1,6 +1,11 @@
 export { PlanningEngine } from "./PlanningEngine";
 export { PlanningPipeline } from "./PlanningPipeline";
 export { PlanningValidator } from "./PlanningValidator";
+export { PlanningMemory } from "./PlanningMemory";
+export { PlanningLifecycle } from "./PlanningLifecycle";
+export { PlanningBuilder } from "./PlanningBuilder";
+export { PlanningGenerator } from "./PlanningGenerator";
+export { PlanningMetrics } from "./PlanningMetrics";
 
 export {
   PLANNING_ENGINE_NAME,
@@ -12,6 +17,9 @@ export type {
   PlanningStage,
   PlanningOperation,
   PlanningInput,
+  PlanningEntity,
+  ExecutionStep,
+  ExecutionStepStatus,
   PlanningOperationResult,
 } from "./PlanningTypes";
 

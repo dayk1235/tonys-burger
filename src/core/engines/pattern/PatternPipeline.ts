@@ -25,30 +25,47 @@ import { PatternEventNames } from "./PatternEvents";
 import { InsufficientEvidenceError } from "./PatternErrors";
 
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 export class PatternPipeline {
-  readonly lifecycle = new PatternLifecycle();
-  readonly factory = new PatternFactory();
-  readonly validator = new PatternValidator();
-  readonly quality = new PatternQuality();
-  readonly confidence = new PatternConfidence();
-  readonly scoring = new PatternScoring();
-  readonly correlation = new PatternCorrelation();
-  readonly trend = new PatternTrend();
-  readonly anomaly = new PatternAnomaly();
-  readonly sequence = new PatternSequence();
-  readonly relationships = new PatternRelationships();
-  readonly registry = new PatternRegistry();
-  readonly metrics = new PatternMetrics();
+  readonly lifecycle: PatternLifecycle;
+  readonly factory: PatternFactory;
+  readonly validator: PatternValidator;
+  readonly quality: PatternQuality;
+  readonly confidence: PatternConfidence;
+  readonly scoring: PatternScoring;
+  readonly correlation: PatternCorrelation;
+  readonly trend: PatternTrend;
+  readonly anomaly: PatternAnomaly;
+  readonly sequence: PatternSequence;
+  readonly relationships: PatternRelationships;
+  readonly registry: PatternRegistry;
+  readonly metrics: PatternMetrics;
 
   private recentObservations: ObservationRef[] = [];
   private readonly maxRecentObservations = 500;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
     private readonly auditPipeline?: AuditPipeline,
     private readonly recoveryPipeline?: RecoveryPipeline
-  ) {}
+  ) {
+    this.lifecycle = new PatternLifecycle();
+    this.factory = new PatternFactory();
+    this.validator = new PatternValidator();
+    this.quality = new PatternQuality();
+    this.confidence = new PatternConfidence();
+    this.scoring = new PatternScoring();
+    this.correlation = new PatternCorrelation(this.auditPipeline);
+    this.trend = new PatternTrend(this.auditPipeline);
+    this.anomaly = new PatternAnomaly();
+    this.sequence = new PatternSequence();
+    this.relationships = new PatternRelationships();
+    this.registry = new PatternRegistry();
+    this.metrics = new PatternMetrics();
+    this.errorReporter = new RuntimeErrorReporter("PatternPipeline", this.auditPipeline, this.recoveryPipeline);
+  }
 
   async processObservation(observation: ObservationRef): Promise<Pattern[]> {
     const detectedPatterns: Pattern[] = [];
@@ -67,8 +84,10 @@ export class PatternPipeline {
             detectedPatterns.push(pattern);
           }
         }
-      } catch {
-        // skip definitions that fail
+      } catch (error) {
+        await this.errorReporter.reportWithDetails("evaluate_definition", error, {
+          event: def.name,
+        });
       }
     }
 
@@ -352,6 +371,7 @@ export class PatternPipeline {
     if (!this.eventBus) return;
     const operation = this.getPatternOperation(eventName);
     await this.eventBus.emit(eventName, {
+      entity: { pattern: { ...pattern } },
       pattern: { ...pattern },
       operation,
       timestamp: new Date().toISOString(),

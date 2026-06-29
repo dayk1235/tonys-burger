@@ -1,6 +1,7 @@
-import { RuntimeScheduler } from "../engines/observation/ObservationContracts";
+import { RuntimeScheduler, AuditPipeline } from "../engines/observation/ObservationContracts";
 import { RuntimeClock } from "./RuntimeClock";
 import { SchedulerError } from "./RuntimeErrors";
+import { RuntimeErrorReporter } from "./RuntimeErrorReporter";
 
 interface ScheduledJob {
   intervalMs: number;
@@ -12,9 +13,11 @@ export class RuntimeSchedulerImpl implements RuntimeScheduler {
   private timerIds: Map<string, ReturnType<typeof setInterval>> = new Map();
   private running = false;
   private clock: RuntimeClock;
+  private readonly errorReporter: RuntimeErrorReporter;
 
-  constructor(clock: RuntimeClock) {
+  constructor(clock: RuntimeClock, auditPipeline?: AuditPipeline) {
     this.clock = clock;
+    this.errorReporter = new RuntimeErrorReporter("RuntimeScheduler", auditPipeline);
   }
 
   async scheduleRecurring(
@@ -63,8 +66,8 @@ export class RuntimeSchedulerImpl implements RuntimeScheduler {
     const timerId = setInterval(async () => {
       try {
         await task();
-      } catch {
-        // task errors are swallowed to prevent scheduler crashes
+      } catch (err) {
+        await this.errorReporter.reportRuntimeError("scheduled_task", err);
       }
     }, intervalMs);
     this.timerIds.set(id, timerId);

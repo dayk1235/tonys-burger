@@ -16,8 +16,11 @@ import {
 } from "./EvidenceTypes";
 
 import { EVIDENCE_EVENTS } from "./EvidenceEvents";
+import { PatternEventNames } from "../pattern/PatternEvents";
 import { EvidencePipeline } from "./EvidencePipeline";
 import { EvidenceValidator } from "./EvidenceValidator";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -29,6 +32,7 @@ export class EvidenceEngine implements CognitiveEngine {
   private state: InternalEngineState = "INITIALIZED";
   private pipeline: EvidencePipeline;
   private validator: EvidenceValidator;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -37,6 +41,7 @@ export class EvidenceEngine implements CognitiveEngine {
   ) {
     this.pipeline = new EvidencePipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new EvidenceValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -50,7 +55,7 @@ export class EvidenceEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -103,25 +108,25 @@ export class EvidenceEngine implements CognitiveEngine {
   private subscribeToPatternEvents(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("pattern.lifecycle.supported_established", async (payload) => {
+    this.eventBus.subscribe(PatternEventNames.SUPPORTED_ESTABLISHED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(PatternEventNames.SUPPORTED_ESTABLISHED, err);
       }
     });
 
-    this.eventBus.subscribe("pattern.lifecycle.validated_confirmed", async (payload) => {
+    this.eventBus.subscribe(PatternEventNames.VALIDATED_CONFIRMED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(PatternEventNames.VALIDATED_CONFIRMED, err);
       }
     });
   }
 
   private extractObservations(input: Record<string, unknown>): ObservationDetail[] {
-    const raw = input.observations;
+    const raw = ((input.entity as Record<string, unknown> | undefined)?.observations) ?? input.observations;
     if (!Array.isArray(raw)) return [];
     return raw.map((o: unknown) => {
       const obs = o as Record<string, unknown>;
@@ -138,7 +143,8 @@ export class EvidenceEngine implements CognitiveEngine {
   }
 
   private extractPattern(input: Record<string, unknown>): PatternDetail | undefined {
-    const pattern = input.pattern as Record<string, unknown> | undefined;
+    const pattern = ((input.entity as Record<string, unknown> | undefined)?.pattern as Record<string, unknown> | undefined) ??
+      (input.pattern as Record<string, unknown> | undefined);
     if (!pattern) return undefined;
 
     const identity = pattern.identity as Record<string, unknown> | undefined;

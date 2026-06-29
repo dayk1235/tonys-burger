@@ -182,6 +182,16 @@ Todos los documentos de gobernanza deben ser descubribles a través de:
 
 Ningún documento puede existir fuera de la estructura documentada.
 
+### LAW_067 — CANONICAL RUNTIME LANGUAGE
+
+Todo intercambio entre motores cognitivos deberá realizarse mediante el Canonical Runtime Event (`entity`, `operation`, `timestamp`, `version`). Los nombres específicos de dominio (`observation`, `pattern`, `memory`, `knowledge`, `attention`, `reasoning`, `decision`, etc.) pertenecen a la entidad, nunca al protocolo. Ver `LAW-067_CANONICAL_RUNTIME_LANGUAGE.md`.
+
+### LAW_068 — ARCHITECTURE DISCOVERY BEFORE CODE EXPLORATION
+
+No implementation may begin until architectural context is discovered. Every Validation Sprint, Bug Fix, Integration Sprint, or Architectural Refactor must begin with a Discovery Phase. Graph-first discovery is preferred. The Discovery Phase never modifies source code — its sole purpose is understanding. Ver `LAW-068_ARCHITECTURE_DISCOVERY.md`.
+
+---
+
 ### LAW_043 — ALWAYS GREEN REPOSITORY
 
 The main branch must always compile successfully.

@@ -1,4 +1,4 @@
-import { DecisionStage, DecisionAlternative } from "./DecisionTypes";
+import { DecisionStage, DecisionAlternative, DecisionResult, AlternativeEvaluation } from "./DecisionTypes";
 
 export interface DecisionSubscriber {
   onProposalCreated(proposalId: string, alternatives: readonly DecisionAlternative[]): Promise<void>;
@@ -9,10 +9,22 @@ export interface DecisionSubscriber {
 }
 
 export interface DecisionQuery {
-  findById(id: string): Promise<unknown>;
-  findActive(): Promise<unknown[]>;
-  findArchived(): Promise<unknown[]>;
-  findByReasoningId(reasoningId: string): Promise<unknown[]>;
+  findById(id: string): Promise<DecisionResult | undefined>;
+  findActive(): Promise<DecisionResult[]>;
+  findArchived(): Promise<DecisionResult[]>;
+  findByReasoningId(reasoningId: string): Promise<DecisionResult[]>;
+  findAll(): Promise<DecisionResult[]>;
+}
+
+export interface DecisionEvaluatorContract {
+  evaluateAlternatives(alternatives: readonly DecisionAlternative[]): {
+    evaluations: AlternativeEvaluation[];
+    selectedAlternativeId: string | null;
+    selectedLabel: string;
+    bestScore: number;
+  };
+  computeConfidence(reasoningConfidence: number, bestAlternativeScore: number): number;
+  generateRationale(evaluations: AlternativeEvaluation[], selectedAlternativeId: string | null, selectedLabel: string): string;
 }
 
 export interface DecisionEngineMetrics {

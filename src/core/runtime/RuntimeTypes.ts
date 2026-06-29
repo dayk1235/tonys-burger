@@ -92,6 +92,8 @@ export interface CognitiveEvent {
   payload: Record<string, unknown>;
   confidence?: number;
   ttl?: number;
+  businessId?: string;
+  correlationId?: string;
 }
 
 export interface WorkingMemoryEntry {
@@ -116,6 +118,10 @@ export interface RuntimeMetricsSnapshot {
   recoveryCount: number;
   uptimeMs: number;
   state: RuntimeState;
+  totalErrors: number;
+  errorsByEngine: Record<string, number>;
+  errorsBySeverity: Record<string, number>;
+  lastErrorTimestamp: string;
 }
 
 export interface HealthStatus {

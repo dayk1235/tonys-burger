@@ -10,6 +10,8 @@ import {
 } from "./AttentionTypes";
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline, CognitiveEngine, EngineState } from "../observation/ObservationContracts";
 import { KNOWLEDGE_EVENTS } from "../knowledge/KnowledgeEvents";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 import { AttentionPipeline } from "./AttentionPipeline";
 import { AttentionValidator } from "./AttentionValidator";
@@ -23,6 +25,7 @@ export class AttentionEngine implements CognitiveEngine {
   private pipeline: AttentionPipeline;
   private validator: AttentionValidator;
   private tickInterval: ReturnType<typeof setInterval> | null = null;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -31,6 +34,7 @@ export class AttentionEngine implements CognitiveEngine {
   ) {
     this.pipeline = new AttentionPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new AttentionValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(tickMs: number = 1000): Promise<void> {
@@ -41,14 +45,14 @@ export class AttentionEngine implements CognitiveEngine {
     this.state = "RUNNING";
 
     this.tickInterval = setInterval(() => {
-      this.pipeline.tick().catch(() => {});
+      this.pipeline.tick().catch((err) => { this.errorReporter.reportEngineError("tick", err); });
     }, tickMs);
 
     if (this.auditPipeline) {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -95,7 +99,7 @@ export class AttentionEngine implements CognitiveEngine {
       opportunity: (priorityFactors?.opportunity as number) || (input.opportunity as number) || 0,
       businessValue: (input.businessValue as number) || 0,
       humanValue: (input.humanValue as number) || 0,
-      businessId: (input.businessId as string) || "default",
+      businessId: (input.businessId as string) || "",
     };
 
     this.validator.validateInput(attentionInput);
@@ -132,17 +136,19 @@ export class AttentionEngine implements CognitiveEngine {
   private subscribeToRuntimeEvents(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("runtime.emergency", async (payload) => {
+    this.eventBus.subscribe(RUNTIME_EVENTS.RUNTIME_EMERGENCY, async (payload) => {
+      const p = payload as Record<string, unknown>;
+      const entity = p.entity as Record<string, unknown> | undefined;
       this.pipeline.submitInterruption(
-        (payload.sourceId as string) || "",
+        (entity?.sourceId as string) ?? (p.sourceId as string) ?? "",
         "RUNTIME_EVENT" as SourceType,
-        (payload.priority as number) || 0.9,
-        (payload.reason as string) || "Runtime emergency",
+        (entity?.priority as number) ?? (p.priority as number) ?? 0.9,
+        (entity?.reason as string) ?? (p.reason as string) ?? "Runtime emergency",
         true,
       );
     });
 
-    this.eventBus.subscribe("runtime.context.change", async (payload) => {
+    this.eventBus.subscribe(RUNTIME_EVENTS.RUNTIME_CONTEXT_CHANGE, async (payload) => {
       if (payload.loadLevel !== undefined) {
         this.pipeline.updateContext({ loadLevel: payload.loadLevel as number });
       }
@@ -155,7 +161,8 @@ export class AttentionEngine implements CognitiveEngine {
     this.eventBus.subscribe(KNOWLEDGE_EVENTS.LIFECYCLE_VALIDATED, async (payload) => {
       try {
         const p = payload as Record<string, unknown>;
-        const knowledge = p.knowledge as Record<string, unknown> | undefined;
+        const knowledge = ((p.entity as Record<string, unknown> | undefined)?.knowledge as Record<string, unknown> | undefined) ??
+          (p.knowledge as Record<string, unknown> | undefined);
 
         if (knowledge) {
           const identity = (knowledge.identity as Record<string, unknown>) || {};
@@ -204,11 +211,11 @@ export class AttentionEngine implements CognitiveEngine {
             opportunity: 0,
             businessValue: typeof p.integrity === "number" ? p.integrity : 0.5,
             humanValue: 0.5,
-            businessId: "default",
+            businessId: "",
           } as unknown as Record<string, unknown>);
         }
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(KNOWLEDGE_EVENTS.LIFECYCLE_VALIDATED, err);
       }
     });
   }

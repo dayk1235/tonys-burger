@@ -360,8 +360,6 @@ Maintain repository organization. No clutter. No dead files. Consistent structur
 **LAW_020 — Stop When Uncertain**
 If architecture is unclear: DO NOT GUESS. Ask for clarification. Escalate.
 
----
-
 ### ROADMAP LAWS
 
 **LAW_025 — Follow The Roadmap**
@@ -676,6 +674,18 @@ Toda nueva funcionalidad deberá comenzar en un Sprint nuevo.
 Cada Validation Sprint solo puede resolver un Dead End.
 
 Si durante la ejecución se detectan problemas adicionales, oportunidades de mejora o refactors posibles, estos deberán registrarse como riesgos o futuros Dead Ends, pero nunca resolverse dentro del Sprint actual. La finalización de un Sprint implica detener la ejecución inmediatamente después de cumplir el objetivo definido.
+
+**LAW 67 — CANONICAL RUNTIME LANGUAGE**
+
+Todo intercambio entre motores cognitivos deberá realizarse mediante el Canonical Runtime Event. Ningún motor podrá depender del nombre específico de otra entidad en el nivel del protocolo de comunicación. Toda comunicación deberá realizarse utilizando exclusivamente: `entity`, `operation`, `timestamp`, `version`. Los nombres específicos de dominio pertenecen a la entidad, nunca al protocolo. Ver: `project-docs/00-governance/LAW-067_CANONICAL_RUNTIME_LANGUAGE.md`.
+
+**LAW 68 — ARCHITECTURE DISCOVERY BEFORE CODE EXPLORATION**
+
+No implementation may begin until the architectural context has been discovered. Every Validation Sprint, Bug Fix, Integration Sprint, or Architectural Refactor must begin with a Discovery Phase covering: affected engines, event flow, dependencies, callers/callees, runtime propagation, and architectural boundaries. Graph-first discovery is preferred over blind file exploration. The Discovery Phase must never modify source code — its sole purpose is understanding. Ver: `project-docs/00-governance/LAW-068_ARCHITECTURE_DISCOVERY.md`.
+
+**LAW 69 — VALIDATION SPRINT SCOPE**
+
+Un Validation Sprint (VS) nunca implementa nuevas capacidades. VS únicamente descubre, audita, certifica e identifica gaps. Toda nueva capacidad descubierta durante un VS debe convertirse en un BF independiente. VS = evidencia. BF = implementación. Ver: `project-docs/00-governance/LAW-069_VALIDATION_SPRINT_SCOPE.md`.
 
 ---
 

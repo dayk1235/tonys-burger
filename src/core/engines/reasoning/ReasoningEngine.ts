@@ -11,6 +11,8 @@ import { RuntimeEventBus, AuditPipeline, RecoveryPipeline, CognitiveEngine, Engi
 import { ATTENTION_EVENTS } from "../attention/AttentionEvents";
 import { ReasoningPipeline } from "./ReasoningPipeline";
 import { ReasoningValidator } from "./ReasoningValidator";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 export class ReasoningEngine implements CognitiveEngine {
   readonly name = REASONING_ENGINE_NAME;
@@ -20,6 +22,7 @@ export class ReasoningEngine implements CognitiveEngine {
   private state: EngineState = "INITIALIZED";
   private pipeline: ReasoningPipeline;
   private validator: ReasoningValidator;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -28,6 +31,7 @@ export class ReasoningEngine implements CognitiveEngine {
   ) {
     this.pipeline = new ReasoningPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new ReasoningValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -40,7 +44,7 @@ export class ReasoningEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -122,8 +126,8 @@ export class ReasoningEngine implements CognitiveEngine {
     this.eventBus.subscribe(ATTENTION_EVENTS.OPERATION_PRIORITIZED, async (payload: Record<string, unknown>) => {
       try {
         await this.receiveInput(payload);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(ATTENTION_EVENTS.OPERATION_PRIORITIZED, err);
       }
     });
   }

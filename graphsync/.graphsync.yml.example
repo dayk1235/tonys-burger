@@ -1,0 +1,79 @@
+# GraphSync Configuration
+# Place this file as .graphsync.yml in your project root.
+
+version: 1
+
+# Project identifier. Used for state isolation in ~/.graphsync/projects/<name>/
+project: my-project
+
+# File watching configuration
+watch:
+  # Glob patterns to watch for changes
+  paths:
+    - project-docs/**
+    - src/**
+    - "*.md"
+    - docs/**
+
+  # Glob patterns to ignore
+  ignore:
+    - node_modules/**
+    - dist/**
+    - build/**
+    - coverage/**
+    - .next/**
+    - .git/**
+    - "*.lock"
+
+# Knowledge sources define what constitutes "knowledge" in this project.
+# Only files matching one of these sources trigger a reindex.
+knowledge_sources:
+  - id: documentation
+    label: "Documentation"
+    paths:
+      - project-docs/**
+
+  - id: source-code
+    label: "Source Code"
+    paths:
+      - src/**
+
+  # Future knowledge sources can be added here without modifying code:
+  # - id: business-school
+  #   label: "Business Knowledge School"
+  #   paths:
+  #     - schools/business/**
+
+# Indexing behavior
+indexing:
+  # Default mode: fast, moderate, or full
+  default_mode: fast
+
+  # Per-source mode overrides
+  mode_by_source:
+    documentation: fast
+    source-code: moderate
+
+  # Milliseconds to wait after the last file change before triggering an index
+  debounce_ms: 2000
+
+  # Seconds to wait after an index before allowing another for the same source
+  cooldown_seconds: 60
+
+# Index provider configuration
+provider:
+  # Provider type. Currently supports: mcp, dry-run
+  type: mcp
+
+  # Path to the MCP binary (required for type: mcp)
+  binary: ~/.local/bin/codebase-memory-mcp
+
+  # Repository path (relative or absolute)
+  repo_path: .
+
+  # Timeout in milliseconds for index operations
+  timeout_ms: 300000
+
+# State directory (default: ~/.graphsync)
+state:
+  dir: ~/.graphsync

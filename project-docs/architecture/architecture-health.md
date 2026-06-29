@@ -1,6 +1,6 @@
 # Architecture Health Report
 
-**Generated**: 2026-06-28T07:47:06.144Z
+**Generated**: 2026-06-28T17:05:14.934Z
 **Repository**: tony-burgers
 **Engines**: 13
 **Total Event Bindings**: 77
@@ -12,10 +12,10 @@
 | Metric | Value |
 |--------|-------|
 | **Overall Score** | **55 / 100** |
-| Contracts (canonical %) | 65% |
-| Traceability (chains intact) | 100% |
-| Dead Code Issues | 46 |
-| Broken Chains | 0 |
+| Contracts (canonical %) | 100% |
+| Traceability (chains intact) | 88% |
+| Dead Code Issues | 51 |
+| Broken Chains | 1 |
 | Payload Risks | 1 |
 
 ---
@@ -26,7 +26,7 @@
 |--------|-----------|-------|-----------------|
 | **attention** | 3 | 7 | 2 |
 | **decision** | 1 | 2 | 2 |
-| **evidence** | 2 | 4 | 2 |
+| **evidence** | 2 | 4 | 0 |
 | **execution** | 1 | 2 | 2 |
 | **knowledge** | 3 | 5 | 3 |
 | **learning** | 2 | 2 | 3 |
@@ -48,32 +48,30 @@
 ✓ knowledge        → knowledge.lifecycle.*                    [CONNECTED]
 ✓ attention        → attention.operation.prioritized          [CONNECTED]
 ✓ reasoning        → reasoning.lifecycle.*                    [CONNECTED]
-✓ decision         → decision.lifecycle.*                     [CONNECTED]
+✗ decision         → decision.lifecycle.*                     [DISCONNECTED]
 ```
 
 ## Producer / Consumer Matrix
 
 | Event | Producers | Consumers | Contract |
 |-------|-----------|-----------|----------|
-| `runtime.emergency` | — | AttentionEngine.ts | ⚠️ Hardcoded (no constant) |
-| `runtime.context.change` | — | AttentionEngine.ts | ⚠️ Hardcoded (no constant) |
+| `RUNTIME_EVENTS.RUNTIME_EMERGENCY` | — | AttentionEngine.ts | ✅ Canonical |
+| `RUNTIME_EVENTS.RUNTIME_CONTEXT_CHANGE` | — | AttentionEngine.ts | ✅ Canonical |
 | `knowledge.lifecycle.validated` | — | AttentionEngine.ts | ✅ Canonical |
-| `engine:state-change` | AttentionEngine.ts, DecisionEngine.ts, EvidenceEngine.ts, ExecutionEngine.ts, KnowledgeEngine.ts, LearningEngine.ts, MemoryEngine.ts, PatternEngine.ts, PlanningEngine.ts, PredictionEngine.ts, ReasoningEngine.ts, RecommendationEngine.ts | — | ⚠️ Hardcoded (no constant) |
+| `RUNTIME_EVENTS.ENGINE_STATE_CHANGE` | AttentionEngine.ts, DecisionEngine.ts, EvidenceEngine.ts, ExecutionEngine.ts, KnowledgeEngine.ts, LearningEngine.ts, MemoryEngine.ts, PatternEngine.ts, PlanningEngine.ts, PredictionEngine.ts, ReasoningEngine.ts, RecommendationEngine.ts | — | ✅ Canonical |
 | `attention.operation.prioritized` | AttentionPipeline.ts | ReasoningEngine.ts | ✅ Canonical |
 | `attention.operation.focused` | AttentionPipeline.ts | — | ✅ Canonical |
 | `attention.operation.defocused` | AttentionPipeline.ts | — | ✅ Canonical |
 | `attention.operation.interrupted` | AttentionPipeline.ts | — | ✅ Canonical |
 | `attention.lifecycle.deferred` | AttentionPipeline.ts | — | ✅ Canonical |
 | `attention.operation.released` | AttentionPipeline.ts | — | ✅ Canonical |
-| `reasoning.lifecycle.completed` | — | DecisionEngine.ts | ✅ Canonical |
-| `decision.lifecycle.initiated` | DecisionPipeline.ts | LearningEngine.ts | ~ Mixed |
-| `pattern.lifecycle.supported_established` | — | EvidenceEngine.ts | ❌ Hardcoded (constant available) |
-| `pattern.lifecycle.validated_confirmed` | — | EvidenceEngine.ts | ❌ Hardcoded (constant available) |
+| `recommendation.lifecycle.completed` | — | DecisionEngine.ts, ExecutionEngine.ts, PlanningEngine.ts, PredictionEngine.ts, RecommendationEngine.ts | ✅ Canonical |
+| `recommendation.lifecycle.initiated` | DecisionPipeline.ts, ExecutionPipeline.ts, LearningPipeline.ts, PlanningPipeline.ts, PredictionPipeline.ts, RecommendationPipeline.ts | LearningEngine.ts | ✅ Canonical |
+| `pattern.lifecycle.supported_established` | — | EvidenceEngine.ts | ✅ Canonical |
+| `pattern.lifecycle.validated_confirmed` | — | EvidenceEngine.ts | ✅ Canonical |
 | `evidence.evaluation.started` | EvidencePipeline.ts | — | ✅ Canonical |
 | `evidence.evaluation.completed` | EvidencePipeline.ts | MemoryEngine.ts | ✅ Canonical |
 | `evidence.evaluation.failed` | EvidencePipeline.ts | — | ✅ Canonical |
-| `planning.lifecycle.completed` | — | ExecutionEngine.ts | ⚠️ Hardcoded (no constant) |
-| `execution.lifecycle.initiated` | ExecutionPipeline.ts | — | ⚠️ Hardcoded (no constant) |
 | `memory.lifecycle.consolidated` | — | KnowledgeEngine.ts | ✅ Canonical |
 | `memory.lifecycle.long_term_promoted` | — | KnowledgeEngine.ts | ✅ Canonical |
 | `memory.lifecycle.semantic_established` | — | KnowledgeEngine.ts | ✅ Canonical |
@@ -81,8 +79,7 @@
 | `knowledge.operation.generalized` | KnowledgePipeline.ts | — | ✅ Canonical |
 | `knowledge.operation.specialized` | KnowledgePipeline.ts | — | ✅ Canonical |
 | `knowledge.operation.deprecated` | KnowledgePipeline.ts | — | ✅ Canonical |
-| `decision.lifecycle.accepted` | — | LearningEngine.ts | ⚠️ Hardcoded (no constant) |
-| `learning.lifecycle.initiated` | LearningPipeline.ts | — | ⚠️ Hardcoded (no constant) |
+| `decision.lifecycle.accepted` | — | LearningEngine.ts | ✅ Canonical |
 | `evidence.lifecycle.validated_confirmed` | — | MemoryEngine.ts | ✅ Canonical |
 | `observation.lifecycle.historical_committed` | ObservationPipeline.ts | MemoryEngine.ts, PatternEngine.ts | ✅ Canonical |
 | `memory.operation.created` | MemoryPipeline.ts | — | ✅ Canonical |
@@ -108,16 +105,10 @@
 | `pattern.discovery.trend_detected` | PatternPipeline.ts | — | ✅ Canonical |
 | `pattern.discovery.anomaly_detected` | PatternPipeline.ts | — | ✅ Canonical |
 | `pattern.discovery.sequence_discovered` | PatternPipeline.ts | — | ✅ Canonical |
-| `recommendation.lifecycle.completed` | — | PlanningEngine.ts | ⚠️ Hardcoded (no constant) |
-| `planning.lifecycle.initiated` | PlanningPipeline.ts | — | ⚠️ Hardcoded (no constant) |
-| `learning.lifecycle.completed` | — | PredictionEngine.ts | ⚠️ Hardcoded (no constant) |
-| `prediction.lifecycle.initiated` | PredictionPipeline.ts | — | ⚠️ Hardcoded (no constant) |
-| `prediction.lifecycle.completed` | — | RecommendationEngine.ts | ⚠️ Hardcoded (no constant) |
-| `recommendation.lifecycle.initiated` | RecommendationPipeline.ts | — | ⚠️ Hardcoded (no constant) |
 
 ## Contract Verification
 
-Canonical constants found: **141** in **8** files
+Canonical constants found: **157** in **13** files
 
 | File | Constant | Value |
 |------|----------|-------|
@@ -169,6 +160,9 @@ Canonical constants found: **141** in **8** files
 | src/core/engines/evidence/EvidenceEvents.ts | `CONTRADICTION_RESOLVED` | `evidence.contradiction.resolved` |
 | src/core/engines/evidence/EvidenceEvents.ts | `RELATIONSHIP_DISCOVERED` | `evidence.relationship.discovered` |
 | src/core/engines/evidence/EvidenceEvents.ts | `METRICS_UPDATED` | `evidence.metrics.updated` |
+| src/core/engines/execution/ExecutionEvents.ts | `LIFECYCLE_INITIATED` | `execution.lifecycle.initiated` |
+| src/core/engines/execution/ExecutionEvents.ts | `LIFECYCLE_COMPLETED` | `execution.lifecycle.completed` |
+| src/core/engines/execution/ExecutionEvents.ts | `LIFECYCLE_FAILED` | `execution.lifecycle.failed` |
 | src/core/engines/knowledge/KnowledgeEvents.ts | `LIFECYCLE_CANDIDATE_CREATED` | `knowledge.lifecycle.candidate_created` |
 | src/core/engines/knowledge/KnowledgeEvents.ts | `LIFECYCLE_EXTRACTED` | `knowledge.lifecycle.extracted` |
 | src/core/engines/knowledge/KnowledgeEvents.ts | `LIFECYCLE_STRUCTURED` | `knowledge.lifecycle.structured` |
@@ -188,6 +182,10 @@ Canonical constants found: **141** in **8** files
 | src/core/engines/knowledge/KnowledgeEvents.ts | `OPERATION_DEPRECATED` | `knowledge.operation.deprecated` |
 | src/core/engines/knowledge/KnowledgeEvents.ts | `OPERATION_EXPANDED` | `knowledge.operation.expanded` |
 | src/core/engines/knowledge/KnowledgeEvents.ts | `METRICS_UPDATED` | `knowledge.metrics.updated` |
+| src/core/engines/learning/LearningEvents.ts | `LIFECYCLE_INITIATED` | `learning.lifecycle.initiated` |
+| src/core/engines/learning/LearningEvents.ts | `LIFECYCLE_COMPLETED` | `learning.lifecycle.completed` |
+| src/core/engines/learning/LearningEvents.ts | `LIFECYCLE_ACCEPTED` | `decision.lifecycle.accepted` |
+| src/core/engines/learning/LearningEvents.ts | `LIFECYCLE_FAILED` | `learning.lifecycle.failed` |
 | src/core/engines/memory/MemoryEvents.ts | `LIFECYCLE_WORKING_CREATED` | `memory.lifecycle.working_created` |
 | src/core/engines/memory/MemoryEvents.ts | `LIFECYCLE_CANDIDATE_PROMOTED` | `memory.lifecycle.candidate_promoted` |
 | src/core/engines/memory/MemoryEvents.ts | `LIFECYCLE_SHORT_TERM_ESTABLISHED` | `memory.lifecycle.short_term_established` |
@@ -236,6 +234,12 @@ Canonical constants found: **141** in **8** files
 | src/core/engines/pattern/PatternEvents.ts | `PATTERN_UPDATED` | `pattern.lifecycle.pattern_updated` |
 | src/core/engines/pattern/PatternEvents.ts | `PATTERN_CONFLICT` | `pattern.lifecycle.pattern_conflict` |
 | src/core/engines/pattern/PatternEvents.ts | `PATTERN_MERGED` | `pattern.lifecycle.pattern_merged` |
+| src/core/engines/planning/PlanningEvents.ts | `LIFECYCLE_INITIATED` | `planning.lifecycle.initiated` |
+| src/core/engines/planning/PlanningEvents.ts | `LIFECYCLE_COMPLETED` | `planning.lifecycle.completed` |
+| src/core/engines/planning/PlanningEvents.ts | `LIFECYCLE_FAILED` | `planning.lifecycle.failed` |
+| src/core/engines/prediction/PredictionEvents.ts | `LIFECYCLE_INITIATED` | `prediction.lifecycle.initiated` |
+| src/core/engines/prediction/PredictionEvents.ts | `LIFECYCLE_COMPLETED` | `prediction.lifecycle.completed` |
+| src/core/engines/prediction/PredictionEvents.ts | `LIFECYCLE_FAILED` | `prediction.lifecycle.failed` |
 | src/core/engines/reasoning/ReasoningEvents.ts | `LIFECYCLE_CANDIDATE` | `reasoning.lifecycle.candidate` |
 | src/core/engines/reasoning/ReasoningEvents.ts | `LIFECYCLE_ACTIVATED` | `reasoning.lifecycle.activated` |
 | src/core/engines/reasoning/ReasoningEvents.ts | `LIFECYCLE_CONTEXT_BUILDING` | `reasoning.lifecycle.context_building` |
@@ -262,70 +266,48 @@ Canonical constants found: **141** in **8** files
 | src/core/engines/reasoning/ReasoningEvents.ts | `OPERATION_INFERENCE_PERFORMED` | `reasoning.operation.inference_performed` |
 | src/core/engines/reasoning/ReasoningEvents.ts | `OPERATION_CONCLUSION_BUILT` | `reasoning.operation.conclusion_built` |
 | src/core/engines/reasoning/ReasoningEvents.ts | `METRICS_UPDATED` | `reasoning.metrics.updated` |
+| src/core/engines/recommendation/RecommendationEvents.ts | `LIFECYCLE_INITIATED` | `recommendation.lifecycle.initiated` |
+| src/core/engines/recommendation/RecommendationEvents.ts | `LIFECYCLE_COMPLETED` | `recommendation.lifecycle.completed` |
+| src/core/engines/recommendation/RecommendationEvents.ts | `LIFECYCLE_FAILED` | `recommendation.lifecycle.failed` |
 
-### Hardcoded Event Names (27)
+### Hardcoded Event Names (0)
 
-| File | Line | Event | Constant Available? |
-|------|------|-------|--------------------|
-| src/core/engines/attention/AttentionEngine.ts | 135 | `runtime.emergency` | ❌ No |
-| src/core/engines/attention/AttentionEngine.ts | 145 | `runtime.context.change` | ❌ No |
-| src/core/engines/attention/AttentionEngine.ts | 51 | `engine:state-change` | ❌ No |
-| src/core/engines/decision/DecisionEngine.ts | 53 | `engine:state-change` | ❌ No |
-| src/core/engines/evidence/EvidenceEngine.ts | 106 | `pattern.lifecycle.supported_established` | ✅ Yes |
-| src/core/engines/evidence/EvidenceEngine.ts | 114 | `pattern.lifecycle.validated_confirmed` | ✅ Yes |
-| src/core/engines/evidence/EvidenceEngine.ts | 53 | `engine:state-change` | ❌ No |
-| src/core/engines/execution/ExecutionEngine.ts | 94 | `planning.lifecycle.completed` | ❌ No |
-| src/core/engines/execution/ExecutionEngine.ts | 51 | `engine:state-change` | ❌ No |
-| src/core/engines/execution/ExecutionPipeline.ts | 27 | `execution.lifecycle.initiated` | ❌ No |
-| src/core/engines/knowledge/KnowledgeEngine.ts | 52 | `engine:state-change` | ❌ No |
-| src/core/engines/learning/LearningEngine.ts | 94 | `decision.lifecycle.initiated` | ✅ Yes |
-| src/core/engines/learning/LearningEngine.ts | 102 | `decision.lifecycle.accepted` | ❌ No |
-| src/core/engines/learning/LearningEngine.ts | 51 | `engine:state-change` | ❌ No |
-| src/core/engines/learning/LearningPipeline.ts | 27 | `learning.lifecycle.initiated` | ❌ No |
-| src/core/engines/memory/MemoryEngine.ts | 66 | `engine:state-change` | ❌ No |
-| src/core/engines/pattern/PatternEngine.ts | 53 | `engine:state-change` | ❌ No |
-| src/core/engines/planning/PlanningEngine.ts | 94 | `recommendation.lifecycle.completed` | ❌ No |
-| src/core/engines/planning/PlanningEngine.ts | 51 | `engine:state-change` | ❌ No |
-| src/core/engines/planning/PlanningPipeline.ts | 27 | `planning.lifecycle.initiated` | ❌ No |
-| src/core/engines/prediction/PredictionEngine.ts | 94 | `learning.lifecycle.completed` | ❌ No |
-| src/core/engines/prediction/PredictionEngine.ts | 51 | `engine:state-change` | ❌ No |
-| src/core/engines/prediction/PredictionPipeline.ts | 27 | `prediction.lifecycle.initiated` | ❌ No |
-| src/core/engines/reasoning/ReasoningEngine.ts | 43 | `engine:state-change` | ❌ No |
-| src/core/engines/recommendation/RecommendationEngine.ts | 94 | `prediction.lifecycle.completed` | ❌ No |
-| src/core/engines/recommendation/RecommendationEngine.ts | 51 | `engine:state-change` | ❌ No |
-| src/core/engines/recommendation/RecommendationPipeline.ts | 27 | `recommendation.lifecycle.initiated` | ❌ No |
+✅ No hardcoded event names found — all use canonical constants.
 
 ## Dead Code Report
 
 | Type | Description | File | Line | Severity |
 |------|-------------|------|------|----------|
-| HARDCODED_EVENT_NAME | Event "pattern.lifecycle.supported_established" has canonical constant available but uses hardcoded string | src/core/engines/evidence/EvidenceEngine.ts | 106 | 🟡 MEDIUM |
-| HARDCODED_EVENT_NAME | Event "pattern.lifecycle.validated_confirmed" has canonical constant available but uses hardcoded string | src/core/engines/evidence/EvidenceEngine.ts | 114 | 🟡 MEDIUM |
-| HARDCODED_EVENT_NAME | Event "decision.lifecycle.initiated" has canonical constant available but uses hardcoded string | src/core/engines/learning/LearningEngine.ts | 94 | 🟡 MEDIUM |
-| ORPHAN_SUBSCRIBER | Subscribes to "runtime.emergency" but no emitter found | src/core/engines/attention/AttentionEngine.ts | 135 | 🔴 HIGH |
-| ORPHAN_SUBSCRIBER | Subscribes to "runtime.context.change" but no emitter found | src/core/engines/attention/AttentionEngine.ts | 145 | 🔴 HIGH |
-| ORPHAN_EMITTER | Emits "attention.operation.focused" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 262 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "attention.operation.defocused" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 293 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "attention.operation.interrupted" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 330 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "attention.lifecycle.deferred" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 359 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "attention.operation.released" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 389 | 🟡 MEDIUM |
+| ORPHAN_SUBSCRIBER | Subscribes to "RUNTIME_EVENTS.RUNTIME_EMERGENCY" but no emitter found | src/core/engines/attention/AttentionEngine.ts | 136 | 🔴 HIGH |
+| ORPHAN_SUBSCRIBER | Subscribes to "RUNTIME_EVENTS.RUNTIME_CONTEXT_CHANGE" but no emitter found | src/core/engines/attention/AttentionEngine.ts | 148 | 🔴 HIGH |
+| ORPHAN_SUBSCRIBER | Subscribes to "decision.lifecycle.accepted" but no emitter found | src/core/engines/learning/LearningEngine.ts | 105 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/attention/AttentionEngine.ts | 52 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "attention.operation.focused" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 263 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "attention.operation.defocused" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 295 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "attention.operation.interrupted" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 333 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "attention.lifecycle.deferred" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 363 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "attention.operation.released" but no subscriber found | src/core/engines/attention/AttentionPipeline.ts | 394 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/decision/DecisionEngine.ts | 54 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/evidence/EvidenceEngine.ts | 55 | 🔴 HIGH |
 | ORPHAN_EMITTER | Emits "evidence.evaluation.started" but no subscriber found | src/core/engines/evidence/EvidencePipeline.ts | 68 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "evidence.evaluation.failed" but no subscriber found | src/core/engines/evidence/EvidencePipeline.ts | 191 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "execution.lifecycle.initiated" but no subscriber found | src/core/engines/execution/ExecutionPipeline.ts | 27 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "evidence.evaluation.failed" but no subscriber found | src/core/engines/evidence/EvidencePipeline.ts | 197 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/execution/ExecutionEngine.ts | 53 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/knowledge/KnowledgeEngine.ts | 53 | 🔴 HIGH |
 | ORPHAN_EMITTER | Emits "knowledge.operation.extracted" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 114 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "knowledge.operation.generalized" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 201 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "knowledge.operation.specialized" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 236 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "knowledge.operation.deprecated" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 308 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "learning.lifecycle.initiated" but no subscriber found | src/core/engines/learning/LearningPipeline.ts | 27 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "knowledge.operation.generalized" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 202 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "knowledge.operation.specialized" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 238 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "knowledge.operation.deprecated" but no subscriber found | src/core/engines/knowledge/KnowledgePipeline.ts | 311 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/learning/LearningEngine.ts | 54 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/memory/MemoryEngine.ts | 67 | 🔴 HIGH |
 | ORPHAN_EMITTER | Emits "memory.operation.created" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 86 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.strengthened" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 153 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.weakened" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 174 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.forgotten" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 194 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.reactivated" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 224 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.compressed" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 244 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.merged" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 270 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.associated" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 290 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "memory.operation.detached" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 309 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.strengthened" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 154 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.weakened" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 176 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.forgotten" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 197 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.reactivated" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 228 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.compressed" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 249 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.merged" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 276 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.associated" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 297 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "memory.operation.detached" but no subscriber found | src/core/engines/memory/MemoryPipeline.ts | 317 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "pattern.lifecycle.potential_detected" but no subscriber found | src/core/engines/observation/ObservationPipeline.ts | 70 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "observation.lifecycle.candidate_verified" but no subscriber found | src/core/engines/observation/ObservationPipeline.ts | 88 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "observation.lifecycle.context_assigned" but no subscriber found | src/core/engines/observation/ObservationPipeline.ts | 97 | 🟡 MEDIUM |
@@ -334,6 +316,7 @@ Canonical constants found: **141** in **8** files
 | ORPHAN_EMITTER | Emits "observation.lifecycle.pattern_evidence_linked" but no subscriber found | src/core/engines/observation/ObservationPipeline.ts | 259 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "observation.lifecycle.knowledge_evidence_linked" but no subscriber found | src/core/engines/observation/ObservationPipeline.ts | 280 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "observation.lifecycle.archived" but no subscriber found | src/core/engines/observation/ObservationPipeline.ts | 295 | 🟡 MEDIUM |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/pattern/PatternEngine.ts | 54 | 🔴 HIGH |
 | ORPHAN_EMITTER | Emits "pattern.lifecycle.potential_detected" but no subscriber found | src/core/engines/pattern/PatternPipeline.ts | 133 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "pattern.lifecycle.emerging_confirmed" but no subscriber found | src/core/engines/pattern/PatternPipeline.ts | 134 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "pattern.lifecycle.pattern_updated" but no subscriber found | src/core/engines/pattern/PatternPipeline.ts | 168 | 🟡 MEDIUM |
@@ -342,9 +325,10 @@ Canonical constants found: **141** in **8** files
 | ORPHAN_EMITTER | Emits "pattern.discovery.anomaly_detected" but no subscriber found | src/core/engines/pattern/PatternPipeline.ts | 258 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "pattern.discovery.sequence_discovered" but no subscriber found | src/core/engines/pattern/PatternPipeline.ts | 288 | 🟡 MEDIUM |
 | ORPHAN_EMITTER | Emits "pattern.lifecycle.deprecated" but no subscriber found | src/core/engines/pattern/PatternPipeline.ts | 323 | 🟡 MEDIUM |
-| ORPHAN_EMITTER | Emits "planning.lifecycle.initiated" but no subscriber found | src/core/engines/planning/PlanningPipeline.ts | 27 | 🔴 HIGH |
-| ORPHAN_EMITTER | Emits "prediction.lifecycle.initiated" but no subscriber found | src/core/engines/prediction/PredictionPipeline.ts | 27 | 🔴 HIGH |
-| ORPHAN_EMITTER | Emits "recommendation.lifecycle.initiated" but no subscriber found | src/core/engines/recommendation/RecommendationPipeline.ts | 27 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/planning/PlanningEngine.ts | 53 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/prediction/PredictionEngine.ts | 53 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/reasoning/ReasoningEngine.ts | 44 | 🔴 HIGH |
+| ORPHAN_EMITTER | Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found | src/core/engines/recommendation/RecommendationEngine.ts | 53 | 🔴 HIGH |
 
 ## Payload Compatibility
 
@@ -372,41 +356,46 @@ Canonical constants found: **141** in **8** files
 
 ## Recommended Actions
 
-### 🔴 Critical (7)
+### 🔴 Critical (15)
 
-- **ORPHAN_SUBSCRIBER**: Subscribes to "runtime.emergency" but no emitter found (src/core/engines/attention/AttentionEngine.ts:135)
-- **ORPHAN_SUBSCRIBER**: Subscribes to "runtime.context.change" but no emitter found (src/core/engines/attention/AttentionEngine.ts:145)
-- **ORPHAN_EMITTER**: Emits "execution.lifecycle.initiated" but no subscriber found (src/core/engines/execution/ExecutionPipeline.ts:27)
-- **ORPHAN_EMITTER**: Emits "learning.lifecycle.initiated" but no subscriber found (src/core/engines/learning/LearningPipeline.ts:27)
-- **ORPHAN_EMITTER**: Emits "planning.lifecycle.initiated" but no subscriber found (src/core/engines/planning/PlanningPipeline.ts:27)
-- **ORPHAN_EMITTER**: Emits "prediction.lifecycle.initiated" but no subscriber found (src/core/engines/prediction/PredictionPipeline.ts:27)
-- **ORPHAN_EMITTER**: Emits "recommendation.lifecycle.initiated" but no subscriber found (src/core/engines/recommendation/RecommendationPipeline.ts:27)
+- **ORPHAN_SUBSCRIBER**: Subscribes to "RUNTIME_EVENTS.RUNTIME_EMERGENCY" but no emitter found (src/core/engines/attention/AttentionEngine.ts:136)
+- **ORPHAN_SUBSCRIBER**: Subscribes to "RUNTIME_EVENTS.RUNTIME_CONTEXT_CHANGE" but no emitter found (src/core/engines/attention/AttentionEngine.ts:148)
+- **ORPHAN_SUBSCRIBER**: Subscribes to "decision.lifecycle.accepted" but no emitter found (src/core/engines/learning/LearningEngine.ts:105)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/attention/AttentionEngine.ts:52)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/decision/DecisionEngine.ts:54)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/evidence/EvidenceEngine.ts:55)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/execution/ExecutionEngine.ts:53)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/knowledge/KnowledgeEngine.ts:53)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/learning/LearningEngine.ts:54)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/memory/MemoryEngine.ts:67)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/pattern/PatternEngine.ts:54)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/planning/PlanningEngine.ts:53)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/prediction/PredictionEngine.ts:53)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/reasoning/ReasoningEngine.ts:44)
+- **ORPHAN_EMITTER**: Emits "RUNTIME_EVENTS.ENGINE_STATE_CHANGE" but no subscriber found (src/core/engines/recommendation/RecommendationEngine.ts:53)
 
-### 🟡 Medium (40)
+### 🟡 Medium (37)
 
-- **HARDCODED_EVENT_NAME**: Event "pattern.lifecycle.supported_established" has canonical constant available but uses hardcoded string (src/core/engines/evidence/EvidenceEngine.ts:106)
-- **HARDCODED_EVENT_NAME**: Event "pattern.lifecycle.validated_confirmed" has canonical constant available but uses hardcoded string (src/core/engines/evidence/EvidenceEngine.ts:114)
-- **HARDCODED_EVENT_NAME**: Event "decision.lifecycle.initiated" has canonical constant available but uses hardcoded string (src/core/engines/learning/LearningEngine.ts:94)
-- **ORPHAN_EMITTER**: Emits "attention.operation.focused" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:262)
-- **ORPHAN_EMITTER**: Emits "attention.operation.defocused" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:293)
-- **ORPHAN_EMITTER**: Emits "attention.operation.interrupted" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:330)
-- **ORPHAN_EMITTER**: Emits "attention.lifecycle.deferred" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:359)
-- **ORPHAN_EMITTER**: Emits "attention.operation.released" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:389)
+- **ORPHAN_EMITTER**: Emits "attention.operation.focused" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:263)
+- **ORPHAN_EMITTER**: Emits "attention.operation.defocused" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:295)
+- **ORPHAN_EMITTER**: Emits "attention.operation.interrupted" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:333)
+- **ORPHAN_EMITTER**: Emits "attention.lifecycle.deferred" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:363)
+- **ORPHAN_EMITTER**: Emits "attention.operation.released" but no subscriber found (src/core/engines/attention/AttentionPipeline.ts:394)
 - **ORPHAN_EMITTER**: Emits "evidence.evaluation.started" but no subscriber found (src/core/engines/evidence/EvidencePipeline.ts:68)
-- **ORPHAN_EMITTER**: Emits "evidence.evaluation.failed" but no subscriber found (src/core/engines/evidence/EvidencePipeline.ts:191)
+- **ORPHAN_EMITTER**: Emits "evidence.evaluation.failed" but no subscriber found (src/core/engines/evidence/EvidencePipeline.ts:197)
 - **ORPHAN_EMITTER**: Emits "knowledge.operation.extracted" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:114)
-- **ORPHAN_EMITTER**: Emits "knowledge.operation.generalized" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:201)
-- **ORPHAN_EMITTER**: Emits "knowledge.operation.specialized" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:236)
-- **ORPHAN_EMITTER**: Emits "knowledge.operation.deprecated" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:308)
+- **ORPHAN_EMITTER**: Emits "knowledge.operation.generalized" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:202)
+- **ORPHAN_EMITTER**: Emits "knowledge.operation.specialized" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:238)
+- **ORPHAN_EMITTER**: Emits "knowledge.operation.deprecated" but no subscriber found (src/core/engines/knowledge/KnowledgePipeline.ts:311)
 - **ORPHAN_EMITTER**: Emits "memory.operation.created" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:86)
-- **ORPHAN_EMITTER**: Emits "memory.operation.strengthened" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:153)
-- **ORPHAN_EMITTER**: Emits "memory.operation.weakened" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:174)
-- **ORPHAN_EMITTER**: Emits "memory.operation.forgotten" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:194)
-- **ORPHAN_EMITTER**: Emits "memory.operation.reactivated" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:224)
-- **ORPHAN_EMITTER**: Emits "memory.operation.compressed" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:244)
-- **ORPHAN_EMITTER**: Emits "memory.operation.merged" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:270)
-- **ORPHAN_EMITTER**: Emits "memory.operation.associated" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:290)
-- **ORPHAN_EMITTER**: Emits "memory.operation.detached" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:309)
+- **ORPHAN_EMITTER**: Emits "memory.operation.strengthened" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:154)
+- **ORPHAN_EMITTER**: Emits "memory.operation.weakened" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:176)
+- **ORPHAN_EMITTER**: Emits "memory.operation.forgotten" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:197)
+- **ORPHAN_EMITTER**: Emits "memory.operation.reactivated" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:228)
+- **ORPHAN_EMITTER**: Emits "memory.operation.compressed" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:249)
+- **ORPHAN_EMITTER**: Emits "memory.operation.merged" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:276)
+- **ORPHAN_EMITTER**: Emits "memory.operation.associated" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:297)
+- **ORPHAN_EMITTER**: Emits "memory.operation.detached" but no subscriber found (src/core/engines/memory/MemoryPipeline.ts:317)
 - **ORPHAN_EMITTER**: Emits "pattern.lifecycle.potential_detected" but no subscriber found (src/core/engines/observation/ObservationPipeline.ts:70)
 - **ORPHAN_EMITTER**: Emits "observation.lifecycle.candidate_verified" but no subscriber found (src/core/engines/observation/ObservationPipeline.ts:88)
 - **ORPHAN_EMITTER**: Emits "observation.lifecycle.context_assigned" but no subscriber found (src/core/engines/observation/ObservationPipeline.ts:97)
@@ -423,11 +412,11 @@ Canonical constants found: **141** in **8** files
 - **ORPHAN_EMITTER**: Emits "pattern.discovery.anomaly_detected" but no subscriber found (src/core/engines/pattern/PatternPipeline.ts:258)
 - **ORPHAN_EMITTER**: Emits "pattern.discovery.sequence_discovered" but no subscriber found (src/core/engines/pattern/PatternPipeline.ts:288)
 - **ORPHAN_EMITTER**: Emits "pattern.lifecycle.deprecated" but no subscriber found (src/core/engines/pattern/PatternPipeline.ts:323)
-- **PAYLOAD_MISMATCH**: Producer emits flat payload {attentionId, name, category, priority} but consumer expects nested {attention: {id, identity, provenance}} — fallback paths used, provenance lost (src/core/engines/reasoning/ReasoningEngine.ts:122)
+- **PAYLOAD_MISMATCH**: Producer emits flat payload {attentionId, name, category, priority} but consumer expects nested {attention: {id, identity, provenance}} — fallback paths used, provenance lost (src/core/engines/reasoning/ReasoningEngine.ts:123)
 
 ## Decision
 
-⚠️ **IMPLEMENT WITH CAUTION** — 7 critical issues found.
+⚠️ **IMPLEMENT WITH CAUTION** — 15 critical issues found.
 
 ---
 *Report generated by ARCH-002 Continuous Architecture Watchdog*

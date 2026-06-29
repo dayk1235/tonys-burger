@@ -17,6 +17,8 @@ import {
 import { KnowledgePipeline } from "./KnowledgePipeline";
 import { KnowledgeValidator } from "./KnowledgeValidator";
 import { MEMORY_EVENTS } from "../memory/MemoryEvents";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -28,6 +30,7 @@ export class KnowledgeEngine implements CognitiveEngine {
   private state: InternalEngineState = "INITIALIZED";
   private pipeline: KnowledgePipeline;
   private validator: KnowledgeValidator;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -36,6 +39,7 @@ export class KnowledgeEngine implements CognitiveEngine {
   ) {
     this.pipeline = new KnowledgePipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new KnowledgeValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -49,7 +53,7 @@ export class KnowledgeEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -112,24 +116,24 @@ export class KnowledgeEngine implements CognitiveEngine {
     this.eventBus.subscribe(MEMORY_EVENTS.LIFECYCLE_CONSOLIDATED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(MEMORY_EVENTS.LIFECYCLE_CONSOLIDATED, err);
       }
     });
 
     this.eventBus.subscribe(MEMORY_EVENTS.LIFECYCLE_LONG_TERM_PROMOTED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(MEMORY_EVENTS.LIFECYCLE_LONG_TERM_PROMOTED, err);
       }
     });
 
     this.eventBus.subscribe(MEMORY_EVENTS.LIFECYCLE_SEMANTIC_ESTABLISHED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(MEMORY_EVENTS.LIFECYCLE_SEMANTIC_ESTABLISHED, err);
       }
     });
   }

@@ -10,7 +10,7 @@ import { ProgressCard } from "./ProgressCard";
 import { MetricExpectation } from "./MetricExpectation";
 import { ReviewCard } from "./ReviewCard";
 import { LearningGoal } from "./LearningGoal";
-import { DecisionEngine } from "@/features/engines/decision/engine";
+import { DecisionDashboard } from "@/features/engines/decision/engine";
 import { DASHBOARD_ROUTES } from "@/features/dashboard/config/routes";
 import { useTranslation } from "@/localization";
 
@@ -20,7 +20,7 @@ interface ExperimentLifecycleViewProps {
 
 export function ExperimentLifecycleView({ experimentId }: ExperimentLifecycleViewProps) {
   const { t, locale } = useTranslation();
-  const data = DecisionEngine.getExperimentLifecycle(experimentId, locale);
+  const data = DecisionDashboard.getExperimentLifecycle(experimentId, locale);
 
   if (!data) {
     notFound();

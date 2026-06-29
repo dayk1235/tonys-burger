@@ -10,6 +10,7 @@ import {
   ContextSnapshot,
 } from "./AttentionTypes";
 import { RuntimeEventBus, AuditPipeline, RecoveryPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 import { ATTENTION_EVENTS, getAttentionLifecycleEventName } from "./AttentionEvents";
 
 import { AttentionFactory } from "./AttentionFactory";
@@ -56,6 +57,7 @@ export class AttentionPipeline {
   readonly memory: AttentionMemory;
   readonly queue: AttentionQueue;
   readonly scheduler: AttentionScheduler;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -80,7 +82,8 @@ export class AttentionPipeline {
     this.interruptions = new AttentionInterruptions();
     this.policyEngine = new AttentionPolicyEngine();
     this.metrics = new AttentionMetrics();
-    this.memory = new AttentionMemory();
+    this.errorReporter = new RuntimeErrorReporter("AttentionPipeline", this.auditPipeline, this.recoveryPipeline);
+    this.memory = new AttentionMemory(this.errorReporter);
     this.queue = new AttentionQueue();
     this.scheduler = new AttentionScheduler();
   }
@@ -166,6 +169,7 @@ export class AttentionPipeline {
     this.queue.enqueue(queued);
 
     await this.emitEvent(ATTENTION_EVENTS.OPERATION_PRIORITIZED, {
+      entity: { attention: { ...queued } },
       attention: { ...queued },
       operation: "PRIORITIZE",
       timestamp: new Date().toISOString(),
@@ -260,6 +264,7 @@ export class AttentionPipeline {
     this.metrics.recordStage(updated.stage);
 
     await this.emitEvent(ATTENTION_EVENTS.OPERATION_FOCUSED, {
+      entity: { attention: { ...updated } },
       attentionId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -291,6 +296,7 @@ export class AttentionPipeline {
     this.metrics.updateBudget(this.allocation.getBudget().total, this.allocation.getBudget().available);
 
     await this.emitEvent(ATTENTION_EVENTS.OPERATION_DEFOCUSED, {
+      entity: { attention: { ...released } },
       attentionId: released.id,
       name: released.identity.name,
       category: released.identity.category,
@@ -328,6 +334,7 @@ export class AttentionPipeline {
     this.metrics.updateBudget(this.allocation.getBudget().total, this.allocation.getBudget().available);
 
     await this.emitEvent(ATTENTION_EVENTS.OPERATION_INTERRUPTED, {
+      entity: { attention: { ...updated } },
       attentionId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -357,6 +364,7 @@ export class AttentionPipeline {
     this.metrics.updateBudget(this.allocation.getBudget().total, this.allocation.getBudget().available);
 
     await this.emitEvent(ATTENTION_EVENTS.LIFECYCLE_DEFERRED, {
+      entity: { attention: { ...updated } },
       attentionId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -387,6 +395,7 @@ export class AttentionPipeline {
     this.metrics.updateBudget(this.allocation.getBudget().total, this.allocation.getBudget().available);
 
     await this.emitEvent(ATTENTION_EVENTS.OPERATION_RELEASED, {
+      entity: { attention: { ...updated } },
       attentionId: updated.id,
       name: updated.identity.name,
       category: updated.identity.category,
@@ -481,8 +490,8 @@ export class AttentionPipeline {
     if (!this.eventBus) return;
     try {
       await this.eventBus.emit(eventName, payload);
-    } catch {
-      // swallow
+    } catch (err) {
+      await this.errorReporter.reportPipelineError("emitEvent", err);
     }
   }
 
@@ -491,6 +500,7 @@ export class AttentionPipeline {
     if (!eventName) return;
     const operation = attention.stage === "ARCHIVED" ? "ARCHIVE" : "RELEASE";
     await this.emitEvent(eventName, {
+      entity: { attention: { ...attention } },
       attention: { ...attention },
       operation,
       timestamp: new Date().toISOString(),

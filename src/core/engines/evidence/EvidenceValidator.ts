@@ -69,6 +69,7 @@ export class EvidenceValidator {
       patternName: (identity?.name as string) || "",
       patternCategory: (identity?.category as string) || "",
       businessId: (pattern as Record<string, unknown>).businessId as string || (pattern.originObservations as string[])?.[0] || "",
+      reasoningId: ((pattern as Record<string, unknown>).reasoningId as string) || (input.reasoningId as string) || undefined,
       observations: [...(pattern.originObservations as string[] || []), ...(pattern.supportingObservations as string[] || [])],
       supportingObservationIds: pattern.supportingObservations as string[] || [],
       contradictingObservationIds: pattern.contradictingObservations as string[] || [],

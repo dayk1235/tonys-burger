@@ -33,6 +33,8 @@ export interface EvidenceIdentity {
   readonly category: string;
   readonly classification: EvidenceCategory;
   readonly evaluatedAt: string;
+  readonly reasoningId?: string;
+  readonly businessId?: string;
 }
 
 export interface EvidenceVersion {
@@ -121,6 +123,7 @@ export interface EvidenceEvaluationRequest {
   readonly patternName: string;
   readonly patternCategory: string;
   readonly businessId: string;
+  readonly reasoningId?: string;
   readonly observations: readonly string[];
   readonly supportingObservationIds: readonly string[];
   readonly contradictingObservationIds: readonly string[];
@@ -168,6 +171,8 @@ export interface PatternDetail {
 }
 
 export interface EvidenceEventPayload {
+  readonly entity: Record<string, unknown>;
+  readonly operation: string;
   readonly evidenceId: string;
   readonly patternId: string;
   readonly patternName: string;
@@ -177,4 +182,5 @@ export interface EvidenceEventPayload {
   readonly supportingCount: number;
   readonly contradictingCount: number;
   readonly timestamp: string;
+  readonly version: number;
 }

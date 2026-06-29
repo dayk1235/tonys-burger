@@ -16,6 +16,10 @@ import {
 
 import { LearningPipeline } from "./LearningPipeline";
 import { LearningValidator } from "./LearningValidator";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { DECISION_EVENTS } from "../decision/DecisionEvents";
+import { LEARNING_EVENTS } from "./LearningEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -27,6 +31,7 @@ export class LearningEngine implements CognitiveEngine {
   private state: InternalEngineState = "INITIALIZED";
   private pipeline: LearningPipeline;
   private validator: LearningValidator;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -35,6 +40,7 @@ export class LearningEngine implements CognitiveEngine {
   ) {
     this.pipeline = new LearningPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new LearningValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -48,7 +54,7 @@ export class LearningEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -85,25 +91,26 @@ export class LearningEngine implements CognitiveEngine {
   }
 
   getMetrics() {
-    return {};
+    return this.pipeline.metrics.getSnapshot();
   }
 
   private subscribeToRuntimeEvents(): void {
     if (!this.eventBus) return;
 
-    this.eventBus.subscribe("decision.lifecycle.initiated", async (payload) => {
+    this.eventBus.subscribe(DECISION_EVENTS.LIFECYCLE_INITIATED, async (payload) => {
       try {
-        await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+        const extracted = this.validator.extractFromDecisionEvent(payload as Record<string, unknown>);
+        await this.receiveInput(extracted);
+      } catch (err) {
+        await this.errorReporter.reportEngineError(DECISION_EVENTS.LIFECYCLE_INITIATED, err);
       }
     });
 
-    this.eventBus.subscribe("decision.lifecycle.accepted", async (payload) => {
+    this.eventBus.subscribe(LEARNING_EVENTS.LIFECYCLE_ACCEPTED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (err) {
+        await this.errorReporter.reportEngineError(LEARNING_EVENTS.LIFECYCLE_ACCEPTED, err);
       }
     });
   }

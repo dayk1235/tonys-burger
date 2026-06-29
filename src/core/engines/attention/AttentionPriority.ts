@@ -77,10 +77,10 @@ export class AttentionPriority {
   getEscalationLevel(attention: Attention): string {
     const { urgency, importance, risk } = attention.priorityFactors;
     const composite = urgency * 0.4 + importance * 0.3 + risk * 0.3;
-    if (composite >= 0.9) return "CRITICAL";
-    if (composite >= 0.7) return "HIGH";
-    if (composite >= 0.5) return "MEDIUM";
-    if (composite >= 0.3) return "LOW";
+    if (composite >= 0.75) return "CRITICAL";
+    if (composite >= 0.55) return "HIGH";
+    if (composite >= 0.35) return "MEDIUM";
+    if (composite >= 0.15) return "LOW";
     return "NONE";
   }
 }

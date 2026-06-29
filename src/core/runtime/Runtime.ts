@@ -18,6 +18,7 @@ import { EngineManifestDefinition } from "./EngineManifest";
 import type { CanonicalOrderEvent, RuntimeReceiveResult } from "./CanonicalOrderEvent";
 import { ObservationCategory, type Observation } from "../engines/observation/ObservationTypes";
 import { EngineNotFoundError, EngineNotRunningError } from "./RuntimeErrors";
+import { RUNTIME_EVENTS } from "./RuntimeEvents";
 
 export class Runtime {
   readonly config: RuntimeConfiguration;
@@ -39,18 +40,23 @@ export class Runtime {
     this.config = new RuntimeConfiguration(configOverrides);
     this.clock = new RuntimeClock();
     this.lifecycle = new RuntimeLifecycle();
-    this.eventBus = new EventBus(this.clock, this.config.get("eventHistoryLimit"));
-    this.contextBus = new ContextBusImpl();
-    this.workingMemory = new WorkingMemory(
-      this.config.get("maxWorkingMemoryItems"),
-      this.config.get("workingMemoryTTLMs")
+    this.eventBus = new EventBus(
+      this.clock,
+      this.config.get("eventHistoryLimit"),
+      () => this.metrics.incrementDelivered()
     );
     this.engineRegistry = new EngineRegistry();
     this.engineLoader = new EngineLoader(this.engineRegistry);
     this.runtimeRegistry = new RuntimeRegistryImpl(this.engineRegistry);
     this.auditPipeline = new AuditPipelineImpl(this.clock, this.config.get("auditRetentionMs"));
     this.recoveryPipeline = new RecoveryPipelineImpl(this.clock);
-    this.scheduler = new RuntimeSchedulerImpl(this.clock);
+    this.contextBus = new ContextBusImpl(this.auditPipeline);
+    this.workingMemory = new WorkingMemory(
+      this.config.get("maxWorkingMemoryItems"),
+      this.config.get("workingMemoryTTLMs"),
+      this.auditPipeline
+    );
+    this.scheduler = new RuntimeSchedulerImpl(this.clock, this.auditPipeline);
     this.metrics = new RuntimeMetrics(this.clock);
     this.health = new RuntimeHealth(this.clock);
   }
@@ -80,9 +86,13 @@ export class Runtime {
     this.metrics.incrementPublished();
     this.lifecycle.transition("OPERATING");
 
-    await this.eventBus.emit("runtime:started", {
+    await this.eventBus.emit(RUNTIME_EVENTS.RUNTIME_STARTED, {
+      entity: { runtime: { state: this.lifecycle.current, engines: this.engineRegistry.count() } },
+      operation: "START",
       state: this.lifecycle.current,
       engines: this.engineRegistry.count(),
+      timestamp: new Date().toISOString(),
+      version: 1,
     });
   }
 
@@ -92,8 +102,12 @@ export class Runtime {
     await this.scheduler.stop();
     this.lifecycle.transition("SHUTTING_DOWN");
 
-    await this.eventBus.emit("runtime:shutting-down", {
+    await this.eventBus.emit(RUNTIME_EVENTS.RUNTIME_SHUTTING_DOWN, {
+      entity: { runtime: { finalState: this.lifecycle.current } },
+      operation: "SHUTDOWN",
       finalState: this.lifecycle.current,
+      timestamp: new Date().toISOString(),
+      version: 1,
     });
 
     this.lifecycle.transition("HALTED");
@@ -156,11 +170,15 @@ export class Runtime {
 
     this.metrics.incrementPublished();
 
-    await this.eventBus.emit("runtime:order-received", {
+    await this.eventBus.emit(RUNTIME_EVENTS.RUNTIME_ORDER_RECEIVED, {
+      entity: { order: { orderId: event.orderId, requestId: event.requestId, observationId: observation.id, channel: event.channel.type } },
+      operation: "RECEIVE",
       orderId: event.orderId,
       requestId: event.requestId,
       observationId: observation.id,
       channel: event.channel.type,
+      timestamp: new Date().toISOString(),
+      version: 1,
     });
 
     return {

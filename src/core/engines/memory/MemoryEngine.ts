@@ -20,6 +20,8 @@ import { MEMORY_EVENTS } from "./MemoryEvents";
 import { ObservationEventNames } from "../observation/ObservationEvents";
 import { PatternEventNames } from "../pattern/PatternEvents";
 import { EVIDENCE_EVENTS } from "../evidence/EvidenceEvents";
+import { RUNTIME_EVENTS } from "../../runtime/RuntimeEvents";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 type InternalEngineState = "INITIALIZED" | "RUNNING" | "PAUSED" | "STOPPED" | "RECOVERING";
 
@@ -32,6 +34,7 @@ export class MemoryEngine implements CognitiveEngine {
   private pipeline: MemoryPipeline;
   private validator: MemoryValidator;
   private cycleInterval: ReturnType<typeof setInterval> | null = null;
+  private readonly errorReporter: RuntimeErrorReporter;
 
   constructor(
     private readonly eventBus?: RuntimeEventBus,
@@ -40,6 +43,7 @@ export class MemoryEngine implements CognitiveEngine {
   ) {
     this.pipeline = new MemoryPipeline(this.eventBus, this.auditPipeline, this.recoveryPipeline);
     this.validator = new MemoryValidator();
+    this.errorReporter = new RuntimeErrorReporter(this.name, this.auditPipeline, this.recoveryPipeline);
   }
 
   async start(): Promise<void> {
@@ -52,8 +56,8 @@ export class MemoryEngine implements CognitiveEngine {
     this.cycleInterval = setInterval(async () => {
       try {
         await this.pipeline.processCycle();
-      } catch {
-        // silently handle cycle errors
+      } catch (error) {
+        await this.errorReporter.reportWithDetails("process_cycle", error, {});
       }
     }, 60000);
 
@@ -63,7 +67,7 @@ export class MemoryEngine implements CognitiveEngine {
       await this.auditPipeline.recordStateChange(this.name, "INITIALIZED", "RUNNING");
     }
     if (this.eventBus) {
-      await this.eventBus.emit("engine:state-change", {
+      await this.eventBus.emit(RUNTIME_EVENTS.ENGINE_STATE_CHANGE, {
         engine: this.name,
         from: "INITIALIZED",
         to: "RUNNING",
@@ -153,16 +157,28 @@ export class MemoryEngine implements CognitiveEngine {
     this.eventBus.subscribe(EVIDENCE_EVENTS.LIFECYCLE_VALIDATED_CONFIRMED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (error) {
+        const p = payload as Record<string, unknown> | undefined;
+        const ev = p?.evidence as Record<string, unknown> | undefined;
+        await this.errorReporter.reportWithDetails("receive_evidence", error, {
+          event: EVIDENCE_EVENTS.LIFECYCLE_VALIDATED_CONFIRMED,
+          entityId: (ev?.id as string) || undefined,
+          businessId: (p?.businessId as string) || undefined,
+        });
       }
     });
 
     this.eventBus.subscribe(EVIDENCE_EVENTS.EVALUATION_COMPLETED, async (payload) => {
       try {
         await this.receiveInput(payload as unknown as Record<string, unknown>);
-      } catch {
-        // silently handle
+      } catch (error) {
+        const p = payload as Record<string, unknown> | undefined;
+        const ev = p?.evidence as Record<string, unknown> | undefined;
+        await this.errorReporter.reportWithDetails("receive_evidence", error, {
+          event: EVIDENCE_EVENTS.EVALUATION_COMPLETED,
+          entityId: (ev?.id as string) || undefined,
+          businessId: (p?.businessId as string) || undefined,
+        });
       }
     });
   }
@@ -198,9 +214,10 @@ export class MemoryEngine implements CognitiveEngine {
             businessId: observation.businessId,
           } as unknown as Record<string, unknown>);
         } else {
-          const data = (p.data as Record<string, unknown>) || {};
-          const eventPayload = (data.payload as Record<string, unknown>) || {};
+          const entity = (p.entity as Record<string, unknown> | undefined) ?? (p.data as Record<string, unknown>) ?? {};
+          const eventPayload = (entity.payload as Record<string, unknown>) ?? (p.payload as Record<string, unknown>) ?? {};
           const observationId = p.observationId as string;
+          const businessId = (eventPayload.businessId as string) ?? (entity.businessId as string) ?? "";
           await this.receiveInput({
             evidence: {
               id: observationId,
@@ -215,11 +232,17 @@ export class MemoryEngine implements CognitiveEngine {
               score: 0.5,
               confidence: 0.5,
             },
-            businessId: "default",
+            businessId,
           } as unknown as Record<string, unknown>);
         }
-      } catch {
-        // silently handle
+      } catch (error) {
+        const p = payload as Record<string, unknown> | undefined;
+        const obs = (p?.entity ?? p?.observation) as Record<string, unknown> | undefined;
+        await this.errorReporter.reportWithDetails("receive_observation", error, {
+          event: ObservationEventNames.HISTORICAL_COMMITTED,
+          entityId: (obs?.id as string) || (p?.observationId as string) || undefined,
+          businessId: (obs?.businessId as string) || undefined,
+        });
       }
     });
   }
@@ -242,10 +265,12 @@ export class MemoryEngine implements CognitiveEngine {
       this.eventBus.subscribe(eventName, async (payload) => {
         try {
           const p = payload as Record<string, unknown>;
-          const pattern = p.pattern as Record<string, unknown> | undefined;
+          const pattern = ((p.entity as Record<string, unknown> | undefined)?.pattern as Record<string, unknown> | undefined) ??
+            (p.pattern as Record<string, unknown> | undefined);
 
           if (pattern) {
             const identity = (pattern.identity as Record<string, unknown>) || {};
+            const businessId = ((identity as Record<string, unknown>).businessId as string) ?? "";
             await this.receiveInput({
               evidence: {
                 id: pattern.id as string,
@@ -258,15 +283,16 @@ export class MemoryEngine implements CognitiveEngine {
                 score: (pattern.strength as number) || 0.5,
                 confidence: (pattern.confidence as number) || 0.5,
               },
-              businessId: ((identity as Record<string, unknown>).businessId as string) || "default",
+              businessId,
               description: `Memory from pattern ${pattern.id}`,
             } as unknown as Record<string, unknown>);
           } else {
-            const eventPayload = (p.payload as Record<string, unknown>) || {};
-            const patternId = (eventPayload.patternId as string) || "";
-            const stage = (eventPayload.stage as string) || "";
+            const entity = (p.entity as Record<string, unknown> | undefined) ?? (p.payload as Record<string, unknown>) ?? {};
+            const patternId = (entity.patternId as string) || "";
+            const stage = (entity.stage as string) || "";
             if (!patternId) return;
-            const data = (eventPayload.data as Record<string, unknown>) || {};
+            const data = (entity.data as Record<string, unknown>) || {};
+            const businessId = (data.businessId as string) ?? (entity.businessId as string) ?? "";
             await this.receiveInput({
               evidence: {
                 id: patternId,
@@ -276,12 +302,19 @@ export class MemoryEngine implements CognitiveEngine {
                 score: (data.strength as number) || 0.5,
                 confidence: (data.confidence as number) || 0.5,
               },
-              businessId: "default",
+              businessId,
               description: `Memory from pattern ${patternId}`,
             } as unknown as Record<string, unknown>);
           }
-        } catch {
-          // silently handle
+        } catch (error) {
+          const pl = payload as Record<string, unknown> | undefined;
+          const pat = (pl?.entity as Record<string, unknown> | undefined)?.pattern as Record<string, unknown> | undefined ?? pl?.pattern as Record<string, unknown> | undefined;
+          const ent = (pl?.entity as Record<string, unknown> | undefined) ?? (pl?.payload as Record<string, unknown> | undefined) ?? {};
+          await this.errorReporter.reportWithDetails("process_pattern_event", error, {
+            event: eventName,
+            entityId: (pat?.id as string) || (ent?.patternId as string) || undefined,
+            businessId: (pat?.identity as Record<string, unknown> | undefined)?.businessId as string | undefined ?? (ent?.data as Record<string, unknown> | undefined)?.businessId as string | undefined ?? undefined,
+          });
         }
       });
     }

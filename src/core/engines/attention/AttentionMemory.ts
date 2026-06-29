@@ -1,9 +1,15 @@
 import { Attention } from "./AttentionTypes";
 import { AttentionSubscriber } from "./AttentionContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 export class AttentionMemory {
   private items: Map<string, Attention> = new Map();
   private subscribers: AttentionSubscriber[] = [];
+  private readonly errorReporter: RuntimeErrorReporter;
+
+  constructor(errorReporter?: RuntimeErrorReporter) {
+    this.errorReporter = errorReporter ?? new RuntimeErrorReporter("AttentionMemory");
+  }
 
   subscribe(subscriber: AttentionSubscriber): void {
     this.subscribers.push(subscriber);
@@ -77,13 +83,17 @@ export class AttentionMemory {
 
   private notifyCreated(attention: Attention): void {
     for (const subscriber of this.subscribers) {
-      subscriber.onAttentionCreated(attention).catch(() => {});
+      subscriber.onAttentionCreated(attention).catch((err) => {
+        this.errorReporter.reportEngineError("onAttentionCreated", err);
+      });
     }
   }
 
   private notifyUpdated(attention: Attention): void {
     for (const subscriber of this.subscribers) {
-      subscriber.onAttentionUpdated(attention).catch(() => {});
+      subscriber.onAttentionUpdated(attention).catch((err) => {
+        this.errorReporter.reportEngineError("onAttentionUpdated", err);
+      });
     }
   }
 }

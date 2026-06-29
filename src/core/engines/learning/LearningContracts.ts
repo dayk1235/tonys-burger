@@ -1,4 +1,4 @@
-import type { LearningStage } from "./LearningTypes";
+import type { LearningStage, LearningEntity } from "./LearningTypes";
 
 export interface LearningSubscriber {
   onLearningInitiated(learningId: string): Promise<void>;
@@ -8,9 +8,11 @@ export interface LearningSubscriber {
 }
 
 export interface LearningQuery {
-  findById(id: string): Promise<unknown>;
-  findActive(): Promise<unknown[]>;
-  findByDecisionId(decisionId: string): Promise<unknown[]>;
+  findById(id: string): Promise<LearningEntity | undefined>;
+  findActive(): Promise<LearningEntity[]>;
+  findByDecisionId(decisionId: string): Promise<LearningEntity[]>;
+  findByStage(stage: LearningStage): Promise<LearningEntity[]>;
+  findAll(): Promise<LearningEntity[]>;
 }
 
 export interface LearningEngineMetrics {
@@ -20,4 +22,5 @@ export interface LearningEngineMetrics {
   readonly activeCycles: number;
   readonly averageConfidence: number;
   readonly patternsDerived: number;
+  readonly cyclesByStage: Record<string, number>;
 }

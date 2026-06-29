@@ -434,6 +434,7 @@ function detectDeadCode(
   // Check for orphan emitters (no matching subscriber)
   for (const emit of emits) {
     // Skip engine:state-change — consumed by runtime/UI observers
+    // engine:state-change is consumed by Runtime/UI observers — skip from orphan check
     if (emit.eventName === "engine:state-change") continue;
 
     const hasSubscriber = subscribes.some(

@@ -10,6 +10,11 @@ export class RuntimeMetrics {
   private eventDeliveredCount = 0;
   private clock: RuntimeClock;
 
+  totalErrors = 0;
+  errorsByEngine: Record<string, number> = {};
+  errorsBySeverity: Record<string, number> = {};
+  lastErrorTimestamp = "";
+
   constructor(clock: RuntimeClock) {
     this.clock = clock;
   }
@@ -20,6 +25,13 @@ export class RuntimeMetrics {
 
   incrementDelivered(): void {
     this.eventDeliveredCount++;
+  }
+
+  recordError(engineName: string, severity: string): void {
+    this.totalErrors++;
+    this.errorsByEngine[engineName] = (this.errorsByEngine[engineName] || 0) + 1;
+    this.errorsBySeverity[severity] = (this.errorsBySeverity[severity] || 0) + 1;
+    this.lastErrorTimestamp = new Date().toISOString();
   }
 
   snapshot(
@@ -46,6 +58,10 @@ export class RuntimeMetrics {
       recoveryCount: recovery.count() - recovery.countUnrecovered(),
       uptimeMs: this.clock.uptimeMs(),
       state,
+      totalErrors: this.totalErrors,
+      errorsByEngine: { ...this.errorsByEngine },
+      errorsBySeverity: { ...this.errorsBySeverity },
+      lastErrorTimestamp: this.lastErrorTimestamp,
     };
   }
 }

@@ -1,13 +1,14 @@
 /**
- * VS1-004 — Reasoning → Decision Integration.
+ * VS1-004 / VS1-012 — Reasoning → Decision Integration.
  *
- * Demonstrates that DecisionEngine automatically consumes
- * reasoning lifecycle completed events from the EventBus
- * and initiates a decision proposal.
+ * VS1-012 transforms DecisionPipeline from a stub (random proposal ID, no
+ * evaluation) into a real pipeline that evaluates alternatives, computes
+ * confidence, generates rationale, and emits a deterministic decision ID.
  *
  * Pipeline:
  *   ReasoningPipeline → EventBus → DecisionEngine
  *   [reasoning.lifecycle.completed] → receiveInput → initiateDecision
+ *   → evaluate alternatives → select best → return real payload
  */
 
 import { describe, it } from "node:test";
@@ -17,15 +18,15 @@ import { RuntimeClock } from "../../../runtime/RuntimeClock";
 import { DecisionEngine } from "../DecisionEngine";
 import { REASONING_EVENTS } from "../../reasoning/ReasoningEvents";
 
-describe("VS1-004 Reasoning → Decision Integration", () => {
-  it("creates decision proposal when reasoning.lifecycle.completed is emitted", async () => {
+describe("VS1-004 / VS1-012 Reasoning → Decision Integration", () => {
+  it("creates decision proposal with real metrics when reasoning completes", async () => {
     const clock = new RuntimeClock();
     const eventBus = new EventBus(clock);
     const engine = new DecisionEngine(eventBus);
 
     await engine.start();
 
-    const reasoningId = "reason_vs1_004_001";
+    const reasoningId = "reason_vs1_012_001";
     const reasoningName = "Inventory shortage analysis";
 
     await eventBus.emit(REASONING_EVENTS.LIFECYCLE_COMPLETED, {
@@ -43,12 +44,16 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
 
     const metrics = engine.getMetrics();
     assert.ok(engine.getState() === "RUNNING", "engine should remain running after event");
-    assert.deepEqual(metrics, {}, "metrics should be empty object (not implemented)");
+    assert.equal(metrics.totalProposalsCreated, 1, "should record one proposal");
+    assert.equal(metrics.activeProposals, 1, "should have one active proposal");
+    assert.ok(metrics.averageConfidence > 0, "confidence should be computed");
+    assert.equal(metrics.averageAlternativesPerProposal, 2, "should track alternatives count");
+    assert.deepEqual(metrics.proposalsByStage, { PROPOSAL_BUILT: 1 });
 
     await engine.stop();
   });
 
-  it("preserves reasoningId and confidence from the reasoning event", async () => {
+  it("preserves reasoningId and confidence, uses deterministic decision ID, selects best alternative", async () => {
     const clock = new RuntimeClock();
     const eventBus = new EventBus(clock);
     const engine = new DecisionEngine(eventBus);
@@ -60,7 +65,7 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
       capturedResult = payload;
     });
 
-    const reasoningId = "reason_vs1_004_002";
+    const reasoningId = "reason_vs1_012_002";
     await eventBus.emit(REASONING_EVENTS.LIFECYCLE_COMPLETED, {
       reasoningId,
       name: "Customer preference analysis",
@@ -79,8 +84,10 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
     const decision = (capturedResult as Record<string, unknown>).decision as Record<string, unknown>;
     assert.ok(decision, "decision envelope should be present");
     assert.equal(decision.reasoningId, reasoningId, "reasoningId should be preserved");
-    assert.ok(decision.id, "proposalId should be generated");
-    assert.ok(String(decision.id).startsWith("dec-"), "proposalId should start with dec-");
+    assert.equal(decision.id, `dec-${reasoningId}`, "should use deterministic ID from reasoningId");
+    assert.ok(decision.evaluations, "should include alternative evaluations");
+    assert.ok(decision.selectedAlternativeId, "should have selected an alternative");
+    assert.ok(decision.rationale, "should include rationale text");
 
     await engine.stop();
   });
@@ -94,7 +101,7 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
     process.on("uncaughtException", () => { errorCount++; });
 
     await eventBus.emit(REASONING_EVENTS.LIFECYCLE_COMPLETED, {
-      reasoningId: "reason_vs1_004_003",
+      reasoningId: "reason_vs1_012_003",
       name: "Test",
       type: "DIAGNOSTIC",
       stage: "COMPLETED",
@@ -183,7 +190,15 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
     assert.ok(decision, "decision envelope should be present");
     assert.equal(decision.reasoningId, reasoningId, "reasoningId should come from nested payload");
     assert.equal((decision.alternatives as unknown[]).length, 2, "should carry reasoning-generated alternatives");
-    assert.ok(String(decision.id).startsWith("dec-"), "proposalId should be generated");
+    assert.equal(decision.id, `dec-${reasoningId}`, "should use deterministic ID");
+    assert.equal(decision.selectedAlternativeId, "alt-local-1", "should select best-scoring alternative");
+    assert.ok(decision.rationale, "should include rationale");
+
+    const evaluations = decision.evaluations as Record<string, unknown>[];
+    assert.equal(evaluations.length, 2, "should evaluate each alternative");
+    const selected = evaluations.find((e: Record<string, unknown>) => e.isSelected === true);
+    assert.ok(selected, "one alternative should be marked as selected");
+    assert.equal(selected?.alternativeId, "alt-local-1");
 
     await engine.stop();
   });
@@ -218,11 +233,12 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
     const decision = (capturedResult as Record<string, unknown>).decision as Record<string, unknown>;
     assert.ok(decision, "decision envelope should be present");
     assert.equal(decision.reasoningId, "reason_bf009_002");
+    assert.equal(decision.id, "dec-reason_bf009_002", "should use deterministic ID");
 
     await engine.stop();
   });
 
-  it("accepts payload with explicit alternatives and businessId", async () => {
+  it("accepts payload with explicit alternatives and businessId, selects best alternative deterministically", async () => {
     const clock = new RuntimeClock();
     const eventBus = new EventBus(clock);
     const engine = new DecisionEngine(eventBus);
@@ -235,7 +251,7 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
     });
 
     await eventBus.emit(REASONING_EVENTS.LIFECYCLE_COMPLETED, {
-      reasoningId: "reason_vs1_004_004",
+      reasoningId: "reason_vs1_012_006",
       name: "Supplier selection",
       type: "OPERATIONAL",
       stage: "COMPLETED",
@@ -275,8 +291,49 @@ describe("VS1-004 Reasoning → Decision Integration", () => {
     assert.ok(capturedResult !== null, "should have received decision.lifecycle.initiated");
     const decision = (capturedResult as Record<string, unknown>).decision as Record<string, unknown>;
     assert.ok(decision, "decision envelope should be present");
-    assert.equal(decision.reasoningId, "reason_vs1_004_004");
+    assert.equal(decision.reasoningId, "reason_vs1_012_006");
     assert.equal((decision.alternatives as unknown[]).length, 2);
+    assert.equal(decision.id, "dec-reason_vs1_012_006", "should use deterministic ID");
+    assert.equal(decision.selectedAlternativeId, "alt-1", "should select the higher-scoring alternative");
+
+    const rationale = decision.rationale as string;
+    assert.ok(rationale.includes("Local supplier"), "rationale should mention selected alternative");
+
+    await engine.stop();
+  });
+
+  it("exposes pipeline with stored decision via memory", async () => {
+    const clock = new RuntimeClock();
+    const eventBus = new EventBus(clock);
+    const engine = new DecisionEngine(eventBus);
+
+    await engine.start();
+
+    const reasoningId = "reason_vs1_012_mem";
+    await eventBus.emit(REASONING_EVENTS.LIFECYCLE_COMPLETED, {
+      reasoningId,
+      name: "Memory test",
+      type: "OPERATIONAL",
+      stage: "COMPLETED",
+      confidence: 0.8,
+      operation: "COMPLETE",
+      timestamp: new Date().toISOString(),
+      businessId: "biz_memory",
+      alternatives: [
+        { id: "opt-a", label: "Option A", description: "First option", expectedOutcome: "Good", riskLevel: 0.3, opportunityScore: 0.7, costEstimate: 100, humanImpactScore: 0.6, reversibility: "REVERSIBLE" },
+        { id: "opt-b", label: "Option B", description: "Second option", expectedOutcome: "Better", riskLevel: 0.5, opportunityScore: 0.5, costEstimate: 50, humanImpactScore: 0.4, reversibility: "REVERSIBLE" },
+      ],
+    });
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const pipeline = engine.getPipeline();
+    const stored = await pipeline.memory.findByReasoningId(reasoningId);
+    assert.equal(stored.length, 1, "decision should be stored in memory");
+    assert.equal(stored[0].id, `dec-${reasoningId}`);
+    assert.equal(stored[0].selectedAlternativeId, "opt-a");
+    assert.ok(stored[0].confidence > 0);
+    assert.ok(stored[0].rationale.length > 0);
 
     await engine.stop();
   });

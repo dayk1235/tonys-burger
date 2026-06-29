@@ -9,7 +9,7 @@ import type {
 } from "./types";
 import type { LocaleCode } from "@/localization";
 
-export const DecisionEngine = {
+export const DecisionDashboard = {
   getDailyBrief(locale?: LocaleCode): Recommendation[] {
     return demoAdapter.getDailyBrief(locale);
   },

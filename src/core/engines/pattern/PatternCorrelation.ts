@@ -1,5 +1,7 @@
 import { ObservationRef, PatternDetectionResult } from "./PatternTypes";
 import { CorrelationError } from "./PatternErrors";
+import { AuditPipeline } from "../observation/ObservationContracts";
+import { RuntimeErrorReporter } from "../../runtime/RuntimeErrorReporter";
 
 export interface CorrelationResult {
   readonly coefficient: number;
@@ -10,6 +12,12 @@ export interface CorrelationResult {
 }
 
 export class PatternCorrelation {
+  private readonly errorReporter: RuntimeErrorReporter;
+
+  constructor(private readonly auditPipeline?: AuditPipeline) {
+    this.errorReporter = new RuntimeErrorReporter("PatternCorrelation", this.auditPipeline);
+  }
+
   pearson(observationsA: readonly ObservationRef[], observationsB: readonly ObservationRef[]): CorrelationResult {
     const paired = this.alignByTime(observationsA, observationsB);
     if (paired.length < 3) {
@@ -89,8 +97,10 @@ export class PatternCorrelation {
               },
             });
           }
-        } catch {
-          // skip pairs that fail correlation
+        } catch (error) {
+          void this.errorReporter.reportWithDetails("correlate_pair", error, {
+            event: `${categories[i].category}↔${categories[j].category}`,
+          });
         }
       }
     }

@@ -66,4 +66,36 @@ export interface DecisionOperationResult {
   readonly timestamp: string;
   readonly details: string;
   readonly metadata?: Record<string, unknown>;
+  readonly selectedAlternativeId?: string | null;
+  readonly confidence?: number;
+  readonly rationale?: string;
+}
+
+export interface AlternativeEvaluation {
+  readonly alternativeId: string;
+  readonly label: string;
+  readonly riskScore: number;
+  readonly opportunityScore: number;
+  readonly costScore: number;
+  readonly humanImpactScore: number;
+  readonly reversibilityScore: number;
+  readonly weightedScore: number;
+  readonly isSelected: boolean;
+}
+
+export interface DecisionResult {
+  readonly id: string;
+  readonly reasoningId: string;
+  readonly stage: DecisionStage;
+  readonly questionText: string;
+  readonly businessId: string;
+  readonly alternatives: readonly DecisionAlternative[];
+  readonly evaluations: readonly AlternativeEvaluation[];
+  readonly selectedAlternativeId: string | null;
+  readonly selectedLabel: string;
+  readonly confidence: number;
+  readonly rationale: string;
+  readonly reasoningConfidence: number;
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }

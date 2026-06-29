@@ -12,6 +12,8 @@ Este documento es el índice maestro de todos los documentos de gobernanza del p
 | :--- | :--- | :--- |
 | AI_RULES.md | Reglas estrictas para agentes de IA | VISION, ARCHITECTURE, REPOSITORY_GOVERNANCE |
 | REPOSITORY_GOVERNANCE.md | Constitución del repositorio con todas las leyes | — |
+| LAW-067_CANONICAL_RUNTIME_LANGUAGE.md | Canonical Runtime Language — protocolo universal de comunicación entre motores cognitivos | RUNTIME_ARCHITECTURE, ENGINE_IMPLEMENTATION_STANDARD, CanonicalEvent.ts |
+| LAW-068_ARCHITECTURE_DISCOVERY.md | Architecture Discovery Before Code Exploration — fase de descubrimiento obligatoria antes de implementación | EXECUTION_PROTOCOL, ENGINE_IMPLEMENTATION_STANDARD |
 | FOLDER_LAWS.md | Leyes de integridad estructural de carpetas | ARCHITECTURE |
 | DEPENDENCY_POLICY.md | Control de dependencias npm | REPOSITORY_GOVERNANCE |
 | FOUNDATION_FREEZE_POLICY.md | Foundation v1.0 LOCKED, amendment process, seasons | REPOSITORY_GOVERNANCE, Constitution, Product Principles |
